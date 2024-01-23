@@ -34,13 +34,11 @@
           impermanence.nixosModules.impermanence
           ./hosts/hazel.nix 
           ({pkgs, ...}:{
-            system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
+            system.configurationRevision = if self ? rev then self.rev else if self ? dirtyRev then self.dirtyRev else "dirty";
             _module.args.nixinate = {
               host = "hazel.home.faeranne.com";
               sshUser = "nina";
               buildOn = "remote";
-              substituteOnTarget = true;
-              hermetic = true;
             };
           })
         ];
