@@ -20,11 +20,9 @@
     impermanence = {
       url = "github:nix-community/impermanence";
     };
-    nixinate.url = "github:matthewcroughan/nixinate";
   };
 
-  outputs = { self, nixpkgs, sops, disko, impermanence, nixinate, ... }@inputs: {
-    apps = nixinate.nixinate.x86_64-linux self;
+  outputs = { self, nixpkgs, sops, disko, impermanence, ... }@inputs: {
     nixosConfigurations.hazel = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = 
@@ -35,11 +33,6 @@
           ./hosts/hazel.nix 
           ({pkgs, ...}:{
             system.configurationRevision = if self ? rev then self.rev else if self ? dirtyRev then self.dirtyRev else "dirty";
-            _module.args.nixinate = {
-              host = "hazel.home.faeranne.com";
-              sshUser = "nina";
-              buildOn = "remote";
-            };
           })
         ];
     };
