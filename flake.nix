@@ -38,7 +38,7 @@
             _module.args.nixinate = {
               host = "hazel.home.faeranne.com";
               sshUser = "nina";
-              buildOn = "local";
+              buildOn = "remote";
               substituteOnTarget = true;
               hermetic = true;
             };
