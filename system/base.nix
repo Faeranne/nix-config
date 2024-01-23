@@ -10,7 +10,7 @@
   time.timeZone = "America/Indiana";
   i18n.defaultLocale = "en_US.UTF-8";
 
-  sops.age.keyFile = "/nix/persist/sops.key";
+  sops.age.keyFile = "/persist/sops.key";
 
   environment.systemPackages = with pkgs; [
     wget
