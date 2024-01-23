@@ -37,6 +37,7 @@
         ];
         deployment.targetHost = "192.168.1.101";
         deployment.targetUser = "nina";
+        system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
       };
     };
     nixosConfigurations.hazel = nixpkgs.lib.nixosSystem {
@@ -47,6 +48,9 @@
           sops.nixosModules.sops
           impermanence.nixosModules.impermanence
           ./hosts/hazel.nix 
+          ({pkgs, ...}:{
+            system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
+          })
         ];
     };
   };

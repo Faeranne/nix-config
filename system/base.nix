@@ -1,11 +1,9 @@
-{self, config, lib, pkgs, sops, ... }:
+{ config, lib, pkgs, sops, ... }:
 {
   imports = [
     ./users.nix
     ./impermanence.nix
   ];
-
-  system.configurationRevision = lib.mkIf (self ? rev) self.rev;
 
   boot.zfs.forceImportRoot = false;
 
