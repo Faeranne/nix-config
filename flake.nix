@@ -20,26 +20,11 @@
     impermanence = {
       url = "github:nix-community/impermanence";
     };
+    nixinate.url = "github:matthewcroughan/nixinate";
   };
 
-  outputs = { self, nixpkgs, sops, disko, impermanence, ... }@inputs: {
-    nixopsConfigurations.default = {
-      inherit (inputs) nixpkgs;
-      network.description = "Personal Servers";
-      network.storage.legacy = {};
-      network.enableRollback = true;
-      hazel = { pkgs, ... }: {
-        imports = [
-          disko.nixosModules.disko
-          sops.nixosModules.sops
-          impermanence.nixosModules.impermanence
-          ./hosts/hazel.nix
-        ];
-        deployment.targetHost = "192.168.1.101";
-        deployment.targetUser = "nina";
-        system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
-      };
-    };
+  outputs = { self, nixpkgs, sops, disko, impermanence, nixinate, ... }@inputs: {
+    apps = nixinate.nixinate.x86_64-linux self;
     nixosConfigurations.hazel = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = 
@@ -50,6 +35,13 @@
           ./hosts/hazel.nix 
           ({pkgs, ...}:{
             system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
+            _module.args.nixinate = {
+              host = "hazel.home.faeranne.com";
+              sshUser = "nina";
+              buildOn = "local";
+              substituteOnTarget = true;
+              hermetic = true;
+            };
           })
         ];
     };
