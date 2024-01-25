@@ -1,11 +1,9 @@
-{ config, lib, pkgs, sops, ... }:
+{ config, lib, pkgs, sops, primaryEthernet ? "eno0", ... }:
 {
   imports = [
     ./users.nix
     ./impermanence.nix
   ];
-
-  boot.zfs.forceImportRoot = false;
 
   time.timeZone = "America/Indiana";
   i18n.defaultLocale = "en_US.UTF-8";
@@ -22,6 +20,23 @@
   ];
 
   systemd.network.enable = true;
+  networking.useNetworkd = true;
+  networking.nat.externalInterface = primaryEthernet;
+
+  systemd.network = {
+    networks = {
+      "10-lan1" = {
+        matchConfig.Name=primaryEthernet;
+        networkConfig.DHCP = "ipv4";
+      };
+    };
+  };
+
+  networking = {
+    firewall = {
+      enable = true;
+    };
+  };
 
   programs = {
     neovim = {

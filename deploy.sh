@@ -14,4 +14,10 @@ then
   exit 2
 fi
 
-nixos-rebuild --target-host ${!1} --use-remote-sudo --flake ".#${1}" test
+action="deploy"
+if [ -v 2 ];
+then
+  action=$2
+fi
+
+nixos-rebuild --target-host ${!1} --use-remote-sudo --flake ".#${1}" $action

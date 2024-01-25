@@ -1,4 +1,4 @@
-{ lib, disko, ... }:
+{ lib, disko, rootDisk ? "/dev/sda" ,... }:
 {
   disko.devices = {
     nodev = {
@@ -11,7 +11,7 @@
     };
     disk = {
       disk1 = {
-        device = lib.mkDefault "/dev/disk/by-path/pci-0000:00:17.0-ata-1";
+        device = rootDisk;
         type = "disk";
         content = {
           type = "gpt";
