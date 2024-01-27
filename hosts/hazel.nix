@@ -4,7 +4,9 @@ args@{ modulesPath, config, lib, pkgs, sops, disko, ... }: {
       ../system/disks.nix
       ../system/base.nix
       ../system/intel.nix
+      ../services/podman.nix
       ../services/ssh.nix
+      ../services/dns.nix
       ../services/foundry.nix
     ];
   _module.args = {

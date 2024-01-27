@@ -26,18 +26,28 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
+    technitium = {
+      url = "github:faeranne/nix-technitium";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
   };
 
-  outputs = { self, nixpkgs, sops, disko, impermanence, foundryvtt, ... }@inputs: {
+  outputs = { self, nixpkgs, sops, disko, impermanence, foundryvtt, technitium, ... }@inputs: {
     nixosConfigurations.hazel = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      specialArgs = { inherit foundryvtt; };
+      specialArgs = { 
+        inherit foundryvtt; 
+        inherit technitium; 
+      };
       modules = 
         [ 
           disko.nixosModules.disko
           sops.nixosModules.sops
           impermanence.nixosModules.impermanence
           foundryvtt.nixosModules.foundryvtt
+          technitium.nixosModules.technitium
           ./hosts/hazel.nix 
           ({pkgs, ...}:{
             system.configurationRevision = if self ? rev then self.rev else if self ? dirtyRev then self.dirtyRev else "dirty";

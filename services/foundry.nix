@@ -1,6 +1,17 @@
 { config, lib, pkgs, foundryvtt, ... }:
 {
   containers.foundry-self = {
+    autoStart = true;
+    privateNetwork = true;
+    hostAddress = "10.200.1.1";
+    localAddress = "10.200.1.2";
+    forwardPorts = [
+      {
+        containerPort = 30000;
+        hostPort = 8080;
+        protocol = "tcp";
+      }
+    ];
     bindMounts = {
       "/var/lib/foundryvtt" = {
         hostPath = "/persist/foundryvtt/self";
