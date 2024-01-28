@@ -6,8 +6,6 @@ args@{ modulesPath, config, lib, pkgs, sops, disko, ... }: {
       ../system/intel.nix
       ../services/podman.nix
       ../services/ssh.nix
-      ../services/dns.nix
-      ../services/foundry.nix
     ];
   _module.args = {
     rootDisk = "/dev/disk/by-path/pci-0000:00:17.0-ata-1";

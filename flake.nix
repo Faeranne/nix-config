@@ -6,7 +6,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
     sops = {
       url = "github:Mic92/sops-nix";
-      inputs = {
+      inputs = { 
         nixpkgs.follows = "nixpkgs";
         nixpkgs-stable.follows = "nixpkgs";
       };
@@ -46,8 +46,6 @@
           disko.nixosModules.disko
           sops.nixosModules.sops
           impermanence.nixosModules.impermanence
-          foundryvtt.nixosModules.foundryvtt
-          technitium.nixosModules.technitium
           ./hosts/hazel.nix 
           ({pkgs, ...}:{
             system.configurationRevision = if self ? rev then self.rev else if self ? dirtyRev then self.dirtyRev else "dirty";
@@ -56,14 +54,19 @@
     };
     nixosConfigurations.oracle1 = nixpkgs.lib.nixosSystem {
       system = "aarch64-linux";
-      specialArgs = { inherit foundryvtt; };
+      specialArgs = { 
+        inherit foundryvtt; 
+        inherit technitium; 
+      };
       modules = 
         [ 
           disko.nixosModules.disko
           sops.nixosModules.sops
           impermanence.nixosModules.impermanence
+          foundryvtt.nixosModules.foundryvtt
+          technitium.nixosModules.technitium
           ./hosts/oracle1.nix 
-          ({pkgs, ...}:{
+          ({nixpkgs, ...}:{
             system.configurationRevision = if self ? rev then self.rev else if self ? dirtyRev then self.dirtyRev else "dirty";
           })
         ];

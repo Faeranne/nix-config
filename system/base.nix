@@ -17,6 +17,8 @@
     pkgs.chezmoi
     atuin
     mlocate
+    htop
+    dig
   ];
 
   systemd.network.enable = true;

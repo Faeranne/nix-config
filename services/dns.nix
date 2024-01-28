@@ -2,16 +2,21 @@
 {
   containers.dns = {
     autoStart = true;
-    privateNetwork = false;
-    #hostAddress = "10.200.1.3";
-    #localAddress = "10.200.1.4";
-    #forwardPorts = [
-    #  {
-    #    containerPort = 5380;
-    #    hostPort = 8081;
-    #    protocol = "tcp";
-    #  }
-    #];
+    privateNetwork = true;
+    hostAddress = "10.200.1.3";
+    localAddress = "10.200.1.4";
+    forwardPorts = [
+      {
+        containerPort = 53;
+        hostPort = 53;
+        protocol = "tcp";
+      }
+      {
+        containerPort = 53;
+        hostPort = 53;
+        protocol = "udp";
+      }
+    ];
     bindMounts = {
       "/etc/dns" = {
         hostPath = "/persist/dns";
@@ -25,21 +30,28 @@
       services.technitium = {
         enable = true;
       };
-    #  networking = {
-    #    useHostResolvConf = pkgs.lib.mkForce false;
-    #    firewall = {
-    #      enable = true;
-    #      allowedTCPPorts = [ 5380 ];
-    #    };
-    #  };
-    #  services.resolved.enable = false;
+      networking = {
+        useHostResolvConf = pkgs.lib.mkForce false;
+        firewall = {
+          enable = true;
+          allowedTCPPorts = [ 5380 53 ];
+          allowedUDPPorts = [ 53 ];
+        };
+      };
+      services.resolved.enable = false;
 
       system.stateVersion = "23.11";
     };
   };
   networking = {
     firewall = {
-      allowedTCPPorts = [ 5380 ];
+      allowedTCPPorts = [ 53 ];
+      allowedUDPPorts = [ 53 ];
     };
+  };
+  services.resolved = {
+    extraConfig = ''
+      DNSStubListener=no
+    '';
   };
 }
