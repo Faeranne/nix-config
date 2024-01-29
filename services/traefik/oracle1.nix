@@ -12,8 +12,14 @@
         service = "dns";
         entryPoints = [ "websecure" ];
       };
+      selfFoundry = {
+        rule = "Host(`foundry.faeranne.com`)";
+        service = "selfFoundry";
+        entryPoints = [ "websecure" ];
+      };
     };
     services = {
       dns.loadBalancer.servers = [ {url = "http://10.200.1.4:5380";} ];
+      selfFoundry.loadBalancer.servers = [ {url = "http://10.200.1.2:30000";} ];
     };
   };

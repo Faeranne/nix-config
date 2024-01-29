@@ -80,6 +80,7 @@
           ./system/intel.nix
           ./services/podman.nix
           ./services/ssh.nix
+          ./services/foundry-self.nix
           ./traefik/oracle1.nix 
           ({...}:{
             _module.args = {

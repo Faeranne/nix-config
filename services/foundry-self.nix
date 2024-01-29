@@ -27,7 +27,6 @@
         hostName = "https://foundry.faeranne.com/";
         proxyPort = 443;
         proxySSL = true;
-        #package = foundryvtt.packages.${pkgs.system}.foundryvtt_10;
         package = foundryvtt.packages.${pkgs.system}.default.overrideAttrs {
           build = "312";
           majorVersion = "10";
