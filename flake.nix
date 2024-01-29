@@ -46,9 +46,19 @@
           disko.nixosModules.disko
           sops.nixosModules.sops
           impermanence.nixosModules.impermanence
-          ./hosts/hazel.nix 
-          ({pkgs, ...}:{
-            system.configurationRevision = if self ? rev then self.rev else if self ? dirtyRev then self.dirtyRev else "dirty";
+          ./system/disks.nix
+          ./system/base.nix
+          ./system/intel.nix
+          ./services/podman.nix
+          ./services/ssh.nix
+          ({...}:{
+            _module.args = {
+              rootDisk = "/dev/disk/by-path/pci-0000:00:17.0-ata-1";
+              primaryEthernet = "eno1";
+            };
+
+            networking.hostName = "hazel"; # Define your hostname.
+            networking.hostId = "279e089e";
           })
         ];
     };
@@ -65,9 +75,20 @@
           impermanence.nixosModules.impermanence
           foundryvtt.nixosModules.foundryvtt
           technitium.nixosModules.technitium
-          ./hosts/oracle1.nix 
-          ({nixpkgs, ...}:{
-            system.configurationRevision = if self ? rev then self.rev else if self ? dirtyRev then self.dirtyRev else "dirty";
+          ./system/disks.nix
+          ./system/base.nix
+          ./system/intel.nix
+          ./services/podman.nix
+          ./services/ssh.nix
+          ./traefik/oracle1.nix 
+          ({...}:{
+            _module.args = {
+              rootDisk = "/dev/disk/by-path/pci-0000:00:17.0-ata-1";
+              primaryEthernet = "eno1";
+            };
+
+            networking.hostName = "oracle1"; # Define your hostname.
+            networking.hostId = "badc65d2";
           })
         ];
     };

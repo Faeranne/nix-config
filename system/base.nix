@@ -5,6 +5,8 @@
     ./impermanence.nix
   ];
 
+  system.configurationRevision = if self ? rev then self.rev else if self ? dirtyRev then self.dirtyRev else "dirty";
+
   time.timeZone = "America/Indiana";
   i18n.defaultLocale = "en_US.UTF-8";
 
@@ -53,4 +55,6 @@
       enable = true;
     };
   };
+
+  system.stateVersion = "23.11"; # Did you read the comment?
 }
