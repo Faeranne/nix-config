@@ -1,4 +1,4 @@
-{ config, lib, pkgs, sops, primaryEthernet ? "eno0", ... }:
+{ self, config, lib, pkgs, sops, primaryEthernet, ... }:
 {
   imports = [
     ./users.nix
@@ -13,6 +13,7 @@
   sops.age.keyFile = "/persist/sops.key";
 
   environment.systemPackages = with pkgs; [
+    python3
     wget
     gitFull
     gita
@@ -39,7 +40,10 @@
   networking = {
     firewall = {
       enable = true;
-      allowedTCPPorts = [ 8081 ];
+      allowedTCPPorts = [ ];
+      extraCommands = ''
+        iptables -t nat -A POSTROUTING -o ${primaryEthernet} -j MASQUERADE
+      '';
     };
   };
 

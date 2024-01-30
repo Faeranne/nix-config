@@ -23,3 +23,4 @@
       selfFoundry.loadBalancer.servers = [ {url = "http://10.200.1.2:30000";} ];
     };
   };
+}

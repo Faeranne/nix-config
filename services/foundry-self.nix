@@ -22,6 +22,9 @@
       imports = [
         foundryvtt.nixosModules.foundryvtt
       ];
+      environment.systemPackages = with pkgs; [
+        dig
+      ];
       services.foundryvtt = {
         enable = true;
         hostName = "https://foundry.faeranne.com/";
@@ -34,6 +37,7 @@
       };
       networking = {
         useHostResolvConf = pkgs.lib.mkForce false;
+        defaultGateway = "10.200.1.1";
         firewall = {
           enable = true;
           allowedTCPPorts = [ 30000 ];

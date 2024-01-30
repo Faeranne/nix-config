@@ -2,6 +2,7 @@ keys:
   - &desktop_token B4383128C3A5F777CBDF1609DFE6E909801C9906
   - &server_hazel $HAZEL_PUB
   - &server_oracle1 $ORACLE1_PUB
+  - &server_bell $BELL_PUB
 creation_rules:
   - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
     key_groups:
@@ -10,3 +11,4 @@ creation_rules:
         age:
           - *server_hazel
           - *server_oracle1
+          - *server_bell
