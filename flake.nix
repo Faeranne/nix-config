@@ -46,16 +46,15 @@ description = "A very nixops flake";
           disko.nixosModules.disko
           sops.nixosModules.sops
           impermanence.nixosModules.impermanence
-          ./system/disks.nix
-          ./system/base.nix
+          ./system
           ./system/intel.nix
           ./services/podman.nix
           ./services/ssh.nix
           ({...}:{
             _module.args = {
-              rootDisk = "/dev/disk/by-path/pci-0000:00:17.0-ata-1";
               primaryEthernet = "eno1";
             };
+            custom.defaultDisk.rootDisk = "/dev/disk/by-path/pci-0000:00:17.0-ata-1";
 
             networking.hostName = "hazel"; # Define your hostname.
             networking.hostId = "279e089e";
@@ -73,18 +72,22 @@ description = "A very nixops flake";
           sops.nixosModules.sops
           impermanence.nixosModules.impermanence
           ./custom/nas_disk.nix
-          ./system/base.nix
+          ./system
           ./system/intel.nix
           ./services/podman.nix
           ./services/ssh.nix
-          ({...}:{
+          ({pkgs, ...}:{
             _module.args = {
-              rootDisk = "/dev/disk/by-path/pci-0000:00:13.0-ata-1";
               primaryEthernet = "eth0";
             };
 
             networking.hostName = "bell"; # Define your hostname.
             networking.hostId = "1cd0fa6c";
+            custom.defaultDisk.enable = false;
+
+            environment.systemPackages = with pkgs; [
+              libgpiod
+            ];
           })
         ];
     };
@@ -102,8 +105,7 @@ description = "A very nixops flake";
           impermanence.nixosModules.impermanence
           foundryvtt.nixosModules.foundryvtt
           technitium.nixosModules.technitium
-          ./system/disks.nix
-          ./system/base.nix
+          ./system
           ./system/oracle.nix
           ./services/podman.nix
           ./services/ssh.nix
@@ -111,11 +113,12 @@ description = "A very nixops flake";
           ./services/dns.nix
           ./services/traefik.nix 
           ./services/traefik/oracle1.nix 
-          ({...}:{
+          ({pkgs, ...}:{
             _module.args = {
-              rootDisk = "/dev/disk/by-path/pci-0000:00:13.0-ata-1";
               primaryEthernet = "eno1";
             };
+            custom.elements = [ "oracle" ];
+            custom.defaultDisk.rootDisk = "/dev/disk/by-path/pci-0000:00:13.0-ata-1";
 
             networking.hostName = "oracle1"; # Define your hostname.
             networking.hostId = "badc65d2";
