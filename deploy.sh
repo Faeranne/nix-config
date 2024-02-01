@@ -4,8 +4,9 @@ source hosts.env
 
 if [ -z "$1" ];
 then
-  echo "Usage: deploy.sh <host>"
-  exit 1
+  arch=$(uname -m)
+  home-manager --flake ./#$arch switch
+  exit 0
 fi
 
 if [ -z "${!1}" ];

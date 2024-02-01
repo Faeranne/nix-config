@@ -144,6 +144,18 @@ description = "A very nixops flake";
         ];
     };
 
+    homeConfigurations."x86_64" = home-manager.lib.homeManagerConfiguration
+    {
+      pkgs = nixpkgs.legacyPackages.x86_64-linux;
+      modules = [ ./home/home.nix ];
+    };
+
+    homeConfigurations."aarch64" = home-manager.lib.homeManagerConfiguration
+    {
+      pkgs = nixpkgs.legacyPackages.aarch64-linux;
+      modules = [ ./home/home.nix ];
+    };
+
     #Installer Images
     nixosConfigurations.anywhereIso = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
