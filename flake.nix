@@ -31,9 +31,15 @@ description = "A very nixops flake";
         nixpkgs.follows = "nixpkgs";
       };
     };
+    home-manager = {
+      url = "github:nix-community/home-manager/release-23.11";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
   };
 
-  outputs = { self, nixpkgs, impermanence, ... }@inputs: {
+  outputs = { self, nixpkgs, impermanence, home-manager, ... }@inputs: {
     nixosConfigurations.hazel = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { 
@@ -45,10 +51,12 @@ description = "A very nixops flake";
           inputs.disko.nixosModules.disko
           inputs.sops.nixosModules.sops
           impermanence.nixosModules.impermanence
+          home-manager.nixosModules.home-manager
           ./system
           ./system/intel.nix
           ./services/podman.nix
           ./services/ssh.nix
+          ./home
           ({...}:{
             _module.args = {
               primaryEthernet = "eno1";

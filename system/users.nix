@@ -1,6 +1,7 @@
 { config, lib, pkgs, inputs, ... }:
 let
   sops = inputs.sops;
+  home-manager = inputs.home-manager;
 in
 {
   nix.settings.trusted-users = [ "nina" ];
