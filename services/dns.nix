@@ -1,4 +1,7 @@
-{ config, lib, pkgs, technitium, ... }:
+{ config, lib, pkgs, inputs, ... }:
+let
+  technitium = inputs.technitium;
+in
 {
   containers.dns = {
     autoStart = true;

@@ -33,18 +33,17 @@ description = "A very nixops flake";
     };
   };
 
-  outputs = { self, nixpkgs, sops, disko, impermanence, foundryvtt, technitium, ... }@inputs: {
+  outputs = { self, nixpkgs, impermanence, ... }@inputs: {
     nixosConfigurations.hazel = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { 
-        inherit foundryvtt; 
-        inherit technitium; 
+        inherit inputs; 
         inherit self;
       };
       modules = 
         [ 
-          disko.nixosModules.disko
-          sops.nixosModules.sops
+          inputs.disko.nixosModules.disko
+          inputs.sops.nixosModules.sops
           impermanence.nixosModules.impermanence
           ./system
           ./system/intel.nix
@@ -64,12 +63,13 @@ description = "A very nixops flake";
     nixosConfigurations.bell = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { 
+        inherit inputs;
         inherit self;
       };
       modules = 
         [ 
-          disko.nixosModules.disko
-          sops.nixosModules.sops
+          inputs.disko.nixosModules.disko
+          inputs.sops.nixosModules.sops
           impermanence.nixosModules.impermanence
           ./custom/nas_disk.nix
           ./system
@@ -94,22 +94,19 @@ description = "A very nixops flake";
     nixosConfigurations.oracle1 = nixpkgs.lib.nixosSystem {
       system = "aarch64-linux";
       specialArgs = { 
-        inherit foundryvtt; 
-        inherit technitium; 
+        inherit inputs;
         inherit self;
       };
       modules = 
         [ 
-          disko.nixosModules.disko
-          sops.nixosModules.sops
+          inputs.disko.nixosModules.disko
+          inputs.sops.nixosModules.sops
           impermanence.nixosModules.impermanence
-          foundryvtt.nixosModules.foundryvtt
-          technitium.nixosModules.technitium
           ./system
           ./system/oracle.nix
           ./services/podman.nix
           ./services/ssh.nix
-          ./services/foundry-self.nix
+          ./services
           ./services/dns.nix
           ./services/traefik.nix 
           ./services/traefik/oracle1.nix 
@@ -119,6 +116,19 @@ description = "A very nixops flake";
             };
             custom.elements = [ "oracle" ];
             custom.defaultDisk.rootDisk = "/dev/disk/by-path/pci-0000:00:13.0-ata-1";
+            custom.foundry.enable = true;
+            custom.foundry.instances = {
+              self = {
+                host = "10.200.1.1";
+                local = "10.200.1.2";
+                url = "https://foundry.faeranne.com/";
+              };
+              neldu = {
+                host = "10.200.1.5";
+                local = "10.200.1.6";
+                url = "https://vaneer.faeranne.com/";
+              };
+            };
 
             networking.hostName = "oracle1"; # Define your hostname.
             networking.hostId = "badc65d2";

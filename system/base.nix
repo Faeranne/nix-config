@@ -1,4 +1,7 @@
-{ self, config, lib, pkgs, sops, primaryEthernet, ... }:
+{ self, config, lib, pkgs, inputs, primaryEthernet, ... }:
+let
+  sops = inputs.sops;
+in
 {
   system.configurationRevision = if self ? rev then self.rev else if self ? dirtyRev then self.dirtyRev else "dirty";
 

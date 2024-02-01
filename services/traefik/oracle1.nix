@@ -17,10 +17,16 @@
         service = "selfFoundry";
         entryPoints = [ "websecure" ];
       };
+      neldFoundry = {
+        rule = "Host(`vaneer.faeranne.com`)";
+        service = "nelduFoundry";
+        entryPoints = [ "websecure" ];
+      };
     };
     services = {
       dns.loadBalancer.servers = [ {url = "http://10.200.1.4:5380";} ];
       selfFoundry.loadBalancer.servers = [ {url = "http://10.200.1.2:30000";} ];
+      nelduFoundry.loadBalancer.servers = [ {url = "http://10.200.1.6:30000";} ];
     };
   };
 }

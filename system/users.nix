@@ -1,5 +1,7 @@
-{ config, lib, pkgs, sops, ... }:
-
+{ config, lib, pkgs, inputs, ... }:
+let
+  sops = inputs.sops;
+in
 {
   nix.settings.trusted-users = [ "nina" ];
   security.sudo.wheelNeedsPassword = false;

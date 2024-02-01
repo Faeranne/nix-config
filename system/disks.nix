@@ -1,7 +1,8 @@
-{ config, lib, disko, rootDisk ? "/dev/sda", ... }:
+{ config, lib, inputs, ... }:
 let 
   cfg = config.custom.defaultDisk;
   impermanence = config.custom.impermanence;
+  disko = inputs.disko;
 in
 {
   options.custom.defaultDisk = {
