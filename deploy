@@ -15,7 +15,7 @@ then
   exit 2
 fi
 
-action="deploy"
+action="switch"
 if [ -v 2 ];
 then
   action=$2
