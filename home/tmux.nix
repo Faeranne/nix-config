@@ -8,4 +8,7 @@
       tmuxinator.enable = true;
     };
   };
+  home.shellAliases = {
+    mux = "tmuxinator";
+  };
 }
