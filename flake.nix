@@ -99,41 +99,40 @@ description = "A very nixops flake";
         inherit inputs;
         inherit self;
       };
-      modules = 
-        [ 
-          ./home
-          ./system
-          ./services
-          ./services/dns.nix
-          ./services/traefik.nix 
-          ./services/traefik/oracle1.nix 
-          ./hardware/oracle.nix
-          ({pkgs, ...}:{
-            networking.hostName = "oracle1"; # Define your hostname.
-            networking.hostId = "badc65d2";
+      modules = [ 
+        ./home
+        ./system
+        ./services
+        ./services/dns.nix
+        ./hardware/oracle.nix
+        ({pkgs, ...}:{
+          networking.hostName = "oracle1"; # Define your hostname.
+          networking.hostId = "badc65d2";
 
-            custom = {
-              elements = [ "oracle" "server" ];
-              primaryNetwork = "eno1";
-              defaultDisk.rootDisk = "/dev/disk/by-path/pci-0000:00:13.0-ata-1";
-              foundry = {
-                enable = true;
-                instances = {
-                  self = {
-                    host = "10.200.1.1";
-                    local = "10.200.1.2";
-                    url = "https://foundry.faeranne.com/";
-                  };
-                  neldu = {
-                    host = "10.200.1.5";
-                    local = "10.200.1.6";
-                    url = "https://vaneer.faeranne.com/";
-                  };
+          custom = {
+            elements = [ "oracle" "server" ];
+            primaryNetwork = "eno1";
+            defaultDisk.rootDisk = "/dev/disk/by-path/pci-0000:00:13.0-ata-1";
+            traefik.enable = true;
+            baseURL = "oracle1.faeranne.com";
+            foundry = {
+              enable = true;
+              instances = {
+                self = {
+                  host = "10.200.1.1";
+                  local = "10.200.1.2";
+                  url = "foundry.faeranne.com";
+                };
+                neldu = {
+                  host = "10.200.1.5";
+                  local = "10.200.1.6";
+                  url = "vaneer.faeranne.com";
                 };
               };
             };
-          })
-        ];
+          };
+        })
+      ];
     };
 
     homeConfigurations."x86_64" = home-manager.lib.homeManagerConfiguration

@@ -24,57 +24,65 @@ in
           url = mkOption {
             type = types.str;
           };
+          majorVersion = mkOption {
+            type = types.str;
+            default = "10";
+          };
+          minorVersion = mkOption {
+            type = types.str;
+            default = "312";
+          };
         };
       });
     };
   };
   config = lib.mkIf cfg.enable {
-    containers = lib.mapAttrs (name: attrs: {
-      autoStart = true;
-      privateNetwork = true;
-      hostAddress = attrs.host; 
-      localAddress = attrs.local;
-      forwardPorts = [
-        {
-          containerPort = 30000;
-          hostPort = 8080;
-          protocol = "tcp";
-        }
-      ];
-      bindMounts = {
-        "/var/lib/foundryvtt" = {
-          hostPath = "/persist/foundryvtt/${name}";
-          isReadOnly = false;
-        };
+    custom.traefik.routes = lib.concatMapAttrs (name: attrs: {
+      "${name}-foundry" = {
+        target = "http://${attrs.local}:30000/";
+        rule = "Host(`${attrs.url}`)";
       };
-      config = {
-        imports = [
-          foundryvtt.nixosModules.foundryvtt
-        ];
-        environment.systemPackages = with pkgs; [
-          dig
-        ];
-        services.foundryvtt = {
-          enable = true;
-          hostName = attrs.url;
-          proxyPort = 443;
-          proxySSL = true;
-          package = foundryvtt.packages.${pkgs.system}.default.overrideAttrs {
-            build = "312";
-            majorVersion = "10";
+    }) cfg.instances;
+    containers = lib.concatMapAttrs (name: attrs: {
+      "${name}-foundry" = {
+        autoStart = true;
+        privateNetwork = true;
+        hostAddress = attrs.host; 
+        localAddress = attrs.local;
+        bindMounts = {
+          "/var/lib/foundryvtt" = {
+            hostPath = "/persist/foundryvtt/${name}";
+            isReadOnly = false;
           };
         };
-        networking = {
-          useHostResolvConf = pkgs.lib.mkForce false;
-          defaultGateway = attrs.host;
-          firewall = {
-            enable = true;
-            allowedTCPPorts = [ 30000 ];
-          };
-        };
-        services.resolved.enable = true;
+        config = {
+          imports = [
+            foundryvtt.nixosModules.foundryvtt
+          ];
 
-        system.stateVersion = "23.11";
+          services.foundryvtt = {
+            enable = true;
+            hostName = "https://${attrs.url}/";
+            proxyPort = 443;
+            proxySSL = true;
+            package = foundryvtt.packages.${pkgs.system}.default.overrideAttrs {
+              build = attrs.minorVersion;
+              majorVersion = attrs.majorVersion;
+            };
+          };
+
+          networking = {
+            useHostResolvConf = pkgs.lib.mkForce false;
+            defaultGateway = attrs.host;
+            firewall = {
+              enable = true;
+              allowedTCPPorts = [ 30000 ];
+            };
+          };
+          services.resolved.enable = true;
+
+          system.stateVersion = "23.11";
+        };
       };
     }) cfg.instances;
   };
