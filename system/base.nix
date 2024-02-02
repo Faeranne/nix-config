@@ -1,62 +1,24 @@
-{ self, config, lib, pkgs, inputs, primaryEthernet, ... }:
+{ self, lib, inputs, ... }:
 let
   sops = inputs.sops;
 in
 {
-  system.configurationRevision = if self ? rev then self.rev else if self ? dirtyRev then self.dirtyRev else "dirty";
-
-  time.timeZone = "America/Indiana";
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  sops.age.keyFile = "/persist/sops.key";
-
-  environment.systemPackages = with pkgs; [
-    python3
-    wget
-    gitFull
-    gita
-    pkgs.chezmoi
-    atuin
-    mlocate
-    htop
-    dig
-  ];
-
-  systemd.network.enable = true;
-  networking.useNetworkd = true;
-  networking.nat.externalInterface = primaryEthernet;
-
-  systemd.network = {
-    networks = {
-      "10-lan1" = {
-        matchConfig.Name=primaryEthernet;
-        networkConfig.DHCP = "ipv4";
-      };
+  options.custom = {
+    elements = lib.mkOption {
+      default = [];
+      description = "Whether to enable the default disk layout";
+      type = lib.types.listOf lib.types.str;
     };
   };
-
-  networking = {
-    firewall = {
-      enable = true;
-      allowedTCPPorts = [ ];
-      extraCommands = ''
-        iptables -t nat -A POSTROUTING -o ${primaryEthernet} -j MASQUERADE
-      '';
+  config = {
+    system = {
+      configurationRevision = if self ? rev then self.rev else if self ? dirtyRev then self.dirtyRev else "dirty";
+      stateVersion = "23.11"; # Did you read the comment?
     };
+
+    time.timeZone = "America/Indiana";
+    i18n.defaultLocale = "en_US.UTF-8";
+
+    sops.age.keyFile = "/persist/sops.key";
   };
-
-  programs = {
-    neovim = {
-      enable = true;
-      defaultEditor = true;
-      viAlias = true;
-      vimAlias = true;
-    };
-
-    zsh = {
-      enable = true;
-    };
-  };
-
-  system.stateVersion = "23.11"; # Did you read the comment?
 }

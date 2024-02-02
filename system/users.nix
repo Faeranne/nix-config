@@ -1,4 +1,4 @@
-{ config, lib, pkgs, inputs, ... }:
+{ config, pkgs, inputs, ... }:
 let
   sops = inputs.sops;
   home-manager = inputs.home-manager;

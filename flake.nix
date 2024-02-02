@@ -48,23 +48,19 @@ description = "A very nixops flake";
       };
       modules = 
         [ 
-          inputs.disko.nixosModules.disko
-          inputs.sops.nixosModules.sops
-          impermanence.nixosModules.impermanence
-          home-manager.nixosModules.home-manager
-          ./system
-          ./system/intel.nix
-          ./services/podman.nix
-          ./services/ssh.nix
           ./home
+          ./system
+          ./services
+          ./hardware/intel.nix
           ({...}:{
-            _module.args = {
-              primaryEthernet = "eno1";
-            };
-            custom.defaultDisk.rootDisk = "/dev/disk/by-path/pci-0000:00:17.0-ata-1";
-
             networking.hostName = "hazel"; # Define your hostname.
             networking.hostId = "279e089e";
+
+            custom = {
+              elements = [ "intel" "server" ];
+              primaryNetwork = "eno1";
+              defaultDisk.rootDisk = "/dev/disk/by-path/pci-0000:00:17.0-ata-1";
+            };
           })
         ];
     };
@@ -76,22 +72,20 @@ description = "A very nixops flake";
       };
       modules = 
         [ 
-          inputs.disko.nixosModules.disko
-          inputs.sops.nixosModules.sops
-          impermanence.nixosModules.impermanence
-          ./custom/nas_disk.nix
+          ./home
           ./system
-          ./system/intel.nix
-          ./services/podman.nix
-          ./services/ssh.nix
+          ./services
+          ./hardware/intel.nix
+          ./custom/nas_disk.nix
           ({pkgs, ...}:{
-            _module.args = {
-              primaryEthernet = "eth0";
-            };
-
             networking.hostName = "bell"; # Define your hostname.
             networking.hostId = "1cd0fa6c";
-            custom.defaultDisk.enable = false;
+
+            custom = {
+              elements = [ "intel" "server" ];
+              primaryNetwork = "eth0";
+              defaultDisk.enable = false;
+            };
 
             environment.systemPackages = with pkgs; [
               libgpiod
@@ -107,39 +101,37 @@ description = "A very nixops flake";
       };
       modules = 
         [ 
-          inputs.disko.nixosModules.disko
-          inputs.sops.nixosModules.sops
-          impermanence.nixosModules.impermanence
+          ./home
           ./system
-          ./system/oracle.nix
-          ./services/podman.nix
-          ./services/ssh.nix
           ./services
           ./services/dns.nix
           ./services/traefik.nix 
           ./services/traefik/oracle1.nix 
+          ./hardware/oracle.nix
           ({pkgs, ...}:{
-            _module.args = {
-              primaryEthernet = "eno1";
-            };
-            custom.elements = [ "oracle" ];
-            custom.defaultDisk.rootDisk = "/dev/disk/by-path/pci-0000:00:13.0-ata-1";
-            custom.foundry.enable = true;
-            custom.foundry.instances = {
-              self = {
-                host = "10.200.1.1";
-                local = "10.200.1.2";
-                url = "https://foundry.faeranne.com/";
-              };
-              neldu = {
-                host = "10.200.1.5";
-                local = "10.200.1.6";
-                url = "https://vaneer.faeranne.com/";
-              };
-            };
-
             networking.hostName = "oracle1"; # Define your hostname.
             networking.hostId = "badc65d2";
+
+            custom = {
+              elements = [ "oracle" "server" ];
+              primaryNetwork = "eno1";
+              defaultDisk.rootDisk = "/dev/disk/by-path/pci-0000:00:13.0-ata-1";
+              foundry = {
+                enable = true;
+                instances = {
+                  self = {
+                    host = "10.200.1.1";
+                    local = "10.200.1.2";
+                    url = "https://foundry.faeranne.com/";
+                  };
+                  neldu = {
+                    host = "10.200.1.5";
+                    local = "10.200.1.6";
+                    url = "https://vaneer.faeranne.com/";
+                  };
+                };
+              };
+            };
           })
         ];
     };
