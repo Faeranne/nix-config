@@ -3,6 +3,10 @@ let
   technitium = inputs.technitium;
 in
 {
+  custom.traefik.routes.dns = {
+    target = "http://10.200.1.4:5380/";
+    rule = "Host(`ns1.faeranne.com`)";
+  };
   containers.dns = {
     autoStart = true;
     privateNetwork = true;
