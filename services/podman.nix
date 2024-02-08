@@ -18,6 +18,37 @@ in
     };
 
     virtualisation.oci-containers.backend = "podman";
+    containers = {
+      "test" = {
+        autoStart = true;
+        privateNetwork = true;
+        hostBridge = "brCont";
+        localAddress = "10.201.1.2";
+        config = {
+          
+          environment.systemPackages = with pkgs; [
+            busybox
+          ];
+          networking = {
+            useHostResolvConf = pkgs.lib.mkForce false;
+            defaultGateway = {
+              address = "10.201.1.1";
+              interface = "eth0";
+            };
+            nameservers = [
+              "10.201.1.1"
+            ];
+            firewall = {
+              enable = false;
+              allowedTCPPorts = [ ];
+            };
+          };
+          services.resolved.enable = true;
+
+          system.stateVersion = "23.11";
+        };
+      };
+    };
   };
 }
 

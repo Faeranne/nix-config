@@ -12,30 +12,31 @@ in
   };
 
   config = {
-    systemd.network = {
-      enable = true;
-      networks = {
-        "10-lan1" = {
-          matchConfig.Name=primeNet;
-          networkConfig = {
-            DHCP = "ipv4";
-            IPMasquerade = config.virtualisation.podman.enable;
+    networking = {
+      bridges = {
+        brCont = {
+          interfaces = [];
+        };
+      };
+
+      interfaces = {
+        brCont = {
+          ipv4 = {
+            addresses = [{address = "10.201.1.1"; prefixLength = 16;}];
           };
         };
       };
-    };
-
-    networking = {
-      useNetworkd = true;
+            
       firewall = {
         enable = true;
         allowedTCPPorts = [ ];
-        trustedInterfaces = [ "podman+" ];
+        trustedInterfaces = [ "podman+" "brCont" ];
       };
+
       nat = lib.mkIf config.virtualisation.podman.enable {
         externalInterface = primeNet;
         enable = true;
-        internalInterfaces = ["ve-+"];
+        internalInterfaces = [ "ve-+" "vb-+" "brCont" ];
       };
     };
   };
