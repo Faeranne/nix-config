@@ -60,6 +60,9 @@ in
         }) routes;
         middlewares = {
           dash-auth.basicAuth.users = [
+            #Should this be behind a secrets.yaml file? probably. Does it matter? nope.
+            #it's protecting the traefik dashboard.  That's mostly read-only, so worst
+            #case I just disable the dashboard.
             "faeranne:$2y$05$E5K0KoncD2AmqaeKpWjMw.7M6jnvOG53SgJxIk2OzPqV8aSwXXW8u"
           ];
         };
@@ -82,6 +85,7 @@ in
           };
         };
         certificatesresolvers.leresolver.acme = {
+          #Yeah, my email is visible here. it's also visible in the git log, so I don't care.
           email = "nina@projectmakeit.com";
           storage = "/etc/traefik/acme.json";
           httpchallenge.entrypoint = "web";
