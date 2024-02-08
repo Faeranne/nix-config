@@ -1,7 +1,7 @@
 keys:
   - &desktop_token B4383128C3A5F777CBDF1609DFE6E909801C9906
   - &server_hazel age1na4qjmt7v5dh3k2vfjyp45zfx3zhhvdjh5z3jfyer6gcw04yed2s5r8phx
-  - &server_oracle1 age1kzryvm5q9jxp545e7ax427wslhrevf5k3y6azyx9jqc9ddv2wghq9pt0ej
+  - &server_oracle1 age1wvcu9typhu2s22e22qe96xd5q2skq0p78fe76j29ffu9lpjhzp6s7qvtfj
   - &server_bell age1s3zdl6gggq38zms04pk49zrq7ptk39cpzczxgedt5s35kv42xv5sqamasu
 creation_rules:
   - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$

@@ -111,8 +111,8 @@ description = "A very nixops flake";
 
           custom = {
             elements = [ "oracle" "server" ];
-            primaryNetwork = "eno1";
-            defaultDisk.rootDisk = "/dev/disk/by-path/pci-0000:00:13.0-ata-1";
+            primaryNetwork = "enp0s6";
+            defaultDisk.rootDisk = "/dev/disk/by-path/pci-0000:18:00.0-scsi-0:0:0:1";
             traefik.enable = true;
             baseURL = "oracle1.faeranne.com";
             foundry = {
