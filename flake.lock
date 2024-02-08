@@ -169,11 +169,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1706439037,
-        "narHash": "sha256-c9H948Q1vPjz73YcOfdffEzBCDXSLxuNDHGeOl2Evo0=",
+        "lastModified": 1707359954,
+        "narHash": "sha256-E/kp/SJBhvLxvVnROuouNzMfjNZnmVvnF12xXPwN0q4=",
         "owner": "faeranne",
         "repo": "nix-technitium",
-        "rev": "7e9e2f1e55af878a84722a56608c81b919fce415",
+        "rev": "0ea332e80c7e6c9e7e4700119044ff9cf65dd0b4",
         "type": "github"
       },
       "original": {
