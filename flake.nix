@@ -60,6 +60,20 @@ description = "A very nixops flake";
               elements = [ "intel" "server" ];
               primaryNetwork = "eno1";
               defaultDisk.rootDisk = "/dev/disk/by-path/pci-0000:00:17.0-ata-1";
+              minecraft = {
+                enable = true;
+                router.local = "10.88.1.2";
+                instances = {
+                  cozy1 = {
+                    local = "10.88.1.3";
+                    domain = "cozy.faeranne.com";
+                    size = "4g";
+                    motd = "Cozy Craft 2.0";
+                    pack = "https://raw.githubusercontent.com/Faeranne/cozy-pack/master/pack.toml";
+                    eula = "true";
+                  };
+                };
+              };
             };
           })
         ];

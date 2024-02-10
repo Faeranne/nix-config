@@ -1,6 +1,7 @@
 { config, lib, pkgs, inputs, ... }:
 let
   cfg = config.custom.minecraft;
+  inherit (lib) mkOption types;
 in
 {
   options.custom.minecraft = {
@@ -10,7 +11,7 @@ in
       type = lib.types.bool;
     };
     router = {
-      local = mkOption {
+      local = lib.mkOption {
         type = types.str;
         description = "Container ip for the router.";
       };
@@ -57,29 +58,13 @@ in
     };
   };
   config = lib.mkIf cfg.enable {
-    virtualisation.oci-containers.containers.mc-router{
-      autoStart = true;
-      image = "itzg/mc-router";
-
-      environment = {
-        ROUTES_CONFIG = (pkgs.format.json {}).generate "routings.json" {
-          mappings = lib.concatMapAttrs (name: attrs: {
-            "${attrs.domain}" = "${attrs.local}:25565";
-          }) cfg.instances;
-        };
-      };
-
-      extraOptions = [
-        "--ip=${cfg.router.local}"
-      ];
-    };
-    virtualisation.oci-containers.containers = lib.concatMapAttrs (name: attrs: {
+    virtualisation.oci-containers.containers = (lib.concatMapAttrs (name: attrs: {
       "${name}-minecraft" = {
         autoStart = true;
         image = "itzg/minecraft-server";
 
         volumes = [
-          "/persist/minecraft/${name}"
+          "/persist/minecraft/${name}:/data"
         ];
 
         environment = {
@@ -94,9 +79,11 @@ in
           SNOOPER_ENABLED = "false";
           ALLOW_FLIGHT="true";
           GUI="false";
+          MOTD=attrs.motd;
           ENABLE_WHITELIST="true";
           ENFORCE_WHITELIST="true";
           OPS="faeranne";
+          SPAWN_PROTECTION="0";
           PACKWIZ_URL = "${attrs.pack}";
         };
 
@@ -104,6 +91,37 @@ in
           "--ip=${attrs.local}"
         ];
       };
-    }) cfg.instances;
+    }) cfg.instances) // {
+      router-minecraft = {
+        autoStart = true;
+        image = "itzg/mc-router";
+
+        environment = {
+          DEBUG = "True";
+          ROUTES_CONFIG="/opt/routes.json";
+        };
+        volumes = [
+          "${(pkgs.formats.json {}).generate "routings.json" {
+            mappings = lib.concatMapAttrs (name: attrs: {
+              "${attrs.domain}" = "${attrs.local}:25565";
+            }) cfg.instances;
+          }}:/opt/routes.json"
+        ];
+
+        ports = [
+          "25565:25565"
+        ];
+
+        extraOptions = [
+          "--ip=${cfg.router.local}"
+        ];
+      };
+    };
+    networking = {
+      firewall = {
+        allowedTCPPorts = [ 25565 ];
+        allowedUDPPorts = [ 25565 ];
+      };
+    };
   };
 }

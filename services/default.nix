@@ -5,5 +5,6 @@
     ./foundry.nix
     ./podman.nix
     ./ssh.nix
+    ./minecraft.nix
   ];
 }
