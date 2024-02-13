@@ -28,12 +28,12 @@ in
       {
         destination = "${cfg.local}:53";
         sourcePort = 53;
-        protocol = "tcp";
+        proto = "tcp";
       }
       {
         destination = "${cfg.local}:53";
         sourcePort = 53;
-        protocol = "udp";
+        proto = "udp";
       }
     ];
     containers.dns = {
