@@ -1,64 +1,82 @@
 { config, lib, pkgs, inputs, ... }:
 let
   technitium = inputs.technitium;
+  cfg = config.custom.dns;
 in
 {
-  custom.traefik.routes.dns = {
-    target = "http://10.200.1.4:5380/";
-    rule = "Host(`ns1.faeranne.com`)";
+  options.custom.dns = {
+    enable = lib.mkOption {
+      default = false;
+      description = "Whether to enable the default disk layout.";
+      type = lib.types.bool;
+    };
+    local = lib.mkOption {
+      description = "Container IP for dns.";
+      type = lib.types.str;
+    };
+    url = lib.mkOption {
+      description = "Web interface url.";
+      type = lib.types.str;
+    };
   };
-  containers.dns = {
-    autoStart = true;
-    privateNetwork = true;
-    hostAddress = "10.200.1.3";
-    localAddress = "10.200.1.4";
-    forwardPorts = [
+  config = lib.mkIf cfg.enable {
+    custom.traefik.routes.dns = {
+      target = "http://${cfg.local}:5380/";
+      rule = "Host(`ns1.faeranne.com`)";
+    };
+    networking.nat.forwardPorts = [
       {
-        containerPort = 53;
-        hostPort = 53;
+        destination = "${cfg.local}:53";
+        sourcePort = 53;
         protocol = "tcp";
       }
       {
-        containerPort = 53;
-        hostPort = 53;
+        destination = "${cfg.local}:53";
+        sourcePort = 53;
         protocol = "udp";
       }
     ];
-    bindMounts = {
-      "/etc/dns" = {
-        hostPath = "/persist/dns";
-        isReadOnly = false;
-      };
-    };
-    config = {
-      imports = [
-        technitium.nixosModules.technitium
-      ];
-      services.technitium = {
-        enable = true;
-      };
-      networking = {
-        useHostResolvConf = pkgs.lib.mkForce false;
-        firewall = {
-          enable = true;
-          allowedTCPPorts = [ 5380 53 ];
-          allowedUDPPorts = [ 53 ];
+    containers.dns = {
+      autoStart = true;
+      privateNetwork = true;
+      hostBridge = "brCont";
+      localAddress = "${cfg.local}/16";
+      bindMounts = {
+        "/etc/dns" = {
+          hostPath = "/persist/dns";
+          isReadOnly = false;
         };
       };
-      services.resolved.enable = false;
+      config = {
+        imports = [
+          technitium.nixosModules.technitium
+        ];
+        services.technitium = {
+          enable = true;
+        };
+        networking = {
+          useHostResolvConf = pkgs.lib.mkForce false;
+          firewall = {
+            enable = true;
+            allowedTCPPorts = [ 5380 53 ];
+            allowedUDPPorts = [ 53 ];
+          };
+        };
+        services.resolved.enable = false;
 
-      system.stateVersion = "23.11";
+        system.stateVersion = "23.11";
+      };
     };
-  };
-  networking = {
-    firewall = {
-      allowedTCPPorts = [ 53 ];
-      allowedUDPPorts = [ 53 ];
+    networking = {
+      firewall = {
+        allowedTCPPorts = [ 53 ];
+        allowedUDPPorts = [ 53 ];
+      };
     };
-  };
-  services.resolved = {
-    extraConfig = ''
-      DNSStubListener=no
-    '';
+    services.resolved = {
+      extraConfig = ''
+        DNSStubListener=no
+      '';
+    };
   };
 }

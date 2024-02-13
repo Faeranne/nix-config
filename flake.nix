@@ -161,7 +161,6 @@ description = "A very nixops flake";
         ./home
         ./system
         ./services
-        ./services/dns.nix
         ./hardware/oracle.nix
         ({pkgs, ...}:{
           networking.hostName = "oracle1"; # Define your hostname.
@@ -177,11 +176,11 @@ description = "A very nixops flake";
               enable = true;
               instances = {
                 self = {
-                  local = "10.200.1.3";
+                  local = "10.200.1.5";
                   url = "foundry.faeranne.com";
                 };
                 neldu = {
-                  local = "10.200.1.4";
+                  local = "10.200.1.6";
                   url = "vaneer.faeranne.com";
                 };
               };

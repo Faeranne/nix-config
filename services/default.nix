@@ -10,6 +10,7 @@ in
     ./ssh.nix
     ./minecraft.nix
     ./media
+    ./dns.nix
   ];
   options.custom.paths = with types; {
     vols = mkOption {
