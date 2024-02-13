@@ -177,13 +177,11 @@ description = "A very nixops flake";
               enable = true;
               instances = {
                 self = {
-                  host = "10.200.1.1";
-                  local = "10.200.1.2";
+                  local = "10.200.1.3";
                   url = "foundry.faeranne.com";
                 };
                 neldu = {
-                  host = "10.200.1.5";
-                  local = "10.200.1.6";
+                  local = "10.200.1.4";
                   url = "vaneer.faeranne.com";
                 };
               };
