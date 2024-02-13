@@ -2,6 +2,8 @@
 let
   cfg = config.custom.minecraft;
   inherit (lib) mkOption types;
+  inherit (builtins) getAttr trace toString;
+  sops = inputs.sops;
 in
 {
   options.custom.minecraft = {
@@ -53,11 +55,28 @@ in
             default = "FALSE";
             description = "Whether you accept the minecraft EULA or not.  If this isn't set to \"TRUE\", then the server won't boot.";
           };
+          
+          rcon_path = mkOption {
+            type = types.str;
+            default = "rcon/default";
+            description = "path to the desired rcon password.  paths are based on secrets/minecraft.yaml and encrypted with sops.";
+          };
         };
       });
     };
   };
   config = lib.mkIf cfg.enable {
+    sops.secrets = (lib.concatMapAttrs (name: attrs: {
+      "${attrs.rcon_path}" = {
+        owner = "services";
+        sopsFile = ../secrets/minecraft.yaml;
+      };
+    }) cfg.instances) // {
+      "rcon/default" = {
+        owner = "services";
+        sopsFile = ../secrets/minecraft.yaml;
+      };
+    };
     virtualisation.oci-containers.containers = (lib.concatMapAttrs (name: attrs: {
       "${name}-minecraft" = {
         autoStart = true;
@@ -65,9 +84,11 @@ in
 
         volumes = [
           "/persist/minecraft/${name}:/data"
+          "${(getAttr (attrs.rcon_path) config.sops.secrets).path}:/run/secrets/rcon_pass"
         ];
 
         environment = {
+          UID="${toString config.users.users.services.uid}";
           EULA=attrs.eula;
           MEMORY="4G";
           ENABLE_ROLLING_LOGS="true";
@@ -85,6 +106,7 @@ in
           OPS="faeranne";
           SPAWN_PROTECTION="0";
           PACKWIZ_URL = "${attrs.pack}";
+          RCON_PASSWORD_FILE = "/run/secrets/rcon_pass";
         };
 
         extraOptions = [
@@ -100,6 +122,7 @@ in
           DEBUG = "True";
           ROUTES_CONFIG="/opt/routes.json";
         };
+
         volumes = [
           "${(pkgs.formats.json {}).generate "routings.json" {
             mappings = lib.concatMapAttrs (name: attrs: {

@@ -47,8 +47,8 @@ in
       "${name}-foundry" = {
         autoStart = true;
         privateNetwork = true;
-        hostAddress = attrs.host; 
-        localAddress = attrs.local;
+        hostBridge = "brCont"; 
+        localAddress = "${attrs.local}/16";
         bindMounts = {
           "/var/lib/foundryvtt" = {
             hostPath = "/persist/foundryvtt/${name}";
@@ -73,7 +73,7 @@ in
 
           networking = {
             useHostResolvConf = pkgs.lib.mkForce false;
-            defaultGateway = attrs.host;
+            defaultGateway = "10.200.1.1";
             firewall = {
               enable = true;
               allowedTCPPorts = [ 30000 ];
