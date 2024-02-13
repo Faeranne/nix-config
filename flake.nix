@@ -171,6 +171,10 @@ description = "A very nixops flake";
             primaryNetwork = "enp0s6";
             defaultDisk.rootDisk = "/dev/disk/by-path/pci-0000:18:00.0-scsi-0:0:0:1";
             traefik.enable = true;
+            dns = {
+              enable = true;
+              local = "10.200.1.3";
+            };
             baseURL = "oracle1.faeranne.com";
             foundry = {
               enable = true;
