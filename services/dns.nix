@@ -56,6 +56,8 @@ in
         };
         networking = {
           useHostResolvConf = pkgs.lib.mkForce false;
+          defaultGateway = "10.200.1.1";
+
           firewall = {
             enable = true;
             allowedTCPPorts = [ 5380 53 ];
