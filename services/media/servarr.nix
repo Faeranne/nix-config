@@ -102,6 +102,7 @@ in
         services.resolved.enable = true;
         networking = {
           useHostResolvConf = pkgs.lib.mkForce false;
+          defaultGateway = "10.200.1.1";
           firewall = {
             enable = true;
             allowedTCPPorts = [ 
