@@ -11,6 +11,7 @@ in
     ./minecraft.nix
     ./media
     ./dns.nix
+    ./rss.nix
   ];
   options.custom.paths = with types; {
     vols = mkOption {

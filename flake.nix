@@ -78,6 +78,12 @@ description = "A very nixops flake";
             tor = {
               local = "10.88.1.2";
             };
+            rss = {
+              enable = true;
+              local = "10.200.1.5";
+              user = "faeranne";
+              url = "rss.faeranne.com";
+            };
           };
         })
       ];

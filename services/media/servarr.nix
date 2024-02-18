@@ -33,6 +33,10 @@ in
         target = "http://${cfg.local}:8686/";
         rule = "Host(`lidarr.${cfg.baseUrl}`)";
       };
+      ombi = {
+        target = "http://${cfg.local}:5000/";
+        rule = "Host(`request.${cfg.baseUrl}`)";
+      };
     };
     containers.servarr = {
       autoStart = true;
@@ -110,6 +114,7 @@ in
               8989
               7878
               8686
+              5000
             ];
           };
         };
