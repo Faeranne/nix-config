@@ -24,7 +24,7 @@
         size = "512M";
         content = {
           type = "filesystem";
-          format = "fat";
+          format = "vfat";
           mountpoint = "/firmware";
         };
       };
