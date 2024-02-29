@@ -1,4 +1,4 @@
-{...}:
+{pkgs, ...}:
 {
   programs = {
     git = {
@@ -32,4 +32,7 @@
     git-cliff.enable = true;
     gitui.enable = true;
   };
+  home.packages = with pkgs; [
+    gource
+  ];
 }

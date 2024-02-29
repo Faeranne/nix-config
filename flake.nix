@@ -37,9 +37,13 @@ description = "A very nixops flake";
         nixpkgs.follows = "nixpkgs";
       };
     };
+    nixos-generators = {
+      url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, impermanence, home-manager, ... }@inputs: {
+  outputs = { self, nixpkgs, impermanence, home-manager, nixos-generators, ... }@inputs: {
     nixosConfigurations.greg = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { 
@@ -122,6 +126,29 @@ description = "A very nixops flake";
                 };
               };
             };
+          };
+        })
+      ];
+    };
+    nixosConfigurations.thomas = nixpkgs.lib.nixosSystem {
+      system = "aarch64-linux-linux";
+      specialArgs = { 
+        inherit inputs; 
+        inherit self;
+      };
+      modules = [ 
+        ./home
+        ./system
+        ./services
+        ./hardware/rpi.nix
+        ({...}:{
+          networking.hostName = "thomas"; # Define your hostname.
+          networking.hostId = "e3281064";
+
+          custom = {
+            elements = [ "raspberrypi" "server" ];
+            primaryNetwork = "enp0";
+            defaultDisk.rootDisk = "/dev/disk/by-path/platform-fe340000.mmc";
           };
         })
       ];
@@ -210,25 +237,24 @@ description = "A very nixops flake";
     };
 
     #Installer Images
-    nixosConfigurations.anywhereIso = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [
-        "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
-        ./system/install.nix
-        ({ pkgs, ... }: {
-          #sdImage.compressImage = false;
-        })
-      ];
-    };
-    nixosConfigurations.anywhereRpi = nixpkgs.lib.nixosSystem {
-      system = "aarch64-linux";
-      modules = [
-        "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64-installer.nix"
-        ./system/install.nix
-        ({ pkgs, ... }: {
-          #sdImage.compressImage = false;
-        })
-      ];
+    packages.x86_64-linux = {
+      anywhereISO = nixos-generators.nixosGenerate {
+        system = "x86_64-linux";
+        modules = [
+          ./system/install.nix
+        ];
+        format = "install-iso";
+      };
+      anywherePi = nixos-generators.nixosGenerate {
+        system = "aarch64-linux";
+        modules = [
+          ./system/install.nix
+          ({ pkgs, ... }: {
+            sdImage.compressImage = false;
+          })
+        ];
+        format = "sd-aarch64-installer";
+      };
     };
   };
 }
