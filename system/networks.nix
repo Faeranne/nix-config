@@ -36,7 +36,7 @@ in
       nat = lib.mkIf config.virtualisation.podman.enable {
         externalInterface = primeNet;
         enable = true;
-        internalInterfaces = [ "ve-+" "vb-+" "brCont" ];
+        internalInterfaces = [ "podman+" "ve-+" "vb-+" "brCont" ];
       };
     };
   };

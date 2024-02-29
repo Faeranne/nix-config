@@ -1,4 +1,4 @@
-{ self, lib, inputs, ... }:
+{ config, self, lib, inputs, ... }:
 let
   sops = inputs.sops;
 in
@@ -21,6 +21,6 @@ in
     time.timeZone = "America/Indiana";
     i18n.defaultLocale = "en_US.UTF-8";
 
-    sops.age.keyFile = "/persist/sops.key";
+    sops.age.keyFile = if config.custom.impermanence.enable then "/persist/sops.key" else "/nix/sops.key";
   };
 }

@@ -82,7 +82,6 @@ in
       };
     };
     fileSystems."/persist" = lib.mkIf impermanence.enable {neededForBoot = true;};
-    fileSystems."/root" = lib.mkIf (!impermanence.enable) {neededForBoot = true;};
     fileSystems."/nix".neededForBoot = true;
   };
 }

@@ -60,6 +60,9 @@ description = "A very nixops flake";
           networking.hostId = "ccd933cc";
 
           boot.zfs.extraPools = [ "Storage" ];
+          boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+          virtualisation.libvirtd.enable = true;
+          programs.virt-manager.enable = true;
 
           custom = {
             elements = [ "intel" "server" "media" ];

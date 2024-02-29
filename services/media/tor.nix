@@ -23,7 +23,13 @@ in
       mode = "0440";
       owner = "services";
     };
-      
+    networking.nat.forwardPorts = [
+      {
+        destination = "${cfg.local}:9091";
+        sourcePort = 9091;
+        proto = "tcp";
+      }
+    ];
     virtualisation.oci-containers.containers = {
       gluetun = {
         image = "qmcgaw/gluetun";
@@ -69,6 +75,12 @@ in
           "--network=container:gluetun"
         ];
         autoStart = true;
+      };
+    };
+    networking = {
+      firewall = {
+        allowedTCPPorts = [ 9091 ];
+        allowedUDPPorts = [ 9091 ];
       };
     };
   };
