@@ -18,64 +18,69 @@ in
     };
   };
   config = lib.mkIf cfg.enable {
-    disko.devices = {
-      nodev = lib.mkIf impermanence.enable {
-        "/" = {
-          fsType = "tmpfs";
-          mountOptions = [
-            "mode=755"
-          ];
+    disko = {
+      extraPackages = with pkgs; [
+        zfs
+      ];
+      devices = {
+        nodev = lib.mkIf impermanence.enable {
+          "/" = {
+            fsType = "tmpfs";
+            mountOptions = [
+              "mode=755"
+            ];
+          };
         };
-      };
-      disk = {
-        disk1 = {
-          device = cfg.rootDisk;
-          type = "disk";
-          content = {
-            type = "gpt";
-            partitions = {
-              boot = {
-                name = "EFI";
-                type = "EF00";
-                start = "1M";
-                size = "512M";
-                content = {
-                  type = "filesystem";
-                  format = "vfat";
-                  mountpoint = "/boot";
+        disk = {
+          disk1 = {
+            device = cfg.rootDisk;
+            type = "disk";
+            content = {
+              type = "gpt";
+              partitions = {
+                boot = {
+                  name = "EFI";
+                  type = "EF00";
+                  start = "1M";
+                  size = "512M";
+                  content = {
+                    type = "filesystem";
+                    format = "vfat";
+                    mountpoint = "/boot";
+                  };
                 };
-              };
-              persist = {
-                size = "100%";
-                content = {
-                  type = "zfs";
-                  pool = "zroot";
+                persist = {
+                  size = "100%";
+                  content = {
+                    type = "zfs";
+                    pool = "zroot";
+                  };
                 };
               };
             };
           };
         };
-      };
-      zpool = {
-        zroot = {
-          type = "zpool";
-          datasets = if impermanence.enable then {
-            "nix" = {
-              type = "zfs_fs";
-              mountpoint = "/nix";
-            };
-            "persist" = {
-              type = "zfs_fs";
-              mountpoint = "/persist";
-            };
-          } else {
-            "nix" = {
-              type = "zfs_fs";
-              mountpoint = "/nix";
-            };
-            "root" = {
-              type = "zfs_fs";
-              mountpoint = "/";
+        zpool = {
+          zroot = {
+            type = "zpool";
+            datasets = if impermanence.enable then {
+              "nix" = {
+                type = "zfs_fs";
+                mountpoint = "/nix";
+              };
+              "persist" = {
+                type = "zfs_fs";
+                mountpoint = "/persist";
+              };
+            } else {
+              "nix" = {
+                type = "zfs_fs";
+                mountpoint = "/nix";
+              };
+              "root" = {
+                type = "zfs_fs";
+                mountpoint = "/";
+              };
             };
           };
         };
