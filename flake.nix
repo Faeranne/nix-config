@@ -131,7 +131,7 @@ description = "A very nixops flake";
       ];
     };
     nixosConfigurations.thomas = nixpkgs.lib.nixosSystem {
-      system = "aarch64-linux-linux";
+      system = "aarch64-linux";
       specialArgs = { 
         inherit inputs; 
         inherit self;
