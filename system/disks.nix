@@ -19,9 +19,6 @@ in
   };
   config = lib.mkIf cfg.enable {
     disko = {
-      extraPackages = with pkgs; [
-        zfs
-      ];
       devices = {
         nodev = lib.mkIf impermanence.enable {
           "/" = {
