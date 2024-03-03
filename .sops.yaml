@@ -4,7 +4,7 @@ keys:
   - &server_oracle1 age1wvcu9typhu2s22e22qe96xd5q2skq0p78fe76j29ffu9lpjhzp6s7qvtfj
   - &server_bell age1s3zdl6gggq38zms04pk49zrq7ptk39cpzczxgedt5s35kv42xv5sqamasu
   - &server_greg age1ytw5hv3k50qnh6yn0ana3l932q7azkx0l2fg9zp9h02gknvqx4yq7yvcgl
-  - &server_thomas age1ygd4f3uzm0krg8dlw8qv3pufx62t8sv545jr8fquphecn7edguysf90un3
+  - &server_thomas age1556xjlmfp3nhhmv3md7k809vvyqru88q63a74e4576qxsvz99phqpfs5lj
 creation_rules:
   - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
     key_groups:

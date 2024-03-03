@@ -16,8 +16,14 @@ in
       description = "What disk to use for the default disk layout.";
       type = lib.types.str;
     };
+    zfsPartition = lib.mkOption {
+      default = "";
+      description = "The partition path to use for zroot. useful if partlabel doesn't show up first.";
+      type = lib.types.str;
+    };
   };
   config = lib.mkIf cfg.enable {
+    boot.supportedFilesystems = [ "zfs" ];
     disko = {
       devices = {
         nodev = lib.mkIf impermanence.enable {
@@ -48,6 +54,7 @@ in
                 };
                 persist = {
                   size = "100%";
+                  device = lib.mkIf (cfg.zfsPartition != "") cfg.zfsPartition;
                   content = {
                     type = "zfs";
                     pool = "zroot";

@@ -1,8 +1,9 @@
 {
 description = "A very nixops flake";
 
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
+  inputs = { nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
+    flake-utils.url = "github:numtide/flake-utils/main";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     sops = {
       url = "github:Mic92/sops-nix";
       inputs = { 
@@ -43,7 +44,7 @@ description = "A very nixops flake";
     };
   };
 
-  outputs = { self, nixpkgs, impermanence, home-manager, nixos-generators, ... }@inputs: {
+  outputs = { self, nixpkgs, flake-utils, impermanence, home-manager, nixos-generators, ... }@inputs: {
     nixosConfigurations.greg = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { 
@@ -151,7 +152,8 @@ description = "A very nixops flake";
           custom = {
             elements = [ "raspberrypi" "server" ];
             primaryNetwork = "enp0";
-            defaultDisk.rootDisk = "/dev/disk/by-path/platform-fe340000.mmc";
+            defaultDisk.rootDisk = "/dev/disk/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usbv3-0:2:1.0-scsi-0:0:0:0";
+            defaultDisk.zfsPartition = "/dev/disk/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usbv3-0:2:1.0-scsi-0:0:0:0-part2";
           };
         })
       ];
@@ -238,26 +240,108 @@ description = "A very nixops flake";
       pkgs = nixpkgs.legacyPackages.aarch64-linux;
       modules = [ ./home/home.nix ];
     };
+  } // flake-utils.lib.eachDefaultSystem (system: let
+      pkgs = import nixpkgs {
+        inherit system;
+      };
+    in {
+      packages = {
+        anywhereISO = nixos-generators.nixosGenerate {
+          system = "x86_64-linux";
+          modules = [
+            ./system/install.nix
+          ];
+          format = "install-iso";
+        };
+        anywherePiso = nixos-generators.nixosGenerate {
+          system = "aarch64-linux";
+          modules = [
+            ./system/install.nix
+          ];
+          format = "install-iso";
+        };
+      };
+      apps = let 
+        regenSopsScript = pkgs.writers.writeBash "regenSops.sh" ''
+          for f in secrets/*.pub
+          do
+            name=$(echo $(basename $f)|sed 's/\./_/g'| awk '{print toupper($0)}')
+            val=$(cat $f)
+            printf -v "$name" "%s" "$val"
+            export "$name"
+          done
+          cat templates/.sops.yaml | envsubst > .sops.yaml
+          for f in secrets/*.yaml
+          do
+            ${pkgs.sops}/bin/sops updatekeys $f
+          done
+        '';
+        genKeyScript = pkgs.writers.writeBash "generate.sh" ''
+          if [ -z "$1" ];
+          then
+            echo "Need to set a hostname before continuing."
+            exit 0
+          fi
+          tmp_dir=$(mktemp -d)
+          mkdir -p $tmp_dir/persist/
+          ${pkgs.age}/bin/age-keygen -o $tmp_dir/persist/sops.key
+          ${pkgs.age}/bin/age-keygen -y $tmp_dir/persist/sops.key > secrets/$1.pub
+          ${regenSopsScript}
+          echo $tmp_dir
+        '';
+        installScript = pkgs.writers.writeBash "install.sh" ''
+          if [ -z "$1" ];
+          then
+            echo "Usage: ./install <host> <key_dir>"
+            exit 0
+          fi
 
-    #Installer Images
-    packages.x86_64-linux = {
-      anywhereISO = nixos-generators.nixosGenerate {
-        system = "x86_64-linux";
-        modules = [
-          ./system/install.nix
-        ];
-        format = "install-iso";
+          if [ -z "$2" ];
+          then
+            echo ""
+            exit 0
+          fi
+
+          if [ -z "$\{!1\}" ];
+          then
+            echo "No such host $1 found."
+            exit 2
+          fi
+
+          echo "Going to install Nix on host $\{1\} via $\{!1\}.  Press enter to continue, or Ctrl-C to cancel."
+
+          read
+
+          nixos-anywhere --extra-files "$2" -t --flake ".#$\{1\}" $\{!1\}
+        '';
+        genKey = pkgs.stdenv.mkDerivation {
+          name = "genKey";
+          buildInputs = with pkgs; [ bash sops age ];
+          unpackPhase = "true";
+          installPhase = ''
+            mkdir -p $out/bin
+            cp ${genKeyScript} $out/bin/generate.sh
+          '';
+        };
+        regenSops = pkgs.stdenv.mkDerivation {
+          name = "regenSops";
+          buildInputs = with pkgs; [ bash sops age ];
+          unpackPhase = "true";
+          installPhase = ''
+            mkdir -p $out/bin
+            cp ${regenSopsScript} $out/bin/regenerateSops.sh
+          '';
+        };
+      in {
+        generateKey = {
+          type = "app";
+          program = "${genKey}/bin/generate.sh";
+        };
+        regenerateSops = {
+          type = "app";
+          program = "${regenSops}/bin/regenerateSops.sh";
+        };
       };
-      anywherePi = nixos-generators.nixosGenerate {
-        system = "aarch64-linux";
-        modules = [
-          ./system/install.nix
-          ({ pkgs, ... }: {
-            sdImage.compressImage = false;
-          })
-        ];
-        format = "sd-aarch64-installer";
-      };
-    };
-  };
+    }
+  );
 }
