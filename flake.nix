@@ -96,6 +96,29 @@ description = "A very nixops flake";
         })
       ];
     };
+    nixosConfigurations.sarah = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = { 
+        inherit inputs; 
+        inherit self;
+      };
+      modules = [ 
+        ./home
+        ./system
+        ./services
+        ./hardware/amd.nix
+        ({...}:{
+          networking.hostName = "sarah"; # Define your hostname.
+          networking.hostId = "586769c4";
+
+          custom = {
+            elements = [ "amd" ];
+            primaryNetwork = "enp10s0";
+            defaultDisk.rootDisk = "/dev/disk/by-id/nvme-eui.002538560140299a";
+          };
+        })
+      ];
+    };
     nixosConfigurations.hazel = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { 
