@@ -16,6 +16,8 @@ in
       stateVersion = "23.11"; # Did you read the comment?
     };
     
+    virtualisation.libvirtd.enable = true;
+    programs.virt-manager.enable = true;
     nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
     time.timeZone = "America/Indiana";

@@ -11,5 +11,7 @@
       ./users.nix
       ./networks.nix
       ./packages.nix
+      ./desktop.nix
+      ./gpu.nix
     ];
 }
