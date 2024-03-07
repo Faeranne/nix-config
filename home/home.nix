@@ -12,5 +12,9 @@
     stateVersion = "23.11";
     username = "nina";
     homeDirectory = "/home/nina";
+    sessionVariables = {
+      BROWSER = "firefox";
+      TERMINAL = "kitty";
+    };
   };
 }

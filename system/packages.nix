@@ -10,6 +10,10 @@
     mlocate
     htop
     dig
+    gnupg
+    yubikey-manager
+    age-plugin-yubikey
+    age
   ];
 
   programs = {

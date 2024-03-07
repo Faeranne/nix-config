@@ -1,7 +1,8 @@
 {
 description = "A very nixops flake";
 
-  inputs = { nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
+  inputs = { 
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils/main";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     sops = {
@@ -33,7 +34,7 @@ description = "A very nixops flake";
       };
     };
     home-manager = {
-      url = "github:nix-community/home-manager/release-23.11";
+      url = "github:nix-community/home-manager";
       inputs = {
         nixpkgs.follows = "nixpkgs";
       };

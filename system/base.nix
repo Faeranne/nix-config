@@ -24,5 +24,6 @@ in
     i18n.defaultLocale = "en_US.UTF-8";
 
     sops.age.keyFile = if config.custom.impermanence.enable then "/persist/sops.key" else "/nix/sops.key";
+    nixpkgs.config.allowUnfree = true;
   };
 }
