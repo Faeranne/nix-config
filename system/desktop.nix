@@ -6,9 +6,18 @@ in
   options.custom.desktop = {
   };
   config = lib.mkIf (builtins.elem "desktop" config.custom.elements) {
+    boot.binfmt.registrations.appimage = {
+      wrapInterpreterInShell = false;
+      interpreter = "${pkgs.appimage-run}/bin/appimage-run";
+      recognitionType = "magic";
+      offset = 0;
+      mask = ''\xff\xff\xff\xff\x00\x00\x00\x00\xff\xff\xff'';
+      magicOrExtension = ''\x7fELF....AI\x02'';
+    };
     services = {
       udev.packages = with pkgs; [ gnome.gnome-settings-daemon yubikey-personalization ];
       pcscd.enable = true;
+      flatpak.enable = true;
       xserver = {
         enable = true;
         displayManager = {
@@ -137,6 +146,8 @@ in
         jackmix
         pipewire.jack
         ruffle
+        appimagekit
+        appimage-run
       ];
       gnome.excludePackages = (with pkgs; [
         gnome-photos
