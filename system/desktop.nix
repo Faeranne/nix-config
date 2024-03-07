@@ -196,5 +196,6 @@ in
         };
       };
     };
+    system.activationScripts.setNinaIcon.text = ("cp " + ../resources/avatar.png + " /var/lib/AccountsService/icons/nina");
   };
 }
