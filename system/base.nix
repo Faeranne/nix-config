@@ -20,7 +20,7 @@ in
     programs.virt-manager.enable = true;
     nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-    time.timeZone = "America/Indiana";
+    time.timeZone = "America/Indiana/Indianapolis";
     i18n.defaultLocale = "en_US.UTF-8";
 
     sops.age.keyFile = if config.custom.impermanence.enable then "/persist/sops.key" else "/nix/sops.key";
