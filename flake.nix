@@ -5,6 +5,13 @@ description = "A very nixops flake";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils/main";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    nix-on-droid = {
+      url = "github:nix-community/nix-on-droid";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+      };
+    };
     sops = {
       url = "github:Mic92/sops-nix";
       inputs = { 
@@ -45,7 +52,7 @@ description = "A very nixops flake";
     };
   };
 
-  outputs = { self, nixpkgs, flake-utils, impermanence, home-manager, nixos-generators, ... }@inputs: {
+  outputs = { self, nixpkgs, flake-utils, impermanence, home-manager, nixos-generators, nix-on-droid, ... }@inputs: {
     nixosConfigurations.greg = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { 
@@ -263,6 +270,9 @@ description = "A very nixops flake";
     {
       pkgs = nixpkgs.legacyPackages.aarch64-linux;
       modules = [ ./home/home.nix ];
+    };
+    nixOnDroidConfigurations.oneplus = nix-on-droid.lib.nixOnDroidConfiguration {
+      modules = [ ./nix-on-droid.nix ];
     };
   } // flake-utils.lib.eachDefaultSystem (system: let
       pkgs = import nixpkgs {
