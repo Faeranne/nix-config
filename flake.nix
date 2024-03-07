@@ -113,7 +113,7 @@ description = "A very nixops flake";
           networking.hostId = "586769c4";
 
           custom = {
-            elements = [ "amd" "desktop" "amdgpu" "gnome" ];
+            elements = [ "amd" "desktop" "amdgpu" "gnome" "steam" ];
             primaryNetwork = "enp10s0";
             defaultDisk.rootDisk = "/dev/disk/by-id/nvme-eui.002538560140299a";
           };
