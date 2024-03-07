@@ -31,16 +31,16 @@ in
       };
       pipewire = {
         enable = true;
+        audio.enable = true;
         alsa.enable = true;
         alsa.support32Bit = true;
         pulse.enable = true;
         jack.enable = true;
-        socketActivation = true;
+        wireplumber.enable = true;
+        /*
         extraConfig.pipewire."91-null-sinks" = {
           context.objects = [
             {
-              # A default dummy driver. This handles nodes marked with the "node.always-driver"
-              # properyty when no other driver is currently active. JACK clients need this.
               factory = "spa-node-factory";
               args = {
                 factory.name     = "support.node.driver";
@@ -100,6 +100,7 @@ in
             }
           ];
         };
+        */
       };
       gnome.gnome-browser-connector.enable = true;
     };
@@ -118,12 +119,14 @@ in
         package = pkgs.gnomeExtensions.gsconnect;
       };
       dconf.enable = true;
+      nix-ld = {
+        enable = true;
+      };
     };
     nixpkgs.config.firefox.enableGnomeExtensions = true;
     environment = {
       systemPackages = with pkgs; [
         discord
-        raysession
         kitty
         passage
         obsidian
@@ -131,6 +134,9 @@ in
         qpwgraph
         gnome3.gnome-tweaks
         gnomeExtensions.appindicator
+        jackmix
+        pipewire.jack
+        ruffle
       ];
       gnome.excludePackages = (with pkgs; [
         gnome-photos

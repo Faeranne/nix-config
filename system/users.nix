@@ -13,7 +13,7 @@ in
   users.users.nina = {
     isNormalUser = true;
     uid = 1000;
-    extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "docker" "audio" ]; # Enable ‘sudo’ for the user.
     hashedPasswordFile = config.sops.secrets.nina.path;
     description = "Nina";
     openssh.authorizedKeys.keys = [
