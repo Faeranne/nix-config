@@ -18,9 +18,7 @@
       enable = true;
       enableZshIntegration = true;
     };
-    kitty = {
-      enable = true;
-    };
+    
     gpg.enable = true;
     password-store = {
       enable = true;
