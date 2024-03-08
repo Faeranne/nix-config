@@ -1,7 +1,7 @@
 { pkgs, inputs, ... }:
 {
   imports = [
-    ./system/programs.nix
+    ./system/packages.nix
   ];
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
     
