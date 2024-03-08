@@ -13,7 +13,6 @@
     media = "/Storage/media";
   };
   modules = [
-    ../../hardware/intel.nix
     ({...}:{
       networking.hostName = "greg"; # Define your hostname.
       networking.hostId = "ccd933cc";

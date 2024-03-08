@@ -1,8 +1,9 @@
 { inputs, mkUser }: hostname: let
   base = import ../hosts/${hostname};
   system = import ./systemFromBase.nix base;
+  hardware = import ./getHardware.nix base.elements;
   additionalModules = [
-  ] ++ base.modules;
+  ] ++ base.modules ++ hardware;
 in {
   configuration = {
     system = system;

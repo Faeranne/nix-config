@@ -18,7 +18,6 @@
   # Users to add to the system. will build Home-Manager installs for this system too.
   users = [ "nina" ];
   modules = [
-    ../../hardware/amd.nix
     ({...}:{
       networking.hostName = "sarah"; # Define your hostname.
       networking.hostId = "586769c4";
