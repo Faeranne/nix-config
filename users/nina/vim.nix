@@ -1,6 +1,6 @@
 {pkgs, lib, ...}:
 let
-  fromGitHub = rev: user: repo: hash: pkgs.vimUtils.buildVimPluginFrom2Nix {
+  fromGitHub = rev: user: repo: hash: pkgs.vimUtils.buildVimPlugin {
     pname = "${lib.strings.sanitizeDerivationName repo}";
     version = rev;
     src = pkgs.fetchFromGitHub {

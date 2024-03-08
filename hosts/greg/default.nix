@@ -4,6 +4,7 @@
   elements = [ 
     "intel"
     "server"
+    "impermanence"
   ];
   # architectures to emulate
   emulate = [ "aarch64-linux" ];

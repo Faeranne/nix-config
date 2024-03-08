@@ -4,6 +4,7 @@
   elements = [ 
     "amd"
     "desktop"
+    "impermanence"
     "amdgpu"
     "gnome"
     "steam"
