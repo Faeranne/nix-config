@@ -15,6 +15,7 @@ in {
       ../home
       ../system
       ../services
+      (import ./hostModule.nix base hostname)
     ] ++ additionalModules;
   };
 }
