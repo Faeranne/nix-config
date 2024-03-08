@@ -150,6 +150,11 @@ in
         gnome-contacts
       ]);
     };
+    home-manager.users.nina.programs = {
+      kitty = {
+        enable = true;
+      };
+    };
     home-manager.users.nina.dconf = {
       enable = true;
       settings = {
