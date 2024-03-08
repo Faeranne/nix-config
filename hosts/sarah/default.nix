@@ -21,6 +21,10 @@
   };
   # Users to add to the system. will build Home-Manager installs for this system too.
   users = [ "nina" ];
+  sudo = [ "nina" ];
+  # Service list
+  services = [
+  ];
   # extra modules to import
   modules = [
     ({...}:{
