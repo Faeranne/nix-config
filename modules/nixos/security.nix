@@ -10,9 +10,9 @@ in{
     rekey = {
       storageMode = "derivation";
       agePlugins = [ pkgs.age-plugin-yubikey ];
-      generatedSecretsDir = ../secrets/generated;
+      generatedSecretsDir = ../../secrets;
       forceRekeyOnSystem = "x86_64-linux";
-      masterIdentities = [ ../secrets/identities/yubikey.pub ];
+      masterIdentities = [ ../../secrets/identities/yubikey.pub ];
       hostPubkey = systemConfig.security.pubkey;
     };
   };

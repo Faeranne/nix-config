@@ -4,7 +4,7 @@
   isDesktop = isGnome || isKde;
 in {
   services = {
-    udev.packages = with pkgs; lib.mkIf [ gnome.gnome-settings-daemon ];
+    udev.packages = with pkgs; lib.mkIf isGnome [ gnome.gnome-settings-daemon ];
     xserver = {
       enable = isDesktop;
       displayManager = {
@@ -14,7 +14,7 @@ in {
         };
         gdm = {
           enable = isGnome;
-          wayland.enable = true;
+          wayland = true;
         };
       };
       desktopManager = {
@@ -36,4 +36,5 @@ in {
     };
     gnome.gnome-browser-connector.enable = isGnome;
   };
+  hardware.pulseaudio.enable = false;
 }

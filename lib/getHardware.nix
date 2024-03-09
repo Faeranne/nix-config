@@ -11,10 +11,10 @@ let
 in
 elements: let
   hardwareModules = foldl' (b: a: let
-    include = if (elem a hardware) then [ ../modules/hardware/${a}.nix ] else [];
+    include = if (elem a elements) then [ ../modules/hardware/${a}.nix ] else [];
     res = b ++ include;
   in 
-    res
+    trace res res
   ) [] hardware;
 in
 hardwareModules

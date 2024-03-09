@@ -25,7 +25,7 @@
   sudo = [ "nina" ];
   # Elements used for security management.
   security = {
-    pubkey = "";
+    pubkey = "age1vucgtp5534aatamvwac90w80cncyts7hxmyrxpjxaek4627lhezqj2uae9";
   };
   # Service list
   services = [

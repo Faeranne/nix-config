@@ -4,6 +4,6 @@ with builtins;
     res = match "(.*)\\..*" filename;
     name = elemAt res 0;
   in
-    trace res name
+    name
   );
 }
