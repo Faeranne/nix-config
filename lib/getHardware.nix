@@ -1,7 +1,7 @@
 with builtins;
 let
   utils = import ./utils;
-  hardwareDir = readDir ../hardware;
+  hardwareDir = readDir ../modules/hardware;
   hardware = foldl' (b: a: let
     include = if ((getAttr a hardwareDir) == "regular") then [(utils.splitFileName a)] else [];
     res = b ++ include;
@@ -11,7 +11,7 @@ let
 in
 elements: let
   hardwareModules = foldl' (b: a: let
-    include = if (elem a hardware) then [ ../hardware/${a}.nix ] else [];
+    include = if (elem a hardware) then [ ../modules/hardware/${a}.nix ] else [];
     res = b ++ include;
   in 
     res

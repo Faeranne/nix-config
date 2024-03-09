@@ -13,7 +13,7 @@ in{
       generatedSecretsDir = ../secrets/generated;
       forceRekeyOnSystem = "x86_64-linux";
       masterIdentities = [ ../secrets/identities/yubikey.pub ];
-      hostPubkey = systemConfig.pubkey;
+      hostPubkey = systemConfig.security.pubkey;
     };
   };
 }

@@ -20,7 +20,7 @@
           ];
         };
         "org/gnome/desktop/background" = {
-         picture-uri = ("file://" + ../resources/background.png);
+         picture-uri = ("file://" + ./resources/background.png);
          picture-uri-dark = ("file://" + ../resources/background.png);
         };
         "org/gnome/desktop/interface" = {

@@ -48,4 +48,18 @@
   in {
     gid = attrs.uid;
   });
+  age.secrets = builtins.foldl' (input: name: let
+    attrs = import ../../users/${name}/config.nix;
+  in
+    input // {
+      "user-${name}".file = ../../secrets/users/${name}.age;
+    }
+  ) {} systemConfig.users;
+  system.activationScripts = builtins.foldl' (input: name: let
+    attrs = import ../../users/${name}/config.nix;
+  in
+    input // {
+      "set${name}icon".text = lib.mkIf attrs.avatar ("cp ${attrs.avatar} /var/lib/AccountsService/icons/${name}");
+    }
+  ) {} systemConfig.users;
 }

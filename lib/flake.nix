@@ -15,13 +15,13 @@ in {
     value = lib.nixosSystem res.configuration;
   }) hosts );
   agenix-rekey = inputs.agenix-rekey.configure {
-    userFlake = self;
-    nodes = self.nixosConfigurations;
+    userFlake = inputs.self;
+    nodes = inputs.self.nixosConfigurations;
   };
 } // inputs.flake-utils.lib.eachDefaultSystem (system: rec {
-  pkgs = import nixpkgs {
+  pkgs = import inputs.nixpkgs {
     inherit system;
-    overlays = [ agenix-rekey.overlays.default ];
+    overlays = [ inputs.agenix-rekey.overlays.default ];
   };
   devShells.default = pkgs.mkShell {
     packages = [ pkgs.agenix-rekey ];

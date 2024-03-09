@@ -5,4 +5,5 @@
   ];
   name = "Nina";
   shell = pkgs: pkgs.zsh;
+  avatar = ./resources/avatar.png;
 }
