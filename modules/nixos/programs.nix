@@ -1,4 +1,6 @@
-{...}: {
+{pkgs, systemConfig, ...}: let
+  isDesktop = (builtins.elem "gnome" systemConfig.elements) || (builtins.elem "kde" systemConfig.elements);
+in {
   boot.binfmt.registrations.appimage = {
     wrapInterpreterInShell = false;
     interpreter = "${pkgs.appimage-run}/bin/appimage-run";
@@ -8,6 +10,9 @@
     magicOrExtension = ''\x7fELF....AI\x02'';
   };
   services = {
-    flatpak.enable = true;
+    flatpak.enable = isDesktop;
+  };
+  programs = {
+    zsh.enable = true;
   };
 }

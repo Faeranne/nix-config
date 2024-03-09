@@ -1,4 +1,4 @@
-{ config, systemConfig, ... }: let
+{ config, systemConfig, lib, pkgs, ... }: let
   isDesktop = (builtins.elem "gnome" systemConfig.elements) || (builtins.elem "kde" systemConfig.elements);
 in {
   boot.initrd.kernelModules = [ "amdgpu" ];
@@ -10,7 +10,7 @@ in {
     enable = true;
     driSupport = true;
     driSupport32Bit = true;
-    #extraPackages = with pkgs; lib.mkIf (builtins.elem "amdgpu" config.custom.elements) [ amdvlk ];
-    #extraPackages32 = with pkgs; lib.mkIf (builtins.elem "amdgpu" config.custom.elements) [ driversi686Linux.amdvlk ];
+    #extraPackages = with pkgs; lib.mkIf (builtins.elem "amdgpu" systemConfig.elements) [ amdvlk ];
+    #extraPackages32 = with pkgs; lib.mkIf (builtins.elem "amdgpu" systemConfig.elements) [ driversi686Linux.amdvlk ];
   };
 }

@@ -1,4 +1,4 @@
-{inputs, systemConfig, ...}: {
+{inputs, self, systemConfig, ...}: {
   
   system = {
     configurationRevision = if self ? rev then self.rev else if self ? dirtyRev then self.dirtyRev else "dirty";

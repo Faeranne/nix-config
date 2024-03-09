@@ -1,5 +1,5 @@
-{systemConfig, ...}: let
-  isImpermanent = (builtins.elem "impermanence" systemConfig.elements)
+{systemConfig, lib, ...}: let
+  isImpermanent = (builtins.elem "impermanence" systemConfig.elements);
 in{
   boot.zfs.extraPools = if systemConfig.storage ? "zfs" then systemConfig.storage.zfs else [];
   boot.supportedFilesystems = [ "zfs" ];
@@ -29,7 +29,7 @@ in{
       };
       disk = {
         disk1 = {
-          device = cfg.rootDisk;
+          device = systemConfig.storage.root;
           type = "disk";
           content = {
             type = "gpt";
@@ -59,7 +59,7 @@ in{
       zpool = {
         zroot = {
           type = "zpool";
-          datasets = if isImpermanence then {
+          datasets = if isImpermanent then {
             "nix" = {
               type = "zfs_fs";
               mountpoint = "/nix";
@@ -82,6 +82,6 @@ in{
       };
     };
   };
-  fileSystems."/persist" = lib.mkIf isImpermanence {neededForBoot = true;};
+  fileSystems."/persist" = lib.mkIf isImpermanent {neededForBoot = true;};
   fileSystems."/nix".neededForBoot = true;
-};
+}

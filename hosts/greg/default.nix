@@ -21,6 +21,10 @@
   # Users to add to the system. will build Home-Manager installs for this system too.
   users = [ "nina" ];
   sudo = [ "nina" ];
+  # Elements used for security management.
+  security = {
+    pubkey = "age1ytw5hv3k50qnh6yn0ana3l932q7azkx0l2fg9zp9h02gknvqx4yq7yvcgl";
+  };
   # Service list
   services = [
   ];

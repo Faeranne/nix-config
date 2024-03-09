@@ -14,4 +14,16 @@ in {
     name = hostname;
     value = lib.nixosSystem res.configuration;
   }) hosts );
-}
+  agenix-rekey = inputs.agenix-rekey.configure {
+    userFlake = self;
+    nodes = self.nixosConfigurations;
+  };
+} // inputs.flake-utils.lib.eachDefaultSystem (system: rec {
+  pkgs = import nixpkgs {
+    inherit system;
+    overlays = [ agenix-rekey.overlays.default ];
+  };
+  devShells.default = pkgs.mkShell {
+    packages = [ pkgs.agenix-rekey ];
+  };
+})
