@@ -5,7 +5,6 @@
     ./desktop.nix
     ./git.nix
     ./packages.nix
-    ./tmux.nix
     ./vim.nix
     ./zsh.nix
   ];
