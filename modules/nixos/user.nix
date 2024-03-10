@@ -54,7 +54,7 @@
     attrs = import ../../users/${name}/config.nix;
   in
     input // {
-      "user-${name}".rekeyFile = ../../secrets/users/${name}.age;
+      "user-${name}".rekeyFile = attrs.passwordPath;
     }
   ) {} systemConfig.users;
   system.activationScripts = builtins.foldl' (input: name: let

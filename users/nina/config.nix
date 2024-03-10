@@ -7,4 +7,5 @@
   shell = pkgs: pkgs.zsh;
   avatar = ./resources/avatar.png;
   wallpaper = ./resources/background.png;
+  passwordPath = ./password.age;
 }
