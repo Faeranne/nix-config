@@ -6,7 +6,7 @@
     inputs.ragenix.nixosModules.default
     inputs.agenix-rekey.nixosModules.default
     ./base.nix
-    ./desktop.nix
+    ./graphical.nix
     ./emulation.nix
     ./networking.nix
     ./programs.nix
