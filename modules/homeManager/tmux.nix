@@ -1,4 +1,4 @@
-{...}:
+{pkgs, ...}:
 {
   programs = {
     tmux = {
@@ -9,6 +9,6 @@
     };
   };
   home.shellAliases = {
-    mux = "tmuxinator";
+    mux = pkgs.tmuxinator;
   };
 }

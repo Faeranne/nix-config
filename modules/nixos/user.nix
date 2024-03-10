@@ -27,7 +27,9 @@
 
   users.users = lib.genAttrs systemConfig.users (name: let
     isSudo = builtins.elem name systemConfig.sudo;
-    isDesktop = (builtins.elem "gnome" systemConfig.elements) || (builtins.elem "kde" systemConfig.elements);
+    isGnome = (builtins.elem "gnome" systemConfig.elements);
+    isKde = (builtins.elem "kde" systemConfig.elements);
+    isGraphical = isGnome || isKde;
     attrs = import ../../users/${name}/config.nix;
   in {
     isNormalUser = true;
@@ -36,7 +38,7 @@
     extraGroups = (
       [] ++ 
       ( if isSudo then [ "wheel" "docker" ] else [] ) ++ 
-      ( if isDesktop then [ "audio" ] else [] )
+      ( if isGraphical then [ "audio" ] else [] )
     );
     description = attrs.name;
     hashedPasswordFile = config.age.secrets."user-${name}".path;

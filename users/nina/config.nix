@@ -6,4 +6,5 @@
   name = "Nina";
   shell = pkgs: pkgs.zsh;
   avatar = ./resources/avatar.png;
+  wallpaper = ./resources/background.png;
 }

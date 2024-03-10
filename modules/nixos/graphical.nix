@@ -1,7 +1,7 @@
 { systemConfig , pkgs, lib, ...}: let
   isGnome = (builtins.elem "gnome" systemConfig.elements);
   isKde = (builtins.elem "kde" systemConfig.elements);
-  isDesktop = isGnome || isKde;
+  isGraphical = isGnome || isKde;
 in {
   services = {
     udev.packages = with pkgs; lib.mkIf isGnome [ gnome.gnome-settings-daemon ];
@@ -37,4 +37,17 @@ in {
     gnome.gnome-browser-connector.enable = isGnome;
   };
   hardware.pulseaudio.enable = false;
+  environment = {
+    gnome.excludePackages = (with pkgs; [
+      gnome-photos
+      gnome-tour
+    ]) ++ ( with pkgs.gnome; [
+      cheese
+      gnome-music
+      epiphany
+      geary
+      gnome-initial-setup
+      gnome-contacts
+    ]);
+  };
 }
