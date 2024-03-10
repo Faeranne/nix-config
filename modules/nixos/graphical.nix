@@ -6,7 +6,7 @@ in {
   services = {
     udev.packages = with pkgs; lib.mkIf isGnome [ gnome.gnome-settings-daemon ];
     xserver = {
-      enable = isDesktop;
+      enable = isGraphical;
       displayManager = {
         sddm = {
           enable = isKde;
