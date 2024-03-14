@@ -2,6 +2,7 @@
   isGnome = (builtins.elem "gnome" systemConfig.elements);
   isKde = (builtins.elem "kde" systemConfig.elements);
   isGraphical = isGnome || isKde;
+  hasSteam = builtins.elem "steam" systemConfig.services;
 in {
   boot.binfmt.registrations.appimage = {
     wrapInterpreterInShell = false;
@@ -16,5 +17,12 @@ in {
   };
   programs = {
     zsh.enable = true;
+  };
+  programs.steam = {
+    enable = hasSteam;
+    remotePlay.openFirewall = true;
+    localNetworkGameTransfers.openFirewall = true;
+    gamescopeSession.enable = true;
+    extest.enable = true;
   };
 }

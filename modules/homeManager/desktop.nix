@@ -1,4 +1,4 @@
-{config, pkgs, lib, systemConfig, ...}: let
+{config, pkgs, lib, systemConfig, userConfig, ...}: let
   isGnome = (builtins.elem "gnome" systemConfig.elements);
   isKde = (builtins.elem "kde" systemConfig.elements);
   isGraphical = isGnome || isKde;
@@ -9,7 +9,7 @@ in {
       settings = {
         "org/gnome/desktop/background" = {
          picture-uri = ("file://" + userConfig.wallpaper);
-         picture-uri-dark = ("file://" + if userConfig ? darkWallpaper then userConfig.darkWallpaper else userconfig.wallpaper);
+         picture-uri-dark = ("file://" + (if userConfig ? darkWallpaper then userConfig.darkWallpaper else userConfig.wallpaper));
         };
         "org/gnome/desktop/session" = lib.mkDefault {
           idle-delay = 900;
@@ -34,14 +34,10 @@ in {
     };
     programs = {
       firefox = {
-      };
-      kdeconnect = {
-      };
-      nix-ld = {
-        enable = true;
+        enableGnomeExtensions = isGnome;
       };
     };
-    environment.packages = with pkgs; [
+    home.packages = with pkgs; [
       
     ];
   };

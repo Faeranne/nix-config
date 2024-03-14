@@ -7,7 +7,6 @@
     "impermanence"
     "amdgpu"
     "gnome"
-    "steam"
   ];
   # architectures to emulate
   emulate = [ "aarch64-linux" ];
@@ -29,6 +28,7 @@
   };
   # Service list
   services = [
+    "steam"
   ];
   # extra modules to import
   modules = [

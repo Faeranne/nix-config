@@ -36,6 +36,12 @@ in {
     };
     gnome.gnome-browser-connector.enable = isGnome;
   };
+  programs = {
+    kdeconnect = {
+      enable = true;
+      package = pkgs.gnomeExtensions.gsconnect;
+    };
+  };
   hardware.pulseaudio.enable = false;
   environment = {
     gnome.excludePackages = (with pkgs; [
@@ -50,4 +56,5 @@ in {
       gnome-contacts
     ]);
   };
+
 }

@@ -9,6 +9,6 @@
     };
   };
   home.shellAliases = {
-    mux = pkgs.tmuxinator;
+    mux = "${pkgs.tmuxinator}";
   };
 }
