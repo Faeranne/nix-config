@@ -25,4 +25,11 @@ in {
     gamescopeSession.enable = true;
     extest.enable = true;
   };
+  environment.systemPackages = with pkgs; (
+    if (
+      pkgs.system == "x86_64-linux"
+    ) then (
+      if isGraphical then [ wineWowPackages.waylandFull ] else [ wineWowPackages.staging ]
+    ) else []
+  );
 }
