@@ -136,7 +136,10 @@
     devShells.default = pkgs.mkShell {
       # We're including the agenix-rekey binary `agenix` in our devshell.  This allows for rekeying secrets
       # using `agenix edit <secret>` from within the devshell.
-      packages = [ pkgs.agenix-rekey ];
+      packages = with pkgs; [ 
+        agenix-rekey 
+        age
+      ];
     };
   });
 }
