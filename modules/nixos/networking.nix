@@ -4,11 +4,11 @@
     hostId = systemConfig.hostId;
 
     interfaces = {
-      brCont = {
-        ipv4 = {
-          addresses = [{address = "10.200.1.1"; prefixLength = 16;}];
-        };
-      };
+#      brCont = {
+#        ipv4 = {
+#          addresses = [{address = "10.200.1.1"; prefixLength = 16;}];
+#        };
+#      };
     };
           
     firewall = {
