@@ -34,7 +34,7 @@ in {
     };
     programs = {
       firefox = {
-        enableGnomeExtensions = isGnome;
+        nativeMessagingHosts = with pkgs; (if isGnome then [ gnome-browser-connector ] else []);
       };
     };
     home.packages = with pkgs; [
