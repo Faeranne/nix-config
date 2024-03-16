@@ -57,11 +57,27 @@
       "user-${name}".rekeyFile = attrs.passwordPath;
     }
   ) {} systemConfig.users;
-  system.activationScripts = builtins.foldl' (input: name: let
+  systemd.services = builtins.foldl' (input: name: let
     attrs = import ../../users/${name}/config.nix;
   in
     input // {
-      "set${name}icon".text = lib.mkIf (attrs ? avatar) ("cp ${attrs.avatar} /var/lib/AccountsService/icons/${name}");
+      "set${name}icon" = lib.mkIf (attrs ? avatar) {
+        serviceConfig = {
+          Type = "oneshot";
+        };
+        enable = true;
+        wantedBy = [ "multi-user.target" ];
+        after = [ "accounts-daemon.service" ];
+        before = [ "display-manager.service" ];
+        requires = [ "accounts-daemon.service" ];
+        script = ''
+          cp ${attrs.avatar} /var/lib/AccountsService/icons/${name};
+          echo "[User]
+          Session=
+          Icon=/var/lib/AccountsService/icons/${name}
+          SystemAccount=false" > /var/lib/AccountsService/users/${name};
+        '';
+      };
     }
   ) {} systemConfig.users;
 }
