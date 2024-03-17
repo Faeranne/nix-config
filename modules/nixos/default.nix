@@ -13,5 +13,6 @@
     ./security.nix
     ./storage.nix
     ./user.nix
+    ./rgb.nix
   ];
 }

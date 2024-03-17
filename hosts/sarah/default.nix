@@ -8,6 +8,7 @@
     "amdgpu"
     "gnome"
     "virtualization"
+    "rgb"
   ];
   # architectures to emulate
   emulate = [ "aarch64-linux" ];
