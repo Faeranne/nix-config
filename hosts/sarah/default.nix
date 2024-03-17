@@ -7,6 +7,7 @@
     "impermanence"
     "amdgpu"
     "gnome"
+    "virtualization"
   ];
   # architectures to emulate
   emulate = [ "aarch64-linux" ];

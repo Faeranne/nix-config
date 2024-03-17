@@ -30,15 +30,16 @@
     isGnome = (builtins.elem "gnome" systemConfig.elements);
     isKde = (builtins.elem "kde" systemConfig.elements);
     isGraphical = isGnome || isKde;
+    isVirtualize = (builtins.elem "virtualization" systemConfig.elements);
     attrs = import ../../users/${name}/config.nix;
   in {
     isNormalUser = true;
     uid = attrs.uid;
     group = name;
     extraGroups = (
-      [] ++ 
       ( if isSudo then [ "wheel" "docker" ] else [] ) ++ 
-      ( if isGraphical then [ "audio" ] else [] )
+      ( if isGraphical then [ "audio" ] else [] ) ++
+      ( if (isSudo && isVirtualize) then [ "vboxusers" ] else [] )
     );
     description = attrs.name;
     hashedPasswordFile = config.age.secrets."user-${name}".path;
