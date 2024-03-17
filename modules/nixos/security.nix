@@ -12,7 +12,7 @@ in{
       agePlugins = [ pkgs.age-plugin-yubikey ];
       generatedSecretsDir = ../../secrets;
       forceRekeyOnSystem = "x86_64-linux";
-      masterIdentities = [ "yubikey.pub" ];
+      masterIdentities = [ "/tmp/yubikey.pub" ];
       extraEncryptionPubkeys = [ 
         "age1yubikey1qtfy343ld8e5sxlvfufa4hh22pm33f6sjq2usx6mmydrmu7txzu7g5xm9vr"
         "age1yubikey1qdnfvhjlw8j2dkksj9eyxaqwldtqw4427cqjjqxulr5t7gn4flnt25lhuyw"
