@@ -26,10 +26,18 @@ in {
     extest.enable = true;
   };
   environment.systemPackages = with pkgs; (
-    if (
+    [
+      appimagekit
+      appimage-run
+    ] ++
+    (if (
       pkgs.system == "x86_64-linux"
     ) then (
-      if isGraphical then [ wineWowPackages.waylandFull ] else [ wineWowPackages.staging ]
-    ) else []
+      if isGraphical then [ 
+        wineWowPackages.waylandFull
+      ] else [ 
+        wineWowPackages.staging 
+      ]
+    ) else [])
   );
 }

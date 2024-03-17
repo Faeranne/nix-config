@@ -44,6 +44,14 @@ in {
   };
   hardware.pulseaudio.enable = false;
   environment = {
+    systemPackages = (if isGraphical then (with pkgs; [
+      helvum
+      qpwgraph
+      ruffle
+    ]) else []) ++ 
+    (if isGnome then (with pkgs; [
+      gnomeExtensions.appindicator
+    ]) else [] );
     gnome.excludePackages = (with pkgs; [
       gnome-photos
       gnome-tour

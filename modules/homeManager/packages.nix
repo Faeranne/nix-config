@@ -6,5 +6,8 @@
     passage
     age-plugin-yubikey
     age
+    ruffle
+    jackmix
+    helvum
   ];
 }
