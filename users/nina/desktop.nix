@@ -36,10 +36,17 @@ in {
       firefox = {
         enable = true;
       };
+      thunderbird = {
+        enable = true;
+        profiles.default = {
+          isDefault = true;
+        };
+      };
     };
     home.packages = with pkgs; [
       obsidian
       discord
+      freecad
     ];
   };
 }
