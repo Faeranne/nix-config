@@ -11,4 +11,4 @@ users: let
     out
   ) {} users;
 in
-  builtins.trace out out
+  out

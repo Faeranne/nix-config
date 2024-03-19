@@ -2,6 +2,7 @@
   imports = [
     inputs.disko.nixosModules.disko
     inputs.impermanence.nixosModules.impermanence
+    inputs.nixos-generators.nixosModules.all-formats
     inputs.home-manager.nixosModules.home-manager
     inputs.ragenix.nixosModules.default
     inputs.agenix-rekey.nixosModules.default

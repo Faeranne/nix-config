@@ -14,7 +14,7 @@ elements: let
     include = if (elem a elements) then [ ../modules/hardware/${a}.nix ] else [];
     res = b ++ include;
   in 
-    trace res res
+    res
   ) [] hardware;
 in
 hardwareModules

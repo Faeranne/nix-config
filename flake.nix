@@ -120,19 +120,30 @@
       userFlake = inputs.self;
       nodes = inputs.self.nixosConfigurations;
     };
-  } // inputs.flake-utils.lib.eachDefaultSystem (system: rec {
-    # `outputs.devShells` requires a set containing every system you might run this on.
-    # to simplify this, since every system is compatable with the devshell I'm making,
-    # we just use `eachDefaultSystem` to make devShells contain a set with every system in it.
-    # like `x86_64-linux` or `aarch64-linux`.  This does look a bit like magic since it will copy
-    # `devShells.default` into `options.devShells.x86_64-linux.default` and so-on, but does make this
-    # *much* easier to manage.
+  } // inputs.flake-utils.lib.eachDefaultSystem (system: let
     pkgs = import inputs.nixpkgs {
       inherit system;
       # I still don't quite understand overlays, so I'll just say this is from agenix-rekey.
       # I'll add more notes here when I do understand it fully.
       overlays = [ inputs.agenix-rekey.overlays.default ];
     };
+  in {
+    packages = {
+      installer = inputs.nixos-generators.nixosGenerate {
+        system = "x86_64-linux";
+        inherit pkgs;
+        modules = [
+          ./modules/nixos/install.nix
+        ];
+        format = "install-iso";
+      };
+    };
+    # `outputs.devShells` requires a set containing every system you might run this on.
+    # to simplify this, since every system is compatable with the devshell I'm making,
+    # we just use `eachDefaultSystem` to make devShells contain a set with every system in it.
+    # like `x86_64-linux` or `aarch64-linux`.  This does look a bit like magic since it will copy
+    # `devShells.default` into `options.devShells.x86_64-linux.default` and so-on, but does make this
+    # *much* easier to manage.
     devShells.default = pkgs.mkShell {
       # We're including the agenix-rekey binary `agenix` in our devshell.  This allows for rekeying secrets
       # using `agenix edit <secret>` from within the devshell.
