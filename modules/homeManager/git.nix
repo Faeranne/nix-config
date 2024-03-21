@@ -1,4 +1,4 @@
-{pkgs, lib, ...}:
+{pkgs, lib, userConfig, ...}:
 {
   programs = {
     git = {
@@ -29,5 +29,15 @@
     };
     git-cliff.enable = true;
     gitui.enable = true;
+    ssh = {
+      enable = true;
+      matchBlocks = {
+        "github.com" = {
+          hostname = "github.com";
+          user = "git";
+          identityFile = "/home/${userConfig.username}/.ssh/id_github";
+        };
+      };
+    };
   };
 }
