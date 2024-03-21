@@ -114,6 +114,15 @@
       overlays = [ inputs.agenix-rekey.overlays.default ];
     };
   in {
+    # Packages and devShells require a set containing every system you might run this on.
+    # to simplify this, since every system is compatable with these,
+    # we just use `eachDefaultSystem` to make both contain a set with every system in it.
+    # like `x86_64-linux` or `aarch64-linux`.  This does look a bit like magic since it will copy
+    # `devShells.default` into `options.devShells.x86_64-linux.default` and so-on, but does make this
+    # *much* easier to manage.
+    # --------
+    # The installer package results in an iso that can be flashed to a usb drive. this contains all
+    # the settings and packages needed to install a new system.  Just `dd if=result/iso/nixos*.iso of=<drive>`
     packages = {
       installer = inputs.nixos-generators.nixosGenerate {
         system = "x86_64-linux";
@@ -127,21 +136,20 @@
         format = "install-iso";
       };
     } // foldl' (acc: name:
+      #This creates a `<system>-disko` script that formats drives for whatever system I may be installing.
+      #Every ssytem is evaluated through this script.
+      ##TODO: I also need to add something to pre-generate new local system keys.
       {
         "${name}-disko" = inputs.self.nixosConfigurations.${name}.config.system.build.diskoScript;
       } // acc
     ) {} hosts;
-    # `outputs.devShells` requires a set containing every system you might run this on.
-    # to simplify this, since every system is compatable with the devshell I'm making,
-    # we just use `eachDefaultSystem` to make devShells contain a set with every system in it.
-    # like `x86_64-linux` or `aarch64-linux`.  This does look a bit like magic since it will copy
-    # `devShells.default` into `options.devShells.x86_64-linux.default` and so-on, but does make this
-    # *much* easier to manage.
     devShells.default = pkgs.mkShell {
+      ##TODO: Add a line that puts the current yubikey identity into `/tmp/yubikey.pub`
       # We're including the agenix-rekey binary `agenix` in our devshell.  This allows for rekeying secrets
       # using `agenix edit <secret>` from within the devshell.
       packages = with pkgs; [ 
         agenix-rekey 
+        age-plugin-yubikey
         age
       ];
     };
