@@ -120,6 +120,7 @@
         inherit pkgs;
         modules = [
           ./modules/nixos/install.nix
+          ./modules/nixos/base.nix
         ];
         format = "install-iso";
       };
