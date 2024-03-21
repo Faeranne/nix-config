@@ -118,6 +118,9 @@
       installer = inputs.nixos-generators.nixosGenerate {
         system = "x86_64-linux";
         inherit pkgs;
+        specialArgs = { 
+          inherit (inputs) self;
+        };
         modules = [
           ./modules/nixos/install.nix
         ];

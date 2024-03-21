@@ -1,4 +1,4 @@
-{pkgs, lib, ...}:let
+{pkgs, lib, self, ...}:let
   keys = import ../../lib/getPubKeys.nix "nina";
 in {
   users.extraUsers = {
