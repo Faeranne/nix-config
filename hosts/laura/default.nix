@@ -31,6 +31,9 @@
   # extra modules to import
   modules = [
     ({...}:{
+      environment.systemPackages = [
+        pkgs.libcamera
+      ];
     })
   ];
 }
