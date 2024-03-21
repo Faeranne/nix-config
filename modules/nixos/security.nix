@@ -1,5 +1,5 @@
 { systemConfig, lib, pkgs, ... }: let
-  localSystem = builtins.elem "local" systemConfig.elements;
+  isImpermanent = (builtins.elem "impermanence" systemConfig.elements);
 in{
   # Enable TPM2 for laptops and other TPM protected computers.
   # These are only used as a basis for speed-boot options, and
@@ -16,6 +16,14 @@ in{
   # PCSCD enables access to things like Yubikeys.
   services = {
     pcscd.enable = true;
+    tcsd.enable = true;
+  };
+  environment = lib.mkIf isImpermanent {
+    persistence."/persist" = {
+      directories = [
+        "/var/lib/tpm"
+      ];
+    };
   };
   # agenix requirements. Agenix handles Activation Time decryption of secrets
   # which makes for a more robust rebuild operation.  More stuff can be setup
