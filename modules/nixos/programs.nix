@@ -29,6 +29,9 @@ in {
     [
       appimagekit
       appimage-run
+      tpm2-tools
+      tpm-tools
+      tpmmanager
     ] ++
     (if (
       pkgs.system == "x86_64-linux"
