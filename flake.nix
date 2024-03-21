@@ -77,22 +77,8 @@
     # so it's imported here.  I also inherit mkHost directly since I use it here.
     flakeLibs = import ./lib inputs;
     inherit (flakeLibs) mkHost;
-    # `readDir` is a builtin.  This returns every filename inside the passed path.
-    # and sets it's value to either "regular", "directory", "symlink", or "unknown".
-    # The goal here is to get only directories, so the below `foldl'` function
-    # turns `hostFolders` into a list containing the names of the directories in
-    # `./hosts`
-    hostFolders = readDir ./hosts;
-    hosts = foldl' (b: a: let
-      include = if ((getAttr a hostFolders) == "directory") then [a] else [];
-      res = b ++ include;
-      #this closes the let enclosure on `foldl'`'s first paramenter
-    in
-      res
-      # we also have to pass an empty array as an initial value for foldl' to work with,
-      # as well as the list to fold. In this case, I use `attrNames`, another builtin,
-      # to get all the key names from `hostFolders`
-    ) [] (attrNames hostFolders);
+    inherit (flakeLibs.utils) getFolders;
+    hosts = getFolders ./hosts;
     #This closes the let enclosure on `outputs`
   in {
     # this produces a set containing every host as a `nixosSystem` derivation.
@@ -137,7 +123,11 @@
         ];
         format = "install-iso";
       };
-    };
+    } // foldl' (acc: name:
+      {
+        "${name}-disko" = inputs.self.nixosConfigurations.${name}.config.system.build.diskoScript;
+      } // acc
+    ) {} hosts;
     # `outputs.devShells` requires a set containing every system you might run this on.
     # to simplify this, since every system is compatable with the devshell I'm making,
     # we just use `eachDefaultSystem` to make devShells contain a set with every system in it.
