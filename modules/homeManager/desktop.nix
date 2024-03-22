@@ -39,6 +39,8 @@ in {
     };
     home.packages = with pkgs; [
       jami      
+      gimp
+      inkscape
     ];
   };
 }

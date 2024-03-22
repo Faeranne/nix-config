@@ -32,6 +32,7 @@ in {
       tpm2-tools
       tpm-tools
       tpmmanager
+      p7zip
     ] ++
     (if (
       pkgs.system == "x86_64-linux"
@@ -39,7 +40,7 @@ in {
       if isGraphical then [ 
         wineWowPackages.waylandFull
       ] else [ 
-        wineWowPackages.staging 
+        wineWowPackages.stagingFull
       ]
     ) else [])
   );
