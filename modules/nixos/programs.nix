@@ -27,6 +27,8 @@ in {
   };
   environment.systemPackages = with pkgs; (
     [
+      flashrom
+      dell-command-configure
       appimagekit
       appimage-run
       tpm2-tools
