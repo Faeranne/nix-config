@@ -47,6 +47,7 @@ in {
       obsidian
       discord
       freecad
+      prismlauncher
     ];
   };
 }
