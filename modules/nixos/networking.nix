@@ -1,4 +1,6 @@
-{systemConfig, lib, ...}: {
+{systemConfig, lib, ...}: let
+  isDesktop = (builtins.elem "desktop" systemConfig.elements);
+in {
   networking = {
     hostName = systemConfig.hostname;
     hostId = systemConfig.hostId;
@@ -12,7 +14,7 @@
     };
           
     firewall = {
-      enable = true;
+      enable = if isDesktop then false else true;
       allowedTCPPorts = [ ];
       trustedInterfaces = [ "podman+" "brCont" ];
     };
