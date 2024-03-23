@@ -3,6 +3,7 @@
   home.packages = with pkgs; [
     silicon
     pinentry
+    passage
   ];
   programs = {
     atuin = {
