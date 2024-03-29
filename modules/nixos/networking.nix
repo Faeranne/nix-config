@@ -14,7 +14,7 @@ in {
     };
           
     firewall = {
-      enable = if isDesktop then false else true;
+      enable = true;
       allowedTCPPorts = [ ];
       trustedInterfaces = [ "podman+" "brCont" ];
     };

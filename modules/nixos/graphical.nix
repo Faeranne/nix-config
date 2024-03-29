@@ -9,7 +9,7 @@ in {
       enable = isGraphical;
       displayManager = {
         sddm = {
-          enable = isKde;
+          enable = isKde && (! isGnome);
           wayland.enable = true;
         };
         gdm = {
@@ -37,6 +37,7 @@ in {
     gnome.gnome-browser-connector.enable = isGnome;
   };
   programs = {
+    ssh.askPassword = lib.mkIf isGraphical "${pkgs.gnome.seahorse.out}/libexec/seahorse/ssh-askpass";
     kdeconnect = {
       enable = true;
       package = pkgs.gnomeExtensions.gsconnect;

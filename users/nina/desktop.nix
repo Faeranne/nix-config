@@ -48,6 +48,8 @@ in {
       discord
       freecad
       prismlauncher
+      godot_4
+      vesktop
     ];
   };
 }

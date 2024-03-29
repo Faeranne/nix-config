@@ -64,6 +64,10 @@
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    local = {
+      url = "./inputs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # since `inputs` is a single variable here, it's the set of flakes input above.
@@ -73,6 +77,7 @@
     # `nixpkgs.lib` is a pretty common set of libraries, so I usually include it
     # when making functions outside of nixos modules.
     inherit (inputs.nixpkgs) lib;
+    inherit (inputs) local;
     # flakeLibs hase `mkHost` and `mkUser` in it.  It needs `inputs` to do it's thing
     # so it's imported here.  I also inherit mkHost directly since I use it here.
     flakeLibs = import ./lib inputs;
@@ -105,6 +110,25 @@
     agenix-rekey = inputs.agenix-rekey.configure {
       userFlake = inputs.self;
       nodes = inputs.self.nixosConfigurations;
+    };
+
+    homeConfigurations = let 
+      res = mkHost "sarah";
+    in {
+      "nina@sarah" = lib.homeManagerConfig {
+        pkgs = import nixpkgs {
+          system = "x86_64-linux";
+        };
+
+        extraSpecialArgs = {
+          systemConfig = res.systemConfig;
+          userConfig = { inherit username; } // import ../../users/${username}/config.nix;
+        };
+        modules = [
+          ./modules/homeManager
+          ./users/nina
+        ];
+      };
     };
   } // inputs.flake-utils.lib.eachDefaultSystem (system: let
     pkgs = import inputs.nixpkgs {

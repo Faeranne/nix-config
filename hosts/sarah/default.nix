@@ -6,6 +6,7 @@
     "desktop"
     "impermanence"
     "amdgpu"
+    "kde"
     "gnome"
     "virtualization"
     "rgb"
@@ -34,7 +35,11 @@
   ];
   # extra modules to import
   modules = [
-    ({...}:{
+    ({inputs, pkgs, ...}:{
+      virtualisation.waydroid.enable = true;
+      environment.systemPackages = with pkgs; [
+      ];
+      programs.corectrl.enable = true;
     })
   ];
 }

@@ -12,4 +12,5 @@
     username = userConfig.username;
     homeDirectory = "/home/" + userConfig.username;
   };
+  programs.home-manager.enable = true;
 }

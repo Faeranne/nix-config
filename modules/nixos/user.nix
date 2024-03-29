@@ -15,7 +15,6 @@
           userConfig = { inherit username; } // import ../../users/${username}/config.nix;
         };
         imports = [
-          ../homeManager
           ../../users/${username}
         ];
       }
