@@ -6,7 +6,6 @@
     "desktop"
     "impermanence"
     "amdgpu"
-    "kde"
     "gnome"
     "virtualization"
     "rgb"

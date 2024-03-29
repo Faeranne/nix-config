@@ -65,5 +65,4 @@ in {
       gnome-contacts
     ]);
   };
-
 }
