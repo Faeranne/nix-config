@@ -23,7 +23,6 @@ in {
     remotePlay.openFirewall = true;
     localNetworkGameTransfers.openFirewall = true;
     #gamescopeSession.enable = true;
-    extest.enable = true;
   };
   hardware.steam-hardware.enable = hasSteam;
   environment.systemPackages = with pkgs; (

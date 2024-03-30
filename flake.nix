@@ -7,7 +7,9 @@
   inputs = { 
     # This is the base nixpkgs repo.  Contains almost anything you
     # could need.
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    # TODO: Override xz and ssh to use stable instead, as currently they are comprimised
+    #       Am temporarily locking nixpkgs to the commit before the comprimised code
+    nixpkgs.url = "github:NixOS/nixpkgs/8db50d6f207f6e6bea072986fe5abfc955f04bfc";
     # Flake utils does some cool things with flakes. there's more 
     # details where they're used
     flake-utils.url = "github:numtide/flake-utils/main";

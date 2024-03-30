@@ -9,6 +9,7 @@ in {
   };
   services = {
     udev.packages = with pkgs; lib.mkIf isGnome [ gnome.gnome-settings-daemon ];
+    dbus.enable = lib.mkDefault isGraphical;
     xserver = {
       enable = isGraphical;
       displayManager = {
