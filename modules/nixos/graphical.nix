@@ -3,6 +3,10 @@
   isKde = (builtins.elem "kde" systemConfig.elements);
   isGraphical = isGnome || isKde;
 in {
+  xdg.portal = lib.mkIf isGraphical {
+    enable = true;
+    wlr.enable = true;
+  };
   services = {
     udev.packages = with pkgs; lib.mkIf isGnome [ gnome.gnome-settings-daemon ];
     xserver = {
@@ -38,6 +42,10 @@ in {
   };
   programs = {
     ssh.askPassword = lib.mkIf isGraphical "${pkgs.gnome.seahorse.out}/libexec/seahorse/ssh-askpass";
+    hyprland = {
+      enable = isGraphical;
+      xwayland.enable = true;
+    };
     kdeconnect = {
       enable = true;
       package = pkgs.gnomeExtensions.gsconnect;
@@ -45,13 +53,25 @@ in {
   };
   hardware.pulseaudio.enable = false;
   environment = {
+    sessionVariables = {
+      NIXOS_OZONE_WL = "1";
+    };
     systemPackages = (if isGraphical then (with pkgs; [
       helvum
       qpwgraph
       ruffle
+      swww
+      xdg-desktop-portal-gtk
+      xdg-desktop-portal-hyprland
+      xwayland
+      nerdfonts
+      meslo-lgs-nf
+      rofi-wayland
+      wofi
     ]) else []) ++ 
     (if isGnome then (with pkgs; [
       gnomeExtensions.appindicator
+      gnome.gnome-tweaks
     ]) else [] );
     gnome.excludePackages = (with pkgs; [
       gnome-photos

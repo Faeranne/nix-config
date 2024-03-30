@@ -14,9 +14,10 @@ in {
           ];
           favorite-apps = [
             "firefox.desktop"
-            "discord.desktop"
+            "vesktop.desktop"
             "org.gnome.Console.desktop"
             "obsidian.desktop"
+            "thunderbird.desktop"
             "org.gnome.Nautilus.desktop"
           ];
         };
@@ -50,6 +51,14 @@ in {
       prismlauncher
       godot_4
       vesktop
+      transmission-remote-gtk
+      xfce.thunar
+      pavucontrol
+      rofi-wayland
     ];
+    wayland.windowManager.hyprland = {
+      enable = true;
+      systemd.enable = true;
+    };
   };
 }
