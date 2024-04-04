@@ -15,5 +15,6 @@
     ./storage.nix
     ./user.nix
     ./rgb.nix
+    ./printers.nix
   ];
 }
