@@ -2,7 +2,7 @@
   isGnome = (builtins.elem "gnome" systemConfig.elements);
   isKde = (builtins.elem "kde" systemConfig.elements);
   isGraphical = isGnome || isKde;
-  hasSteam = builtins.elem "steam" systemConfig.services;
+  hasSteam = builtins.elem "steam" systemConfig.elements;
 in {
   boot.binfmt.registrations.appimage = {
     wrapInterpreterInShell = false;

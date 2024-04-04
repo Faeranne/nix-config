@@ -25,7 +25,4 @@
   security = {
     pubkey = "age1x6yalmlph7h2de3flpk2a088cmhftpncv4czvu37j7fkdg6xtglse5p464";
   };
-  # Service list
-  services = [
-  ];
 }

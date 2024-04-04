@@ -9,6 +9,7 @@
     "gnome"
     "virtualization"
     "rgb"
+    "steam"
   ];
   # architectures to emulate
   emulate = [ "aarch64-linux" ];
@@ -28,8 +29,4 @@
   security = {
     pubkey = "age185avxte33jvaexyl5292nczj3drlhc5dnyv8svyyy8u4l0tfgpksz6encl";
   };
-  # Service list
-  services = [
-    "steam"
-  ];
 }
