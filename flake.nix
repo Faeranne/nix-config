@@ -67,10 +67,6 @@
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    local = {
-      url = "./inputs";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   # since `inputs` is a single variable here, it's the set of flakes input above.
