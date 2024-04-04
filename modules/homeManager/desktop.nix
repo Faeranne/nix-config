@@ -41,6 +41,8 @@ in {
       jami      
       gimp
       inkscape
+      raysession
+      jackmix
     ];
   };
 }
