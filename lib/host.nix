@@ -11,6 +11,17 @@ in {
       inherit (inputs) self;
       inherit systemConfig;
     };
-    modules = additionalModules;
+    modules = additionalModules ++ [
+      ({...}: {
+        nixpkgs.overlays = [
+          (final: prev: {
+            stable = import inputs.nixpkgs-stable {
+              system = prev.system;
+              config.allowUnfree = true;
+            };
+          })
+        ];
+      })
+    ];
   };
 }

@@ -10,6 +10,7 @@
     # TODO: Override xz and ssh to use stable instead, as currently they are comprimised
     #       Am temporarily locking nixpkgs to the commit before the comprimised code
     nixpkgs.url = "github:NixOS/nixpkgs/8db50d6f207f6e6bea072986fe5abfc955f04bfc";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/23.11";
     # Flake utils does some cool things with flakes. there's more 
     # details where they're used
     flake-utils.url = "github:numtide/flake-utils/main";
