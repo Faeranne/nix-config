@@ -2,7 +2,7 @@
   systemConfig = { inherit hostname; } // import ../hosts/${hostname};
   system = import ./systemFromBase.nix systemConfig;
   hardware = import ./getHardware.nix systemConfig.elements;
-  additionalModules = systemConfig.modules ++ hardware ++ [ ../modules/nixos ];
+  additionalModules = hardware ++ [ ../modules/nixos ../hosts/${hostname}/configuration.nix ];
 in {
   configuration = {
     system = system;

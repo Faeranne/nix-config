@@ -28,9 +28,4 @@
   # Service list
   services = [
   ];
-  # extra modules to import
-  modules = [
-    ({...}:{
-    })
-  ];
 }
