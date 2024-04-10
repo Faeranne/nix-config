@@ -43,10 +43,6 @@ in {
   };
   programs = {
     ssh.askPassword = lib.mkIf isGraphical "${pkgs.gnome.seahorse.out}/libexec/seahorse/ssh-askpass";
-    hyprland = {
-      enable = isGraphical;
-      xwayland.enable = true;
-    };
     kdeconnect = {
       enable = true;
       package = pkgs.gnomeExtensions.gsconnect;

@@ -6,7 +6,6 @@
     ./git.nix
     ./vim.nix
     ./zsh.nix
-    ./hypr.nix
     ./waybar.nix
   ];
   home = {
