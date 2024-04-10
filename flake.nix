@@ -170,6 +170,9 @@
       ##TODO: Add a line that puts the current yubikey identity into `/tmp/yubikey.pub`
       # We're including the agenix-rekey binary `agenix` in our devshell.  This allows for rekeying secrets
       # using `agenix edit <secret>` from within the devshell.
+      shellHook = ''
+        age-plugin-yubikey --identity > /tmp/yubikey.pub
+      '';
       packages = with pkgs; [ 
         agenix-rekey 
         age-plugin-yubikey
