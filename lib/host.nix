@@ -1,8 +1,8 @@
-{ inputs, mkUser }: hostname: let
-  systemConfig = { inherit hostname; } // import ../hosts/${hostname};
+{utils, inputs}: hostname: let
+  systemConfig = utils.getHostConfig hostname;
   system = import ./systemFromBase.nix systemConfig;
   hardware = import ./getHardware.nix systemConfig.elements;
-  additionalModules = hardware ++ [ ../modules/nixos ../hosts/${hostname}/configuration.nix ];
+  additionalModules = hardware ++ [ ../modules/nixos (utils.getHostModule hostname) ];
 in {
   configuration = {
     system = system;
@@ -10,6 +10,7 @@ in {
       inherit inputs; 
       inherit (inputs) self;
       inherit systemConfig;
+      flakeUtils = utils;
     };
     modules = additionalModules ++ [
       ({...}: {

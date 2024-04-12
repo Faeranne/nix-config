@@ -80,7 +80,7 @@
     # flakeLibs hase `mkHost` and `mkUser` in it.  It needs `inputs` to do it's thing
     # so it's imported here.  I also inherit mkHost directly since I use it here.
     flakeLibs = import ./lib inputs;
-    inherit (flakeLibs) mkHost;
+    inherit (flakeLibs) mkHost mkUser utils;
     inherit (flakeLibs.utils) getFolders;
     hosts = getFolders ./hosts;
     #This closes the let enclosure on `outputs`
@@ -111,23 +111,8 @@
       nodes = inputs.self.nixosConfigurations;
     };
 
-    homeConfigurations = let 
-      res = mkHost "sarah";
-    in {
-      "nina@sarah" = lib.homeManagerConfig {
-        pkgs = import nixpkgs {
-          system = "x86_64-linux";
-        };
-
-        extraSpecialArgs = {
-          systemConfig = res.systemConfig;
-          userConfig = { inherit username; } // import ../../users/${username}/config.nix;
-        };
-        modules = [
-          ./modules/homeManager
-          ./users/nina
-        ];
-      };
+    homeConfigurations = { 
+      "nina@sarah" = mkUser "sarah" "nina";
     };
   } // inputs.flake-utils.lib.eachDefaultSystem (system: let
     pkgs = import inputs.nixpkgs {
@@ -166,6 +151,12 @@
         "${name}-disko" = inputs.self.nixosConfigurations.${name}.config.system.build.diskoScript;
       } // acc
     ) {} hosts;
+    apps = {
+      "nina@sarah" = {
+        type = "app";
+        program = "${inputs.self.homeConfigurations."nina@sarah".activationPackage}/activate";
+      };
+    };
     devShells.default = pkgs.mkShell {
       ##TODO: Add a line that puts the current yubikey identity into `/tmp/yubikey.pub`
       # We're including the agenix-rekey binary `agenix` in our devshell.  This allows for rekeying secrets

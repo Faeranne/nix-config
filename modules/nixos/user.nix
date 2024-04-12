@@ -1,4 +1,4 @@
-{config, inputs, systemConfig, lib, pkgs, ...}: {
+{config, inputs, systemConfig, lib, pkgs, flakeUtils, ...}: {
 
   home-manager = {
     sharedModules = [ 
@@ -12,10 +12,10 @@
     users = lib.genAttrs systemConfig.users (username: 
       {...}: { 
         _module.args = {
-          userConfig = { inherit username; } // import ../../users/${username}/config.nix;
+          userConfig = flakeUtils.getUserConfig username;
         };
         imports = [
-          ../../users/${username}
+          (flakeUtils.getUserModule username)
         ];
       }
     );

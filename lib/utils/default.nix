@@ -1,5 +1,5 @@
 with builtins;
-{
+rec {
   splitFileName = filename: (let
     res = match "(.*)\\..*" filename;
     name = elemAt res 0;
@@ -20,4 +20,11 @@ with builtins;
     ) [] (attrNames folders);
   in
     results;
+  allHosts = getFolders ../../hosts;
+  allUsers = getFolders ../../users;
+  getHostConfig = hostname: { inherit hostname; } // import ../../hosts/${hostname};
+  getHostModule = hostname: import ../../hosts/${hostname}/configuration.nix;
+  getUserConfig = username: { inherit username; } // import ../../users/${username}/config.nix;
+  getUserModule = username: import ../../users/${username};
+  getSystemFromBase = config: import ../systemFromBase.nix config;
 }
