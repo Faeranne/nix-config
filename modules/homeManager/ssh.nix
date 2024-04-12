@@ -1,6 +1,4 @@
 {pkgs, lib, userConfig, systemConfig, ...}:
 {
-  home.file = lib.concatMapAttrs (name: attrs: {
-    
-  };
+  services.ssh-agent.enable = true;
 }

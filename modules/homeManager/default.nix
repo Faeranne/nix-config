@@ -6,6 +6,7 @@
     ./tmux.nix
     ./vim.nix
     ./zsh.nix
+    ./ssh.nix
   ];
   home = {
     stateVersion = "23.11";

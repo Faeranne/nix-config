@@ -1,7 +1,8 @@
 {config, pkgs, lib, systemConfig, userConfig, ...}: let
   isGnome = (builtins.elem "gnome" systemConfig.elements);
   isKde = (builtins.elem "kde" systemConfig.elements);
-  isGraphical = isGnome || isKde;
+  isSway = (builtins.elem "sway" systemConfig.elements);
+  isGraphical = isGnome || isKde || isSway;
 in {
   config = lib.mkIf isGraphical {
     dconf = lib.mkIf isGnome {
@@ -35,6 +36,38 @@ in {
     programs = {
       firefox = {
         nativeMessagingHosts = with pkgs; (if isGnome then [ gnome-browser-connector ] else []);
+      };
+    };
+    wayland.windowManager.sway = {
+      enable = true;
+      config = rec {
+        modifier = "Mod4";
+        terminal = "kitty";
+        menu = "${pkgs.rofi}/bin/rofi -show drun -theme theme.rasi | ${pkgs.findutils}/bin/xargs swaymsg exec --";
+        output = {
+          "Dell Inc. DELL P2210 0VW5M1C8H57S" = {
+            transform = "270";
+            pos = "1920 -600";
+          };
+          "ViewSonic Corporation VP2468 Series UN8170400211" = {
+            pos = "0 0";
+          };
+          "Dell Inc. DELL P2210 U828K116922M" = {
+            pos = "240 -1050";
+          };
+          "Dell Inc. DELL P2210 6H6FX214352S" = {
+            pos = "-1680 0";
+          };
+        };
+        input = {
+          "*" = {
+            xkb_layout = "us";
+            xkb_options = "caps:escape";
+          };
+        };
+        startup = [
+          { command = "mako"; }
+        ];
       };
     };
     home.packages = with pkgs; [
