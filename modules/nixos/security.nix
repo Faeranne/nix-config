@@ -8,10 +8,15 @@ in{
   boot.initrd.systemd.enableTpm2 = true;
   # Runtime TPM options. these are for managing the TPM, and
   # are not used for any actual encryption/decryption
-  security.tpm2 = {
-    enable = true;
-    tctiEnvironment.enable = true;
-    pkcs11.enable = true;
+  security = {
+    tpm2 = {
+      enable = true;
+      tctiEnvironment.enable = true;
+      pkcs11.enable = true;
+    };
+    polkit = {
+      enable = true;
+    };
   };
   # PCSCD enables access to things like Yubikeys.
   services = {

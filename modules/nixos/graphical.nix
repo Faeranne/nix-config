@@ -1,7 +1,9 @@
 { systemConfig , pkgs, lib, ...}: let
   isGnome = (builtins.elem "gnome" systemConfig.elements);
   isKde = (builtins.elem "kde" systemConfig.elements);
-  isGraphical = isGnome || isKde;
+  isSway = (builtins.elem "sway" systemConfig.elements);
+  isGraphical = isGnome || isKde || isSway;
+  isX11 = isGnome || isKde;
 in {
   xdg.portal = lib.mkIf isGraphical {
     enable = true;
@@ -10,8 +12,20 @@ in {
   services = {
     udev.packages = with pkgs; lib.mkIf isGnome [ gnome.gnome-settings-daemon ];
     dbus.enable = lib.mkDefault isGraphical;
+    greetd = {
+      enable = isSway;
+      settings = {
+        default_session.command = ''
+          ${pkgs.greetd.tuigreet}/bin/tuigreet \
+            --time \
+            --asterisks \
+            --user-menu \
+            --cmd sway
+        '';
+      };
+    };
     xserver = {
-      enable = isGraphical;
+      enable = isX11;
       displayManager = {
         sddm = {
           enable = isKde && (! isGnome);
@@ -49,7 +63,13 @@ in {
     };
   };
   hardware.pulseaudio.enable = false;
+  hardware.opengl.enable = true;
   environment = {
+    etc = {
+      "greetd/environments".text = ''
+        sway
+      '';
+    };
     sessionVariables = {
       NIXOS_OZONE_WL = "1";
     };
@@ -59,7 +79,6 @@ in {
       ruffle
       swww
       xdg-desktop-portal-gtk
-      xdg-desktop-portal-hyprland
       xwayland
       nerdfonts
       meslo-lgs-nf
