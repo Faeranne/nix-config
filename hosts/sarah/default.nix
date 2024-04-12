@@ -7,6 +7,7 @@
     "impermanence"
     "amdgpu"
     "gnome"
+    "sway"
     "virtualization"
     "rgb"
     "steam"
