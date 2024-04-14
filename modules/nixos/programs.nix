@@ -39,6 +39,7 @@ in {
     ) then (
       if isGraphical then [ 
         wineWowPackages.waylandFull
+        lxqt.lxqt-policykit
       ] else [ 
         wineWowPackages.stagingFull
       ]
