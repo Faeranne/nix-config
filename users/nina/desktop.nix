@@ -44,6 +44,25 @@ in {
         };
       };
     };
+    services = {
+      mako = {
+        enable = true;
+        output = "ViewSonic Corporation VP2468 Series UN8170400211";
+        defaultTimeout = 30000;
+      };
+      flameshot = {
+        enable = true;
+        settings = {
+          General = {
+            disabledTrayIcon = false;
+          };
+        };
+      };
+      kdeconnect = {
+        enable = true;
+        indicator = true;
+      };
+    };
     wayland.windowManager.sway.config.output = {
       "*" = {
         bg = "${./resources/background_square.png} center #000000";
@@ -60,6 +79,8 @@ in {
       xfce.thunar
       pavucontrol
       rofi-wayland
+      ryujinx
+     #kicad
     ];
   };
 }
