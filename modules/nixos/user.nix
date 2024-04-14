@@ -10,12 +10,14 @@
       inherit systemConfig;
     };
     users = lib.genAttrs systemConfig.users (username: 
-      {...}: { 
+      {...}: let
+        module = flakeUtils.getUserModule username;
+      in { 
         _module.args = {
           userConfig = flakeUtils.getUserConfig username;
         };
         imports = [
-          (flakeUtils.getUserModule username)
+          module
         ];
       }
     );
