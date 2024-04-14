@@ -9,5 +9,6 @@
     ruffle
     jackmix
     helvum
+    ssh-agents
   ];
 }

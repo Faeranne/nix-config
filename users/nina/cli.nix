@@ -25,7 +25,7 @@
   };
   services = {
     gpg-agent = {
-      enable = true;
+      enable = false;
     };
   };
 }
