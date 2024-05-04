@@ -1,8 +1,15 @@
 {systemConfig, lib, ...}: let
   isImpermanent = (builtins.elem "impermanence" systemConfig.elements);
+  isLowMem = (builtins.elem "lowmem" systemConfig.elements);
 in{
+
   boot.zfs.extraPools = if systemConfig.storage ? "zfs" then systemConfig.storage.zfs else [];
   boot.supportedFilesystems = [ "zfs" ];
+
+  zramSwap = {
+    enable = true;
+  };
+
   environment = lib.mkIf isImpermanent {
     persistence."/persist" = {
       hideMounts = true;
@@ -19,7 +26,7 @@ in{
 
   disko = {
     devices = {
-      nodev = lib.mkIf isImpermanent {
+      nodev = lib.mkIf (isImpermanent && !isLowMem) {
         "/" = {
           fsType = "tmpfs";
           mountOptions = [
@@ -59,29 +66,31 @@ in{
       zpool = {
         zroot = {
           type = "zpool";
-          datasets = if isImpermanent then {
-            "nix" = {
-              type = "zfs_fs";
-              mountpoint = "/nix";
-            };
+          datasets = (if isImpermanent then {
             "persist" = {
               type = "zfs_fs";
               mountpoint = "/persist";
             };
           } else {
-            "nix" = {
-              type = "zfs_fs";
-              mountpoint = "/nix";
-            };
+          }) // (if isLowMem || !isImpermanent then {
             "root" = {
               type = "zfs_fs";
               mountpoint = "/";
+            };
+          } else {
+          }) // {
+            "nix" = {
+              type = "zfs_fs";
+              mountpoint = "/nix";
             };
           };
         };
       };
     };
   };
-  fileSystems."/persist" = lib.mkIf isImpermanent {neededForBoot = true;};
-  fileSystems."/nix".neededForBoot = true;
+
+  fileSystems = {
+    "/persist" = lib.mkIf isImpermanent {neededForBoot = true;};
+    "/nix".neededForBoot = true;
+  };
 }
