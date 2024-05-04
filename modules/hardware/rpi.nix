@@ -18,4 +18,6 @@
     efi.canTouchEfiVariables = false;
     generic-extlinux-compatible.enable = false;
   };
+
+  zramSwap.enable = true;
 }

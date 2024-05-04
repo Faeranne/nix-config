@@ -26,5 +26,9 @@ in {
   time.timeZone = "America/Indiana/Indianapolis";
   i18n.defaultLocale = "en_US.UTF-8";
 
+  zramSwap = {
+    enable = true;
+  };
+
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 }
