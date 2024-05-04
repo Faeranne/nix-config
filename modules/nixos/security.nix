@@ -49,7 +49,9 @@ in{
     # a provided yubikey/hardware token, but then are re-encrypted with the host
     # specific key.
     rekey = {
-      storageMode = "derivation";
+      #moving to local storage due to some cross-system derivation issues.
+      storageMode = "local";
+      localStorageDir = ../.. + "/secrets/rekeyed/${systemConfig.hostname}";
       # Gotta include the age-plugin-yubikey package to support yubikey decryption.
       agePlugins = [ pkgs.age-plugin-yubikey ];
       # No secrets are generated at this time, but this is set for those cases.
