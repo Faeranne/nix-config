@@ -141,6 +141,17 @@
         ];
         format = "install-iso";
       };
+      rpi_base = inputs.nixos-generators.nixosGenerate {
+        system = "aarch64-linux";
+        inherit pkgs;
+        specialArgs = { 
+          inherit (inputs) self;
+        };
+        modules = [
+          ./modules/nixos/rpi.nix
+        ];
+        format = "sd-aarch64";
+      };
     } // foldl' (acc: name:
       #This creates a `<system>-disko` script that formats drives for whatever system I may be installing.
       #Every ssytem is evaluated through this script.
