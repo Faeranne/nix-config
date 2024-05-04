@@ -1,4 +1,4 @@
-{inputs, self, systemConfig, ...}: {
+{inputs, self, systemConfig, pkgs, ...}: {
   
   system = {
     configurationRevision = if self ? rev then self.rev else if self ? dirtyRev then self.dirtyRev else "dirty";
@@ -11,4 +11,8 @@
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nixpkgs.config.allowUnfree = true;
+
+  fonts.packages = with pkgs; [
+    nerdfonts
+  ];
 }
