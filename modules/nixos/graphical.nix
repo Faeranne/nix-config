@@ -13,7 +13,8 @@ in {
     udev.packages = with pkgs; lib.mkIf isGnome [ gnome.gnome-settings-daemon ];
     dbus.enable = lib.mkDefault isGraphical;
     greetd = {
-      enable = isSway;
+      enable = true;
+      vt = 7;
       settings = {
         default_session.command = ''
           ${pkgs.greetd.tuigreet}/bin/tuigreet \
@@ -25,7 +26,7 @@ in {
       };
     };
     xserver = {
-      enable = isX11;
+      enable = false;
       displayManager = {
         sddm = {
           enable = isKde && (! isGnome);
@@ -68,6 +69,7 @@ in {
     etc = {
       "greetd/environments".text = ''
         sway
+        dbus-run-session -- gnome-shell --display-server --wayland
       '';
     };
     sessionVariables = {

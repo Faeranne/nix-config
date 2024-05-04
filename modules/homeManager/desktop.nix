@@ -35,11 +35,12 @@ in {
     };
     programs = {
       firefox = {
+        enable = isGraphical;
         nativeMessagingHosts = with pkgs; (if isGnome then [ gnome-browser-connector ] else []);
       };
     };
     wayland.windowManager.sway = {
-      enable = true;
+      enable = isSway;
       config = rec {
         modifier = "Mod4";
         terminal = "kitty";
@@ -71,11 +72,13 @@ in {
       };
     };
     home.packages = with pkgs; [
-      jami      
+      jami 
       gimp
       inkscape
       raysession
       jackmix
+      lutris
+      samba
     ];
   };
 }

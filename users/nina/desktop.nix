@@ -1,7 +1,8 @@
 {config, pkgs, lib, systemConfig, ...}: let
   isGnome = (builtins.elem "gnome" systemConfig.elements);
   isKde = (builtins.elem "kde" systemConfig.elements);
-  isGraphical = isGnome || isKde;
+  isSway = (builtins.elem "sway" systemConfig.elements);
+  isGraphical = isGnome || isKde || isSway;
 in {
   config = lib.mkIf isGraphical {
     dconf = lib.mkIf isGnome {

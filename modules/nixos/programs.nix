@@ -1,7 +1,8 @@
 {pkgs, systemConfig, ...}: let
   isGnome = (builtins.elem "gnome" systemConfig.elements);
   isKde = (builtins.elem "kde" systemConfig.elements);
-  isGraphical = isGnome || isKde;
+  isSway = (builtins.elem "sway" systemConfig.elements);
+  isGraphical = isGnome || isKde || isSway;
   hasSteam = builtins.elem "steam" systemConfig.elements;
 in {
   boot.binfmt.registrations.appimage = {
