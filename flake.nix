@@ -156,13 +156,13 @@
       };
     };
     devShells.default = pkgs.mkShell {
-     #shellHook = ''
-     #  age-plugin-yubikey --identity > /tmp/yubikey.pub
-     #'';
+     shellHook = ''
+       age-plugin-yubikey --identity > /tmp/yubikey.pub
+     '';
       packages = with pkgs; [ 
         agenix-rekey 
-     #  age-plugin-yubikey
-     #  age
+       age-plugin-yubikey
+       age
       ];
     };
   });

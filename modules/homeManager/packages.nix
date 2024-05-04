@@ -4,8 +4,8 @@
     htop
     dig
     passage
-    age-plugin-yubikey
-    age
+    stable.age-plugin-yubikey
+    stable.age
     ruffle
     jackmix
     helvum
