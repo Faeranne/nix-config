@@ -6,7 +6,6 @@
     "desktop"
     "impermanence"
     "amdgpu"
-    "gnome"
     "sway"
     "virtualization"
     "rgb"

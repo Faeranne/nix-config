@@ -4,4 +4,9 @@
     openrgb-with-all-plugins
   ];
   programs.corectrl.enable = true;
+  networking = {
+    firewall = {
+      allowedTCPPorts = [ 4747 4748 39595 ];
+    };
+  };
 }
