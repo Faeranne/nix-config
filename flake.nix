@@ -7,9 +7,7 @@
   inputs = { 
     # This is the base nixpkgs repo.  Contains almost anything you
     # could need.
-    # TODO: Override xz and ssh to use stable instead, as currently they are comprimised
-    #       Am temporarily locking nixpkgs to the commit before the comprimised code
-    nixpkgs.url = "github:NixOS/nixpkgs/8db50d6f207f6e6bea072986fe5abfc955f04bfc";
+    nixpkgs.url = "github:NixOS/nixpkgs";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/23.11";
     # Flake utils does some cool things with flakes. there's more 
     # details where they're used
@@ -158,16 +156,13 @@
       };
     };
     devShells.default = pkgs.mkShell {
-      ##TODO: Add a line that puts the current yubikey identity into `/tmp/yubikey.pub`
-      # We're including the agenix-rekey binary `agenix` in our devshell.  This allows for rekeying secrets
-      # using `agenix edit <secret>` from within the devshell.
-      shellHook = ''
-        age-plugin-yubikey --identity > /tmp/yubikey.pub
-      '';
+     #shellHook = ''
+     #  age-plugin-yubikey --identity > /tmp/yubikey.pub
+     #'';
       packages = with pkgs; [ 
         agenix-rekey 
-        age-plugin-yubikey
-        age
+     #  age-plugin-yubikey
+     #  age
       ];
     };
   });
