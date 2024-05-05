@@ -22,9 +22,15 @@ rec {
     results;
   allHosts = getFolders ../../hosts;
   allUsers = getFolders ../../users;
+  allHostConfigs = foldl' (res: host: {
+    ${host} = getHostConfig host;
+  } // res) {} allHosts;
   getHostConfig = hostname: { inherit hostname; } // import ../../hosts/${hostname};
   getHostModule = hostname: import ../../hosts/${hostname}/configuration.nix;
   getUserConfig = username: { inherit username; } // import ../../users/${username}/config.nix;
   getUserModule = username: import ../../users/${username};
+  getContainerConfig = name: { inherit name; } // import ../../containers/${name};
+  getContainerModule = name: import ../../containers/${name}/configuration.nix;
   getSystemFromBase = config: import ../systemFromBase.nix config;
+  createContainerForHost = import ./createContainerHost.nix;
 }

@@ -2,6 +2,9 @@
   systemConfig = utils.getHostConfig hostname;
   system = import ./systemFromBase.nix systemConfig;
   hardware = import ./getHardware.nix systemConfig.elements;
+  containerModules = if (builtins.hasAttr "containers" systemConfig) then (builtins.foldl' (acc: container: [
+    (utils.createContainerForHost hostname container)
+  ] ++ acc) [] (builtins.attrNames systemConfig.containers)) else [];
   additionalModules = hardware ++ [ ../modules/nixos (utils.getHostModule hostname) ];
 in {
   configuration = {
@@ -12,7 +15,7 @@ in {
       inherit systemConfig;
       flakeUtils = utils;
     };
-    modules = additionalModules ++ [
+    modules = additionalModules ++ containerModules ++ [
       ({...}: {
         nixpkgs.overlays = [
           (final: prev: {
