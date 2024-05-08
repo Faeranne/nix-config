@@ -34,6 +34,7 @@ in {
       tpm-tools
       tpmmanager
       p7zip
+      stable.yubikey-manager
     ] ++
     (if (
       pkgs.system == "x86_64-linux"
