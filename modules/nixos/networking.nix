@@ -1,5 +1,6 @@
 {systemConfig, lib, ...}: let
   isDesktop = (builtins.elem "desktop" systemConfig.elements);
+  isServer = (builtins.elem "server" systemConfig.elements);
 in {
   networking = {
     hostName = systemConfig.hostname;

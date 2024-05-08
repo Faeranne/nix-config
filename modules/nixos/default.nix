@@ -18,5 +18,6 @@
     ./printers.nix
     ./traefik.nix
     ./containers.nix
+    ./servers.nix
   ];
 }
