@@ -60,7 +60,6 @@ in {
     ssh.askPassword = lib.mkIf isGraphical "${pkgs.gnome.seahorse.out}/libexec/seahorse/ssh-askpass";
     kdeconnect = {
       enable = true;
-      package = pkgs.gnomeExtensions.gsconnect;
     };
   };
   hardware.pulseaudio.enable = false;

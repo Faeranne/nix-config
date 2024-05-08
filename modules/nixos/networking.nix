@@ -15,7 +15,8 @@ in {
           
     firewall = {
       enable = true;
-      allowedTCPPorts = [ ];
+      allowedTCPPortRanges = [ {from = 1714; to = 1764; } ];
+      allowedUDPPortRanges = [ {from = 1714; to = 1764; } ];
       trustedInterfaces = [ "podman+" "brCont" ];
     };
 
