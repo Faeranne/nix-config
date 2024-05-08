@@ -5,6 +5,8 @@
     "intel"
     "server"
     "impermanence"
+    "traefik"
+    "containers"
   ];
   # architectures to emulate
   emulate = [ "aarch64-linux" ];
@@ -26,22 +28,22 @@
     pubkey = "age1ytw5hv3k50qnh6yn0ana3l932q7azkx0l2fg9zp9h02gknvqx4yq7yvcgl";
   };
   # containers used here
-  containers = {
-    "jellyfin" = {
-      type = "jellyfin";
-      localIp = "10.0.0.2";
-      ip = "10.255.1.1";
-      forwardPorts = {
-        jellyfin = {
-          web = "tv.faeranne.com"; #forward via traefik web
-          #tcp = 8096; #forward via traefik tcp
-          #udp = 8096; #forward via traefik udp
-        };
-      };
-      paths = {
-        "media" = "/Storage/media";
-        "config" = "/Storage/volumes/jellyfin";
-      };
-    };
-  };
+  #containers = {
+  #  "jellyfin" = {
+  #    type = "jellyfin";
+  #    localIp = "10.0.0.2";
+  #    ip = "10.255.1.1";
+  #    forwardPorts = {
+  #      jellyfin = {
+  #        web = "tv.faeranne.com"; #forward via traefik web
+  #        #tcp = 8096; #forward via traefik tcp
+  #        #udp = 8096; #forward via traefik udp
+  #      };
+  #    };
+  #    paths = {
+  #      "media" = "/Storage/media";
+  #      "config" = "/Storage/volumes/jellyfin";
+  #    };
+  #  };
+  #};
 }
