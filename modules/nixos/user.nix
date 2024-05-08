@@ -30,7 +30,8 @@
     isSudo = builtins.elem name systemConfig.sudo;
     isGnome = (builtins.elem "gnome" systemConfig.elements);
     isKde = (builtins.elem "kde" systemConfig.elements);
-    isGraphical = isGnome || isKde;
+    isSway = (builtins.elem "sway" systemConfig.elements);
+    isGraphical = isGnome || isKde || isSway;
     isVirtualize = (builtins.elem "virtualization" systemConfig.elements);
     attrs = import ../../users/${name}/config.nix;
   in {
