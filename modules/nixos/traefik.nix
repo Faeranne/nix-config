@@ -2,15 +2,15 @@
   isImpermanent = (builtins.elem "impermanence" systemConfig.elements);
   isTraefik = (builtins.elem "traefik" systemConfig.elements);
 in {
+  environment.persistence = lib.mkIf (isTraefik && isImpermanent) {
+    "/persist" = {
+      directories = [
+        "/etc/traefik"
+      ];
+    };
+  };
   services.traefik = lib.mkIf isTraefik {
     enable = isTraefik;
-    environment.persistence = lib.mkIf isImpermanent = {
-      "/persist" = {
-        directories = [
-          "/etc/traefik"
-        ];
-      };
-    };
     dataDir = "/etc/traefik";
     staticConfigOptions = {
       entryPoints = {
