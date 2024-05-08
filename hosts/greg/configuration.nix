@@ -27,4 +27,24 @@
       };
     };
   };
+  services.traefik.dynamicConfigOptions.http = {
+    routers = {
+      #dashboard = {
+      #  rule = "Host(`traefik.home.faeranne.com`)";
+      #  service = "api@internal";
+      #  entryPoints = [ "websecure" ];
+      #  #middlewares = [ "dash-auth" ];
+      #};
+      jellyfin = {
+        rule = "Host(`tv.faeranne.com`)";
+        service = "jellyfin";
+        entryPoints = [ "websecure" ];
+      };
+    };
+    services = {
+      jellyfin.loadBalancers.servers = [ {url = "http://10.150.0.2:8096"; } ];
+    };
+    middlewares = {
+    };
+  };
 }

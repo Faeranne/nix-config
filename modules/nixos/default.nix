@@ -16,5 +16,7 @@
     ./user.nix
     ./rgb.nix
     ./printers.nix
+    ./traefik.nix
+    ./containers.nix
   ];
 }
