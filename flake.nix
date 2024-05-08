@@ -115,9 +115,29 @@
   } // inputs.flake-utils.lib.eachDefaultSystem (system: let
     pkgs = import inputs.nixpkgs {
       inherit system;
-      # I still don't quite understand overlays, so I'll just say this is from agenix-rekey.
-      # I'll add more notes here when I do understand it fully.
-      overlays = [ inputs.agenix-rekey.overlays.default ];
+      # Overlays are weird, but pretty straight forward from a user perspective.
+      # Each overly in the overlays list is a function that takes two parameters
+      # the first is the *final result* of pkgs after every overlay is applied.
+      # This allows you to reference stuff from later overlays.  Yes, it's weird
+      # but is valid in nix's lazy evaluate language.  For now
+      # just don't try to set a key to something that relys on the future version
+      # of that key (eg: foo = final.foo)  This results in recursion.
+      # Instead, you can use the second value, which is the combination of the
+      # previous overlays `prev` value combine with the previous overlay's output
+      # the initial overaly just gets the default version of `nixpkgs` as you would
+      # normally expect
+      overlays = [ 
+        # We're adding the 23.11 stable version of nixpkgs to `stable` since a few
+        # packages (like things dependent on libpcsc) are broken in the current
+        # unstable version
+        (final: prev: {
+          stable = import inputs.nixpkgs-stable {
+            system = prev.system;
+            config.allowUnfree = true;
+          };
+        })
+        inputs.agenix-rekey.overlays.default
+      ];
     };
   in {
     # Packages and devShells require a set containing every system you might run this on.
@@ -171,9 +191,9 @@
        age-plugin-yubikey --identity > /tmp/yubikey.pub
      '';
       packages = with pkgs; [ 
-        agenix-rekey 
-       age-plugin-yubikey
-       age
+       agenix-rekey 
+       stable.age-plugin-yubikey
+       stable.age
       ];
     };
   });
