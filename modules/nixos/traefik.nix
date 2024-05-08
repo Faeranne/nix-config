@@ -10,7 +10,7 @@ in {
     };
   };
   services.traefik = lib.mkIf isTraefik {
-    enable = isTraefik;
+    enable = true;
     dataDir = "/etc/traefik";
     staticConfigOptions = {
       entryPoints = {
@@ -32,6 +32,8 @@ in {
         storage = "/etc/traefik/acme.json";
         httpchallenge.entrypoint = "web";
       };
+      api.dashboard = true;
+      ping.entrypoint = "internal";
     };
   };
   networking.firewall.allowedTCPPorts = [ 80 443 ];
