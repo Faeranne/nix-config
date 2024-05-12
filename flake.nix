@@ -190,6 +190,8 @@
      shellHook = ''
        age-plugin-yubikey --identity > /tmp/yubikey.pub
      '';
+      #NOTE: we're using the stable version for the moment till nixos/nixpkgs#309297
+      # is merged.  libpcsclite is broken in the current unstable.
       packages = with pkgs; [ 
        agenix-rekey 
        stable.age-plugin-yubikey
