@@ -1,3 +1,5 @@
+#Hey, so no real notes here because this eventually needs to become a
+#container.  Rely on it at your own disgression
 {systemConfig, lib, ...}: let
   isImpermanent = (builtins.elem "impermanence" systemConfig.elements);
   isTraefik = (builtins.elem "traefik" systemConfig.elements);

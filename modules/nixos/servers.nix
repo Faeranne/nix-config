@@ -4,6 +4,10 @@ in {
   services.openssh = lib.mkIf isServer {
       enable = true;
       settings.PasswordAuthentication = false;
+      #TODO: Right now this ignores non-impermanent systems.
+      # Gotta set `path` correctly for non-impermanent systems.
+      # As of this moment none of my systems qualify, so it's a
+      # todo.
       hostKeys = [
         {
           bits = 4096;

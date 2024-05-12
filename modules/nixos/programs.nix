@@ -34,6 +34,8 @@ in {
       tpm-tools
       tpmmanager
       p7zip
+      #NOTE: we're using the stable version for the moment till nixos/nixpkgs#309297
+      # is merged.  libpcsclite is broken in the current unstable.
       stable.yubikey-manager
     ] ++
     (if (

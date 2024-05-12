@@ -49,22 +49,40 @@ in{
     # a provided yubikey/hardware token, but then are re-encrypted with the host
     # specific key.
     rekey = {
-      #moving to local storage due to some cross-system derivation issues.
+      # This causes agenix-rekey to use a local fileset instead of derivations for
+      # rekeyed files.  Since derivations have ended up being fradgle, and don't
+      # work great when used on multiple build hosts (like trying to build for a
+      # laptop on said laptop), I switched recently to the local format.
+      # If derivations get less fradgile (unlikely), then switching back is really
+      # easy.
       storageMode = "local";
+      # This defines the folder that the rekeyed secrets are actually stored in.
+      # It's inside this repo, and must be unique per host to actually behave
+      # correctly.  We're doing `../.. +` to get path values to behave correctly.
+      # Don't ask me why this works, I spent nearly an hour fiddling with it to
+      # make it behave, and now that it works, I'm relying on Nix's declaritive
+      # format to ensure I never have to poke it again.
       localStorageDir = ../.. + "/secrets/rekeyed/${systemConfig.hostname}";
       # Gotta include the age-plugin-yubikey package to support yubikey decryption.
-      agePlugins = [ pkgs.age-plugin-yubikey ];
+      #NOTE: we're using the stable version for the moment till nixos/nixpkgs#309297
+      # is merged.  libpcsclite is broken in the current unstable.
+      agePlugins = [ pkgs.stable.age-plugin-yubikey ];
       # No secrets are generated at this time, but this is set for those cases.
       generatedSecretsDir = ../../secrets;
-      # Due to how derivations are generated, we gotta do all rekey operations on
+      # ~~Due to how derivations are generated, we gotta do all rekey operations on
       # a specific system type. Since no primary system is arm based, I just force
       # agenix to use a x64 system for rekey.  This makes rekey operations work
-      # when doing cross-system builds.
-      forceRekeyOnSystem = "x86_64-linux";
-      # This is the public side of the currently installed Yubikey.  A seperate command
+      # when doing cross-system builds.~~
+      # UPDATE: This is no longer the case since we now use local rekey operations
+      # As such I'm just disabling it for now. If derivations become an option again
+      # This will need to be re-enabled.
+      #forceRekeyOnSystem = "x86_64-linux";
+      # This is the public side of the currently installed Yubikey.  A seperate command [1]
       # fetches the public side and sticks it here, so this operation isn't entirely
       # idempotent, as it doesn't work without a valid harware key.  This is expected
       # and required for proper secret management... sadly.
+      # [1] specifically `nix develop` in this repo, which calls `age-plugin-yubikey -L`
+      # and puts the results here.
       masterIdentities = [ "/tmp/yubikey.pub" ];
       # Every potential hardware key is listed here.  It's seperate from the above
       # option as for whatever reason, age doesn't cleanly handle multiple plugin-yubikey
@@ -79,6 +97,8 @@ in{
       ];
       # This is the public side of the key stored in the identityPath.
       # The actual key data is stored in the `hosts/<name>/config.nix` file.
+      # This is used by rekey to eventually generate the `secrets/rekeyed/` files for
+      # this particular host.
       hostPubkey = systemConfig.security.pubkey;
     };
   };
