@@ -1,68 +1,38 @@
 {config, ...}: {
-  containers = {
-    jellyfin = {
-      privateNetwork = true;
-      restartIfChanged = true;
-      localAddress = "10.150.0.2/16";
-      hostBridge = "brCont";
-      tmpfs = [ "/cache" ];
-      bindMounts = {
-        "/media" = {
-          hostPath = "/Storage/media";
-        };
-        "/var/lib/jellyfin" = {
-          hostPath = "/Storage/volumes/jellyfin";
-          isReadOnly = false;
-        };
-      };
-      config = {config, lib, pkgs, ...}: {
-        environment.systemPackages = with pkgs; [
-          jellyfin
-          jellyfin-web
-          jellyfin-ffmpeg
-        ];
-        services.jellyfin = {
-          enable = true;
-        };
-        networking = {
-          useHostResolvConf = lib.mkForce false;
-          defaultGateway = "10.150.0.1";
-          firewall.allowedTCPPorts = [ 8096 ];
-        };
-        services.resolved.enable = true;
-        system.stateVersion = "23.11";
+  virtualisation.oci-containers.containers = {
+    "dominom-minecraft" = {
+      autoStart = true;
+      image = "itzg/minecraft-server";
+      volumes = [
+        "/Storage/volumes/minecraft/dominom:/data"
+      ];
+      ports = [
+        "25565:25565"
+      ];
+      environment = {
+        UID="1000";
+        EULA="true";
+        MEMORY="4G";
+        ENABLE_ROLLING_LOGS="true";
+        USE_AIKAR_FLAGS="true";
+        TYPE="FORGE";
+        VERSION="1.18.2";
+        FORGE_VERSION="40.2.21";
+        MAX_PLAYERS="2";
+        SNOOPER_ENABLE = "false";
+        ALLOW_FLIGHT="true";
+        GUI="false";
+        MOTD="Create: Computers";
+        ENABLE_WHITELIST="true";
+        ENFORCE_WHITELIST="true";
+        OPS="faeranne";
+        SPAWN_PROTECTION="0";
       };
     };
-    rss = {
-      privateNetwork = true;
-      restartIfChanged = true;
-      localAddress = "10.150.0.3/16";
-      hostBridge = "brCont";
-      bindMounts = {
-        "/var/lib/freshrss" = {
-          hostPath = "/Storage/volumes/freshrss";
-          isReadOnly = false;
-        };
-        "/run/secrets/freshrss" = {
-          hostPath = "${config.age.secrets."freshrss".path}";
-          isReadOnly = true;
-        };
-      };
-      config = {config, lib, pkgs, ...}: {
-        services.freshrss = {
-          enable = true;
-          baseUrl = "https://rss.faeranne.com";
-          defaultUser = "faeranne";
-          passwordFile = "/run/secrets/freshrss";
-        };
-        networking = {
-          useHostResolvConf = lib.mkForce false;
-          defaultGateway = "10.150.0.1";
-          firewall.allowedTCPPorts = [ 80 ];
-        };
-        services.resolved.enable = true;
-        system.stateVersion = "23.11";
-      };
+  };
+  networking = {
+    firewall = {
+      allowedTCPPorts = [ 25565 ];
     };
   };
   age.secrets.freshrss.rekeyFile = ./freshrss.age;
@@ -84,10 +54,16 @@
         service = "freshrss";
         entryPoints = [ "websecure" ];
       };
+      grocy = {
+        rule = "Host(`grocy.faeranne.com`)";
+        service = "grocy";
+        entryPoints = [ "websecure" ];
+      };
     };
     services = {
-      jellyfin.loadBalancer.servers = [ {url = "http://10.150.0.2:8096"; } ];
-      freshrss.loadBalancer.servers = [ {url = "http://10.150.0.3:80"; } ];
+      jellyfin.loadBalancer.servers = [ {url = "http://10.200.0.2:8096"; } ];
+      freshrss.loadBalancer.servers = [ {url = "http://10.200.0.3:80"; } ];
+      grocy.loadBalancer.servers = [ {url = "http://10.200.0.4:80"; } ];
     };
   };
 }

@@ -15,16 +15,9 @@ in {
     };
           
     firewall = {
-      enable = true;
       allowedTCPPortRanges = [ {from = 1714; to = 1764; } ];
       allowedUDPPortRanges = [ {from = 1714; to = 1764; } ];
-      trustedInterfaces = [ "podman+" "brCont" ];
     };
 
-    nat = lib.mkIf (builtins.elem "containers" systemConfig.elements) {
-      externalInterface = systemConfig.netdev;
-      enable = true;
-      internalInterfaces = [ "podman+" "ve-+" "vb-+" "brCont" ];
-    };
   };
 }
