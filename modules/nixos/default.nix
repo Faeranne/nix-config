@@ -19,5 +19,6 @@
     ./traefik.nix
     ./containers.nix
     ./servers.nix
+    ./yggdrasil.nix
   ];
 }

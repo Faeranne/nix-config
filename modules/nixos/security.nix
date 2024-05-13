@@ -68,7 +68,7 @@ in{
       # is merged.  libpcsclite is broken in the current unstable.
       agePlugins = [ pkgs.stable.age-plugin-yubikey ];
       # No secrets are generated at this time, but this is set for those cases.
-      generatedSecretsDir = ../../secrets;
+      generatedSecretsDir = ../../secrets/generated;
       # ~~Due to how derivations are generated, we gotta do all rekey operations on
       # a specific system type. Since no primary system is arm based, I just force
       # agenix to use a x64 system for rekey.  This makes rekey operations work
