@@ -108,6 +108,10 @@
     freshrss.rekeyFile = ./freshrss.age;
     openvpn_user.rekeyFile = ./openvpn_user.age;
     openvpn_pass.rekeyFile = ./openvpn_pass.age;
+    paperless_superuser.generator = {
+      script = "passphrase";
+      tags = [ "pregen" ];
+    };
   };
   services.traefik.dynamicConfigOptions.http = {
     routers = {
