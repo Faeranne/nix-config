@@ -76,6 +76,21 @@
         SPAWN_PROTECTION="0";
       };
     };
+    "wizarr" = {
+      autoStart = true;
+      image = "ghcr.io/wizarrrr/wizarr:4.1.0";
+      volumes = [
+        "/Storage/volumes/wizarr:/data/database"
+      ];
+      ports = [
+        "5690:5690"
+      ];
+      environment = {
+      };
+      extraOptions = [
+        "--ip=10.88.1.3"
+      ];
+    };
   };
   networking = {
     firewall = {
@@ -117,11 +132,47 @@
         service = "grocy";
         entryPoints = [ "websecure" ];
       };
+      prowlarr = {
+        rule = "Host(`prowlarr.faeranne.com`)";
+        service = "prowlarr";
+        entryPoints = [ "websecure" ];
+      };
+      sonarr = {
+        rule = "Host(`sonarr.faeranne.com`)";
+        service = "sonarr";
+        entryPoints = [ "websecure" ];
+      };
+      radarr = {
+        rule = "Host(`radarr.faeranne.com`)";
+        service = "radarr";
+        entryPoints = [ "websecure" ];
+      };
+      lidarr = {
+        rule = "Host(`lidarr.faeranne.com`)";
+        service = "lidarr";
+        entryPoints = [ "websecure" ];
+      };
+      ombi = {
+        rule = "Host(`request.faeranne.com`)";
+        service = "ombi";
+        entryPoints = [ "websecure" ];
+      };
+      wizarr = {
+        rule = "Host(`wizarr.faeranne.com`)";
+        service = "wizarr";
+        entryPoints = [ "websecure" ];
+      };
     };
     services = {
       jellyfin.loadBalancer.servers = [ {url = "http://10.200.0.2:8096"; } ];
       freshrss.loadBalancer.servers = [ {url = "http://10.200.0.3:80"; } ];
       grocy.loadBalancer.servers = [ {url = "http://10.200.0.4:80"; } ];
+      prowlarr.loadBalancer.servers = [ {url = "http://10.200.0.5:9696"; } ];
+      sonarr.loadBalancer.servers = [ {url = "http://10.200.0.5:8989"; } ];
+      radarr.loadBalancer.servers = [ {url = "http://10.200.0.5:7878"; } ];
+      lidarr.loadBalancer.servers = [ {url = "http://10.200.0.5:8686"; } ];
+      ombi.loadBalancer.servers = [ {url = "http://10.200.0.5:5000"; } ];
+      wizarr.loadBalancer.servers = [ {url = "http://10.88.1.3:5690"; } ];
     };
   };
 }
