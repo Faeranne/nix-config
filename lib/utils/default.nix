@@ -184,7 +184,7 @@ rec {
         (sort (a: b: a < b) order)
       )
     ) || (
-      builtins.abort "hosts/${hostname}/containers.json does not contain exactly all containers from hosts/${hostname}/containers/.  Run `nix run .#updateContainers` to correct the list."
+      builtins.abort "hosts/${host}/containers.json does not contain exactly all containers from hosts/${host}/containers/.  Run `nix run .#updateContainers` to correct the list."
     );
     #Container ID time.  This handles assigning the ids based
     #on the container's order in `containers.json`, as well as
