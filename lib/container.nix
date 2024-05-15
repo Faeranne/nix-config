@@ -59,6 +59,9 @@ in {
       localAddress = "${containerConfig.ip}/16";
       #Host bridge is always `brCont` due to being set in `modules/nixos/containers.nix`, so we just static it here.
       hostBridge = "brCont";
+      specialArgs = {
+        inherit containerConfig;
+      };
       config = {config, lib, pkgs, ...}: {
         imports = [
           containerConfig.config
