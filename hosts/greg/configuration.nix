@@ -91,6 +91,8 @@
   };
   age.secrets = {
     freshrss.rekeyFile = ./freshrss.age;
+    openvpn_user.rekeyFile = ./openvpn_user.age;
+    openvpn_pass.rekeyFile = ./openvpn_pass.age;
   };
   services.traefik.dynamicConfigOptions.http = {
     routers = {
