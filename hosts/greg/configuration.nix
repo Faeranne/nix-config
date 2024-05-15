@@ -79,10 +79,16 @@
   };
   networking = {
     firewall = {
-      allowedTCPPorts = [ 25565 ];
+      allowedTCPPorts = [ 25565 9091 ];
     };
+    nat.forwardPorts = [
+      {
+        destination = "10.88.1.2:9091";
+        sourcePort = 9091;
+        proto = "tcp";
+      }
+    ];
   };
-  age.secrets.freshrss.rekeyFile = ./freshrss.age;
   services.traefik.dynamicConfigOptions.http = {
     routers = {
       dashboard = {
