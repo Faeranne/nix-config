@@ -89,6 +89,9 @@
       }
     ];
   };
+  age.secrets = {
+    freshrss.rekeyFile = ./freshrss.age;
+  };
   services.traefik.dynamicConfigOptions.http = {
     routers = {
       dashboard = {
