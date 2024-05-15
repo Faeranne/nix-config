@@ -166,6 +166,11 @@
         service = "wizarr";
         entryPoints = [ "websecure" ];
       };
+      paperless = {
+        rule = "Host(`paperless.faeranne.com`)";
+        service = "paperless";
+        entryPoints = [ "websecure" ];
+      };
     };
     services = {
       jellyfin.loadBalancer.servers = [ {url = "http://10.200.0.2:8096"; } ];
@@ -177,6 +182,7 @@
       lidarr.loadBalancer.servers = [ {url = "http://10.200.0.5:8686"; } ];
       ombi.loadBalancer.servers = [ {url = "http://10.200.0.5:5000"; } ];
       wizarr.loadBalancer.servers = [ {url = "http://10.88.1.3:5690"; } ];
+      paperless.loadBalancer.servers = [ {url = "http://10.200.0.6:8096"; } ];
     };
   };
 }

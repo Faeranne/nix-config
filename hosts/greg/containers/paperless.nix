@@ -32,7 +32,7 @@
         user = "paperless";
         passwordFile = "/run/secrets/paperless_superuser";
         extraConfig = {
-          PAPERLESS_URL="https://docs.faeranne.com";
+          PAPERLESS_URL="https://paperless.faeranne.com";
           PAPERLESS_TRUSTED_PROXIES="10.200.0.1";
           PAPERLESS_USE_X_FORWARD_HOST=true;
           PAPERLESS_TASK_WORKERS=2;
@@ -41,10 +41,6 @@
           PAPERLESS_CONSUMER_ENABLE_ASN_BARCODE=true;
           PAPERLESS_CONSUMER_ENABLE_TAG_BARCODE=true;
         };
-      };
-      redis.servers.paperless = {
-        enable = true;
-        port = 6379;
       };
     };
   };
