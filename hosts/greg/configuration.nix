@@ -1,5 +1,52 @@
 {config, ...}: {
   virtualisation.oci-containers.containers = {
+    "gluetun" = {
+      autoStart = true;
+      image = "qmcgaw/gluetun";
+      hostname = "gluetun";
+      ports = [
+        "9091:9091"
+      ];
+      environment = {
+        PUID="999";
+        GUID="100";
+        VPN_SERVICE_PROVIDER="private internet access";
+        SERVER_REGIONS="Switzerland";
+        TZ="AmericaIndiana";
+        VPN_PORT_FORWARDING="on";
+        VPN_PORT_FORWARDING_STATUS_FILE="/mnt/gluetun_port/forwarded_port";
+      };
+      volumes = [
+        "/Storage/volumes/gluetun:/gluetun"
+        "${config.age.secrets."openvpn_user".path}:/run/secrets/openvpn_user"
+        "${config.age.secrets."openvpn_pass".path}:/run/secrets/openvpn_password"
+        "/Storage/volumes/gluetun_port:/mnt/gluetun_port"
+      ];
+      extraOptions = [
+        "--cap-add=NET_ADMIN"
+        "--device=/dev/net/tun:/dev/net/tun"
+        "--ip=10.88.1.2"
+      ];
+    };
+    transmission = {
+      autoStart = true;
+      image = "lscr.io/linuxserver/transmission:latest";
+      environment = {
+        PUID="999";
+        GUID="100";
+        TZ="America/Indiana";
+        TRANSMISSION_WEB_HOME="/transmission";
+      };
+      volumes = [
+        "/Storage/volumes/transmission:/config"
+        "/Storage/volumes/transmission:/downloads"
+        "/Storage/volumes/gluetun_port:/mnt/gluetun_port"
+      ];
+      dependsOn = [ "gluetun" ];
+      extraOptions = [
+        "--network=container:gluetun"
+      ];
+    };
     "dominom-minecraft" = {
       autoStart = true;
       image = "itzg/minecraft-server";
