@@ -1,6 +1,11 @@
-{systemConfig, lib, ...}: let
+{pkgs, systemConfig, lib, ...}: let
   containersEnabled = (builtins.elem "containers" systemConfig.elements);
 in {
+  age.generators.wireguard = {pkgs, file, ...}: ''
+    priv=$(${pkgs.wireguard-tools}/bin/wg genkey)
+    ${pkgs.wireguard-tools}/bin/wg pubkey <<< "$priv" > ${lib.escapeShellArg (lib.removeSuffix ".age" file + ".pub")}
+    echo "$priv"
+  '';
   networking = {
     bridges.brCont.interfaces = [];
     interfaces.brCont.ipv4.addresses = [{

@@ -1,5 +1,18 @@
 { systemConfig, lib, pkgs, ... }: let
   isImpermanent = (builtins.elem "impermanence" systemConfig.elements);
+  # We get the rekey file locations for secrets that are pregenerated
+  # aka: can't be generated automatically.  This is things like vpn credentials
+  pregenEntries = lib.genAttrs (if (builtins.hasAttr "preset" systemConfig.security) then (systemConfig.security.preset) else []) (name: {
+    rekeyFile = ../../hosts/${systemConfig.hostname}/secrets/${name}.age;
+  });
+  # and we setup generated secrets here.  These can be generated during setup
+  # rather than needing some pre-defined value.  These can change at any time
+  # and shouldn't be relied on being stable.  This can also generate secret
+  # pairs. things like wireguard keypairs.
+  generateEntries = lib.mapAttrs (name: value: {
+    rekeyFile = ../../hosts/${systemConfig.hostname}/secrets/${name}.age;
+    generator = value;
+  }) (if (builtins.hasAttr "generate" systemConfig.security) then systemConfig.security.generate else {}) ;
 in{
   # Enable TPM2 for laptops and other TPM protected computers.
   # These are only used as a basis for speed-boot options, and
@@ -44,6 +57,10 @@ in{
     # agenix encrypted secrets have a functioning OpenSSH daemon running, so
     # host keys aren't always available.
     identityPaths = [ "/persist/agenix.key" "/nix/agenix.key" ];
+    # We're handling pre-adding secrets based on the hostConfig to allow for
+    # dynamic usage of secrets.  Here we use that list to actually put the secrets
+    # into the age system.  We also handle setting up generated secrets here too.
+    secrets = pregenEntries//generateEntries;
     # All these are agenix-rekey options.  This allows using derivations to store
     # the host-encrypted parts.  All secrets still need to be first decrypted with
     # a provided yubikey/hardware token, but then are re-encrypted with the host

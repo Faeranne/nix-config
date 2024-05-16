@@ -18,7 +18,7 @@ containerConfig: let
     (if isUdp then [ containerConfig.network.ports.${portName}.port ] else []) ++ acc
   ) [] portNames;
 
-in {config, ...}:let
+in {config, systemConfig, ...}:let
   /*
     Secret paths are based on the system config's `age.secrets` set, so we gotta do this *inside* the nixos
     module space.  We first make sure the container config contains a `secrets` array. if it does, we can
@@ -36,6 +36,20 @@ in {config, ...}:let
   # We already have existing bindMounts from the container config, so we merge them here with secretMounts.
   bindMounts = containerConfig.bindMounts // secretMounts;
 in {
+  age.secrets."wg${containerConfig.name}" = {
+    rekeyFile = ../hosts/${systemConfig.hostname}/secrets/wireguard-${containerConfig.name}.age;
+    generator = {
+      script = "wireguard";
+      tags = [ "wireguard" ];
+    };
+  };
+  systemd.network.netdevs."wg${containerConfig.name}" = {
+    enable = true;
+    wireguardConfig = {
+      PrivateKeyFile = config.age.secrets."wg${containerConfig.name}".path;
+      ListenPort = 51821+containerConfig.id;
+    };
+  };
   containers = {
     ${containerConfig.name} = {
       /*
