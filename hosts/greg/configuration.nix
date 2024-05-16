@@ -94,7 +94,7 @@
   };
   networking = {
     firewall = {
-      allowedTCPPorts = [ 25565 9091 ];
+      allowedTCPPorts = [ 25565 9091 80 443 ];
     };
     nat.forwardPorts = [
       {

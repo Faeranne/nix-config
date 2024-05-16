@@ -11,9 +11,12 @@ in {
     ${pkgs.yggdrasil}/bin/yggdrasil -useconf -subnet <<< "$privConf" > ${lib.escapeShellArg (lib.removeSuffix ".age" file + ".net")}
     echo "$privConf"
   '';
-  age.secrets."yggdrasil-${systemConfig.hostname}".generator = {
-    script = "yggdrasilKeyConf";
-    tags = ["yggdrasil"];
+  age.secrets.yggdrasil = {
+    rekeyFile = ../../hosts/${systemConfig.hostname}/secrets/yggdrasil.age;
+    generator = {
+      script = "yggdrasilKeyConf";
+      tags = ["yggdrasil"];
+    };
   };
   services.yggdrasil = {
     enable = true;
@@ -22,7 +25,7 @@ in {
     openMulticastPort = true;
     group = "wheel";
     denyDhcpcdInterfaces = [ "tap" ];
-    configFile = config.age.secrets."yggdrasil-${systemConfig.hostname}".path;
+    configFile = config.age.secrets.yggdrasil.path;
   };
   networking.firewall.allowedTCPPorts = [];
 }
