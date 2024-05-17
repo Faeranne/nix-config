@@ -105,12 +105,15 @@
     ];
   };
   age.secrets = {
-    freshrss.rekeyFile = ./freshrss.age;
-    openvpn_user.rekeyFile = ./openvpn_user.age;
-    openvpn_pass.rekeyFile = ./openvpn_pass.age;
-    paperless_superuser.generator = {
-      script = "passphrase";
-      tags = [ "pregen" ];
+    freshrss.rekeyFile = ./secrets/freshrss.age;
+    openvpn_user.rekeyFile = ./secrets/openvpn_user.age;
+    openvpn_pass.rekeyFile = ./secrets/openvpn_pass.age;
+    paperless_superuser = {
+      rekeyFile = ./secrets/paperless_superuser.age;
+      generator = {
+        script = "passphrase";
+        tags = [ "pregen" ];
+      };
     };
   };
   services.traefik.dynamicConfigOptions.http = {

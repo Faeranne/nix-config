@@ -1,7 +1,13 @@
 {
-  network.ports.http = {
-    port = 8096;
-    type = "tcp";
+  network = {
+    links = [
+      "greg-traefik"
+      "greg-servarr"
+    ];
+    ports.http = {
+      port = 8096;
+      type = "tcp";
+    };
   };
   bindMounts = {
     "/media" = {

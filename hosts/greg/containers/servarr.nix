@@ -1,24 +1,28 @@
 {
-  network.ports = {
-    prowlarr = {
-      port = 9696;
-      type = "tcp";
-    };
-    sonarr = {
-      port = 8989;
-      type = "tcp";
-    };
-    radarr = {
-      port = 7878;
-      type = "tcp";
-    };
-    lidarr = {
-      port = 8686;
-      type = "tcp";
-    };
-    ombi = {
-      port = 5000;
-      type = "tcp";
+  network = {
+    links = [
+    ];
+    ports = {
+      prowlarr = {
+        port = 9696;
+        type = "tcp";
+      };
+      sonarr = {
+        port = 8989;
+        type = "tcp";
+      };
+      radarr = {
+        port = 7878;
+        type = "tcp";
+      };
+      lidarr = {
+        port = 8686;
+        type = "tcp";
+      };
+      ombi = {
+        port = 5000;
+        type = "tcp";
+      };
     };
   };
   bindMounts = {

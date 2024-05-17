@@ -1,7 +1,12 @@
 {
-  network.ports.http = {
-    port = 8096;
-    type = "tcp";
+  network = {
+    links = [
+      "greg-traefik"
+    ];
+    ports.http = {
+      port = 8096;
+      type = "tcp";
+    };
   };
   bindMounts = {
     "/var/lib/paperless" = {

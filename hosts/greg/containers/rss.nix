@@ -1,7 +1,12 @@
 {
-  network.ports.http = {
-    port = 80;
-    type = "tcp";
+  network = {
+    links = [
+      "greg-traefik"
+    ];
+    ports.http = {
+      port = 80;
+      type = "tcp";
+    };
   };
   bindMounts = {
     "/var/lib/freshrss" = {
