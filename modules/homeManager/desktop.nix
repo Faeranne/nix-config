@@ -41,6 +41,10 @@ in {
     };
     wayland.windowManager.sway = {
       enable = isSway;
+      wrapperFeatures = {
+        base = true;
+        gtk = true;
+      };
       config = rec {
         modifier = "Mod4";
         terminal = "kitty";

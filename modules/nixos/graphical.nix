@@ -6,12 +6,33 @@
   isX11 = isGnome || isKde;
 in {
   xdg.portal = lib.mkIf isGraphical {
+    config = {
+      common = {
+        default = [
+          "gtk"
+        ];
+        "org.freedesktop.impl.portal.Screencast" = [
+          "wlr"
+        ];
+        "org.freedesktop.impl.portal.Screenshot" = [
+          "wlr"
+        ];
+      };
+    };
     enable = true;
     wlr.enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+    ];
   };
   services = {
     udev.packages = with pkgs; lib.mkIf isGnome [ gnome.gnome-settings-daemon ];
     dbus.enable = lib.mkDefault isGraphical;
+    gvfs = {
+      package = pkgs.gvfs;
+      enable = isGraphical;
+    };
+    tumbler.enable = true;
     greetd = {
       enable = true;
       vt = 7;
@@ -30,11 +51,9 @@ in {
       displayManager = {
         sddm = {
           enable = isKde && (! isGnome);
-          wayland.enable = true;
         };
         gdm = {
           enable = isGnome;
-          wayland = true;
         };
       };
       desktopManager = {
@@ -61,6 +80,10 @@ in {
     kdeconnect = {
       enable = true;
     };
+    thunar = lib.mkIf isSway {
+      enable = true;
+      plugins = with pkgs.xfce; [ thunar-archive-plugin thunar-volman thunar-media-tags-plugin ];
+    };
   };
   hardware.pulseaudio.enable = false;
   hardware.opengl.enable = true;
@@ -85,6 +108,7 @@ in {
       meslo-lgs-nf
       rofi-wayland
       wofi
+      f3d
     ]) else []) ++ 
     (if isGnome then (with pkgs; [
       gnomeExtensions.appindicator

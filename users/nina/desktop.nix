@@ -77,7 +77,6 @@ in {
       godot_4
       vesktop
       transmission-remote-gtk
-      xfce.thunar
       pavucontrol
       rofi-wayland
       ryujinx
