@@ -41,6 +41,7 @@ in {
     };
     wayland.windowManager.sway = {
       enable = isSway;
+      systemd.enable = true;
       wrapperFeatures = {
         base = true;
         gtk = true;
