@@ -46,7 +46,7 @@ in {
         base = true;
         gtk = true;
       };
-      config = rec {
+      config = {
         modifier = "Mod4";
         terminal = "kitty";
         menu = "${pkgs.rofi}/bin/rofi -show drun -theme theme.rasi | ${pkgs.findutils}/bin/xargs swaymsg exec --";
@@ -64,6 +64,11 @@ in {
           "Dell Inc. DELL P2210 6H6FX214352S" = {
             pos = "-1680 0";
           };
+        };
+        keybindings = let
+          modifier = config.wayland.windowManager.sway.config.modifier;
+        in lib.mkOptionDefault {
+          "${modifier}+g" = "exec TIMESTAMP=$(date +\"%Y%m%d%H%M\") grim /tmp/screenshot$TIMESTAMP.png && gimp /tmp/screenshot$TIMESTAMP.png && rm /tmp/screenshot$TIMESTAMP.png";
         };
         input = {
           "*" = {

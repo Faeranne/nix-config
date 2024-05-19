@@ -51,14 +51,6 @@ in {
         output = "ViewSonic Corporation VP2468 Series UN8170400211";
         defaultTimeout = 30000;
       };
-      flameshot = {
-        enable = true;
-        settings = {
-          General = {
-            disabledTrayIcon = false;
-          };
-        };
-      };
       kdeconnect = {
         enable = true;
         indicator = true;

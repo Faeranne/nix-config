@@ -108,8 +108,14 @@ in {
       meslo-lgs-nf
       rofi-wayland
       wofi
-      f3d
     ]) else []) ++ 
+    (if isSway then (with pkgs; [
+      grim 
+      sway-contrib.grimshot
+      swappy
+      wl-clipboard
+      f3d
+    ]) else [] ) ++
     (if isGnome then (with pkgs; [
       gnomeExtensions.appindicator
       gnome.gnome-tweaks
