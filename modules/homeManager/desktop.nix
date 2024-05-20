@@ -78,6 +78,7 @@ in {
         };
         startup = [
           { command = "mako"; }
+          { command = "kdeconnect-indicator"; }
         ];
       };
     };

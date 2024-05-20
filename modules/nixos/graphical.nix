@@ -108,6 +108,7 @@ in {
       meslo-lgs-nf
       rofi-wayland
       wofi
+      kde-connect
     ]) else []) ++ 
     (if isSway then (with pkgs; [
       grim 
