@@ -20,5 +20,7 @@
     ./containers.nix
     ./servers.nix
     ./yggdrasil.nix
+    ./nfs.nix
+    ./netboot.nix
   ];
 }

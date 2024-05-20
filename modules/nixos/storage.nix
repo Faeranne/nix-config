@@ -14,6 +14,7 @@
 {systemConfig, lib, ...}: let
   isImpermanent = (builtins.elem "impermanence" systemConfig.elements);
   isLowMem = (builtins.elem "lowmem" systemConfig.elements);
+  isNetboot = (builtins.elem "netboot" systemConfig.elements);
 in{
 
   #If we have a `zfs` option in systemConfig, we load those pools at boot.
@@ -73,7 +74,7 @@ in{
           content = {
             type = "gpt";
             partitions = {
-              boot = {
+              boot = lib.mkIf (!isNetboot) {
                 name = "EFI";
                 type = "EF00";
                 start = "1M";
@@ -123,13 +124,15 @@ in{
           } else {
             #Since not lowmem is either gonna also be not impermanent or handled above,
             #once again we have an empty space.  What I would give for elseif.
-          }) // {
-            #Always gotta have that nix-store, so this is where we do it.
+          }) // (if (isNetboot) then {
+            #If we're netbooting, we don't want to create the nixstore locally.
+          } else {
+            #Unless we're netbooting, we gotta have a nix store somewhere, so here's where it ends up.
             "nix" = {
               type = "zfs_fs";
               mountpoint = "/nix";
             };
-          };
+          });
         };
       };
     };
@@ -144,6 +147,12 @@ in{
     #if the system isn't impermanet. (Note that nixos modules do a lot more to actually hide this value, but
     #it's not actually possible to set a value to nothing in nix, so this is kinda what it ends up looking like)
     "/persist" = lib.mkIf isImpermanent {neededForBoot = true;};
-    "/nix".neededForBoot = true;
+    "/nix" = {
+      neededForBoot = true;
+    } // (if (isNetboot) then {
+      device = "greg:/nix";
+      fsType = "nfs";
+    } else {
+    });
   };
 }

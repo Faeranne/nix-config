@@ -219,4 +219,14 @@ rec {
     #the check fails.
     if checkContainers then (removeAttrs configs ["currentId"]) else {}
   );
+
+  /*
+    This set of values covers gathering and handling netboot stuff.
+  */
+  getNetbootConfigs = foldl' (res: host: let
+    config = getHostConfig host;
+    isNetboot = (builtins.elem "netboot" config.elements);
+  in (if isNetboot then {
+    ${host} = config;
+  } else {}) // res) {} allHosts;
 }
