@@ -4,7 +4,9 @@
   isSway = (builtins.elem "sway" systemConfig.elements);
   isGraphical = isGnome || isKde || isSway;
 in {
-  config = lib.mkIf isGraphical {
+  config =  let
+    swaylock-bin = "${pkgs.swaylock}/bin/swaylock";
+  in lib.mkIf isGraphical {
     dconf = lib.mkIf isGnome {
       enable = true;
       settings = {
@@ -38,18 +40,26 @@ in {
         enable = isGraphical;
         nativeMessagingHosts = with pkgs; (if isGnome then [ gnome-browser-connector ] else []);
       };
+      swaylock = {
+        enable = true;
+      };
     };
     wayland.windowManager.sway = {
       enable = isSway;
-      systemd.enable = true;
+      systemd = {
+        enable = true;
+        xdgAutostart = true;
+      };
       wrapperFeatures = {
         base = true;
         gtk = true;
       };
+      swaynag.enable = true;
       config = {
         modifier = "Mod4";
         terminal = "kitty";
-        menu = "${pkgs.rofi}/bin/rofi -show drun -theme theme.rasi | ${pkgs.findutils}/bin/xargs swaymsg exec --";
+        menu = "${pkgs.rofi}/bin/rofi -show drun";
+        bars = [];
         output = {
           "Dell Inc. DELL P2210 0VW5M1C8H57S" = {
             transform = "270";
@@ -69,6 +79,7 @@ in {
           modifier = config.wayland.windowManager.sway.config.modifier;
         in lib.mkOptionDefault {
           "${modifier}+g" = "exec TIMESTAMP=$(date +\"%Y%m%d%H%M\") grim /tmp/screenshot$TIMESTAMP.png && gimp /tmp/screenshot$TIMESTAMP.png && rm /tmp/screenshot$TIMESTAMP.png";
+          "${modifier}+Mod1+l" = "exec ${swaylock-bin} -fF";
         };
         input = {
           "*" = {
@@ -91,5 +102,38 @@ in {
       lutris
       samba
     ];
+    services = {
+      swayidle = {
+        enable = true;
+        systemdTarget = "sway-session.target";
+        events = [
+          {
+            event = "before-sleep";
+            command = "${swaylock-bin}";
+          }
+          {
+            event = "lock";
+            command = "${swaylock-bin}";
+          }
+        ];
+        timeouts = [
+          {
+            timeout = 600;
+            command = "${swaylock-bin} -fF";
+          }
+          {
+            timeout = 300;
+            command = "${pkgs.sway}/bin/swaymsg \"output * power off\"";
+            resumeCommand = "${pkgs.sway}/bin/swaymsg \"output * power on\"";
+          }
+        ];
+      };
+      gammastep = {
+        enable = true;
+        tray = true;
+        latitude = 39.7;
+        longitude = -86.2;
+      };
+    };
   };
 }

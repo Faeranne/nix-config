@@ -30,6 +30,9 @@ in{
     polkit = {
       enable = true;
     };
+    pam = {
+      services.swaylock = {};
+    };
   };
   # PCSCD enables access to things like Yubikeys.
   services = {

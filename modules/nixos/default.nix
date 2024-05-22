@@ -22,5 +22,6 @@
     ./yggdrasil.nix
     ./nfs.nix
     ./netboot.nix
+    ./styling.nix
   ];
 }
