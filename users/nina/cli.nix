@@ -22,6 +22,10 @@
       enable = true;
     };
     gpg.enable = true;
+    thefuck = {
+      enable = true;
+      enableZshIntegration = true;
+    };
   };
   services = {
     gpg-agent = {
