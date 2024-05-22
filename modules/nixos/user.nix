@@ -6,6 +6,7 @@
   #There's a few home-manager settings that work cross-user
   #these are set here.
   home-manager = {
+    backupFileExtension = "bak";
     sharedModules = [ 
       #every user will import all the `homeManager` modules,
       #and rely on things like `elements` to enable
