@@ -30,6 +30,7 @@ in {
       flakeUtils = utils;
     };
     modules = additionalModules ++ containerModules ++ [
+      inputs.stylix.nixosModules.stylix
       ({...}: {
         nixpkgs.overlays = [
           (final: prev: {
