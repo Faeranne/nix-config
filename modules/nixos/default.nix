@@ -20,5 +20,6 @@
     ./containers.nix
     ./servers.nix
     ./yggdrasil.nix
+    ./styling.nix
   ];
 }

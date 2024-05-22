@@ -7,6 +7,7 @@
     ./vim.nix
     ./zsh.nix
     ./ssh.nix
+    ./styling.nix
   ];
   home = {
     stateVersion = "23.11";

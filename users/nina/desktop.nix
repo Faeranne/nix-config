@@ -58,7 +58,6 @@ in {
     };
     wayland.windowManager.sway.config.output = {
       "*" = {
-        bg = "${./resources/background_square.png} center #000000";
       };
     };
     home.packages = with pkgs; [
