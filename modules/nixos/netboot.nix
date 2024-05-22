@@ -14,11 +14,11 @@
     kernel=u-boot-rpi3.bin
 
     [pi4]
-    kernel=u-boot-rpi4.bin
-    #kernel=kernel.img
-    #initramfs initrd.img followkernel
-    enable_gic=1
-    armstub=armstub8-gic.bin
+    #kernel=u-boot-rpi4.bin
+    kernel=kernel.img
+    initramfs initrd.img followkernel
+    #enable_gic=1
+    #armstub=armstub8-gic.bin
 
     # Otherwise the resolution will be weird in most cases, compared to
     # what the pi3 firmware does by default.
@@ -44,7 +44,7 @@
 
     # Prevent the firmware from smashing the framebuffer setup done by the mainline kernel
     # when attempting to show low-voltage or overtemperature warnings.
-    avoid_warnings=1
+    #avoid_warnings=1
 
   '';
   netbootLines = lib.strings.concatMapStrings (serv: let
@@ -59,7 +59,7 @@
     initram = target.config.system.build.initialRamdisk;
     kernel = target.config.system.build.kernel;
     commandlineTxt = pkgs.writeText "commandline.txt" ''
-      init=${target.config.system.build.toplevel}/init boot.shell_on_fail console=ttyS0,115200n8 console=ttyAMA0,115200n8 console=tty0 nohibernate loglevel=7
+      init=${target.config.system.build.toplevel}/init ${toString target.config.boot.kernelParams}
     '';
     linuxCfg = ''
       DEFAULT menu.c32
@@ -81,7 +81,7 @@
       cp -r ${boot}/nixos/* $out/${hostId}/boot
       cp -r ${kernel}/dtbs/* $out/${hostId}/dtbs
       ln -s ${topLevel} $out/${hostId}/root
-      ln -s ${kernel}/Image $out/${hostId}/kernel.img
+      ln -s ${kernel}/${target.config.system.boot.loader.kernelFile} $out/${hostId}/kernel.img
       ln -s ${initram}/initrd.zst $out/${hostId}/initrd.img
       ln -s ${configTxt} $out/${hostId}/config.txt
       ln -s ${commandlineTxt} $out/${hostId}/cmdline.txt
@@ -126,6 +126,6 @@ in {
   };
   networking.firewall = lib.mkIf isNetbootServer {
     allowedTCPPorts = [ 69 ];
-    allowedUDPPorts = [ 69 514 ];
+    allowedUDPPorts = [ 69 6665 ];
   };
 }
