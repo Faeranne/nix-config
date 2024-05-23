@@ -48,6 +48,7 @@ in {
         package = pkgs.rofi;
         extraConfig = {
           modes = "window,drun,run,ssh,emoji,calc,file-browser-extended";
+          show-icons = true;
         };
         plugins = with pkgs; [
           rofi-calc
