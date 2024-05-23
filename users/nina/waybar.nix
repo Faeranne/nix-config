@@ -39,9 +39,9 @@
             "9"= "";
             "10"= "";
           };
-          #"clock#time" = {
-          #  "timezone
-          #};
+        };
+        "clock" = {
+          "timezone" = "America/Indiana/Indianapolis";
         };
       };
     };
