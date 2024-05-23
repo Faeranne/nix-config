@@ -69,7 +69,6 @@ in {
       vesktop
       transmission-remote-gtk
       pavucontrol
-      rofi-wayland
       ryujinx
      #kicad
     ];
