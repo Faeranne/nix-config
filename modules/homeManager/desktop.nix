@@ -43,6 +43,24 @@ in {
       swaylock = {
         enable = true;
       };
+      rofi = {
+        enable = true;
+        package = pkgs.rofi;
+        extraConfig = {
+          modes = "window,drun,run,ssh,emoji,calc,file-browser-extended";
+          show-icons = true;
+        };
+        plugins = with pkgs; [
+          rofi-calc
+          rofi-emoji
+          rofi-systemd
+          rofi-screenshot
+          rofi-power-menu
+          rofi-pulse-select
+          rofi-file-browser
+        ];
+        terminal = "${pkgs.kitty}/bin/kitty";
+      };
     };
     wayland.windowManager.sway = {
       enable = isSway;
@@ -58,7 +76,7 @@ in {
       config = {
         modifier = "Mod4";
         terminal = "kitty";
-        menu = "${pkgs.rofi}/bin/rofi -show drun";
+        menu = "${config.programs.rofi.finalPackage}/bin/rofi -show drun";
         bars = [];
         output = {
           "Dell Inc. DELL P2210 0VW5M1C8H57S" = {
@@ -85,6 +103,7 @@ in {
           "*" = {
             xkb_layout = "us";
             xkb_options = "caps:escape";
+            xkb_numlock = "enabled";
           };
         };
         startup = [

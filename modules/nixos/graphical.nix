@@ -106,7 +106,6 @@ in {
       xwayland
       nerdfonts
       meslo-lgs-nf
-      rofi-wayland
       wofi
     ]) else []) ++ 
     (if isSway then (with pkgs; [

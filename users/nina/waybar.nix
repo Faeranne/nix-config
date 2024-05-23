@@ -40,6 +40,9 @@
             "10"= "";
           };
         };
+        "clock" = {
+          "timezone" = "America/Indiana/Indianapolis";
+        };
       };
     };
     systemd = {
