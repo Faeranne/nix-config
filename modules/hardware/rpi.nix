@@ -1,5 +1,4 @@
 { config, lib, pkgs, modulesPath, inputs, ... }:
-
 {
   imports =
     [ (modulesPath + "/installer/scan/not-detected.nix")
@@ -13,25 +12,10 @@
 
   # We rely on Tow-boot to ensure a uniform platform
   boot.loader = {
-    systemd-boot.enable = false;
-    efi.canTouchEfiVariables = false;
-    generic-extlinux-compatible.enable = true;
+    systemd-boot.enable = lib.mkOverride 110 true;
+    efi.canTouchEfiVariables = lib.mkOverride 110 false;
+    generic-extlinux-compatible.enable = lib.mkOverride 110 false;
   };
 
   zramSwap.enable = true;
-  nixpkgs.overlays = [
-    (final: prev: {
-      ubootNet = final.buildUBoot {
-        defconfig = "rpi_4_defconfig";
-        extraConfig = ''
-          CONFIG_BOOTSTD_FULL=y
-          CONFIG_NETCONSOLE=y
-          CONFIG_EXTRA_ENV_SETTINGS="serverip=192.168.1.10
-          test=4"
-        '';
-        extraMeta.platforms = ["aarch64-linux"];
-        filesToInstall = ["u-boot.bin"];
-      };
-    }) 
-  ];
 }

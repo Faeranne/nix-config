@@ -18,6 +18,7 @@
   hostId = "586769c4";
   # Primary network interface as reported by `ip addr`
   netdev = "enp10s0";
+  ip = "192.168.1.80";
   # Root disk devices for this system.  Prefer `by-path` where possible,
   # but can be `by-id` if the path is not guarenteed, like on cloud servers.
   storage = {
