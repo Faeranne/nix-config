@@ -23,5 +23,6 @@
     ./nfs.nix
     ./netboot.nix
     ./styling.nix
+    ./boot.nix
   ];
 }
