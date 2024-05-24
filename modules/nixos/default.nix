@@ -21,5 +21,6 @@
     ./servers.nix
     ./yggdrasil.nix
     ./styling.nix
+    ./boot.nix
   ];
 }
