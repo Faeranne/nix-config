@@ -14,11 +14,11 @@
     kernel=u-boot-rpi3.bin
 
     [pi4]
-    #kernel=u-boot-rpi4.bin
-    kernel=kernel.img
-    initramfs initrd.img followkernel
-    #enable_gic=1
-    #armstub=armstub8-gic.bin
+    kernel=u-boot-rpi4.bin
+    #kernel=kernel.img
+    #initramfs initrd.img followkernel
+    enable_gic=1
+    armstub=armstub8-gic.bin
 
     # Otherwise the resolution will be weird in most cases, compared to
     # what the pi3 firmware does by default.
@@ -62,6 +62,7 @@
       init=${target.config.system.build.toplevel}/init ${toString target.config.boot.kernelParams}
     '';
     linuxCfg = ''
+      
       DEFAULT menu.c32
       PROMPT 0
       TIMEOUT 100
@@ -71,7 +72,7 @@
         MENU LABEL NixOS: ${hostId}
         LINUX ${hostId}/kernel.img
         INITRD ${hostId}/initrd.img
-        APPEND init=${topLevel}/init boot.shell_on_fail console=ttyS0,115200n8 console=ttyAMA0,115200n8 console=tty0 nohibernate loglevel=7
+        APPEND init=${topLevel}/init ${toString target.config.boot.kernelParams} netconsole=@/,6665@192.168.1.10/
         FDTDIR ${hostId}/dtbs
     '';
   in ''

@@ -8,7 +8,6 @@
 
   boot.initrd.availableKernelModules = [ "xhci_pci" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelPackages = pkgs.linuxPackages;
   boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];
 
@@ -25,7 +24,10 @@
       ubootNet = final.buildUBoot {
         defconfig = "rpi_4_defconfig";
         extraConfig = ''
-          CONFIG_SERVERIP="192.168.1.10"
+          CONFIG_BOOTSTD_FULL=y
+          CONFIG_NETCONSOLE=y
+          CONFIG_EXTRA_ENV_SETTINGS="serverip=192.168.1.10
+          test=4"
         '';
         extraMeta.platforms = ["aarch64-linux"];
         filesToInstall = ["u-boot.bin"];
