@@ -179,6 +179,9 @@
         ];
         format = "sd-aarch64";
       };
+      deploy = pkgs.writeShellScriptBin "deploy" ''
+        sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild --flake .#`${pkgs.nettools}/bin/hostname` switch
+      '';
     } // foldl' (acc: name:
       #This creates a `<system>-disko` script that formats drives for whatever system I may be installing.
       #Every ssytem is evaluated through this script.
