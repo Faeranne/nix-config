@@ -13,5 +13,6 @@
     helvum
     ssh-agents
     zip
+    unzip
   ];
 }
