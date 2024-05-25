@@ -26,6 +26,8 @@
       jellyfin
       jellyfin-web
       jellyfin-ffmpeg
+      id3v2
+      yt-dlp
     ];
     services.jellyfin = {
       enable = true;
