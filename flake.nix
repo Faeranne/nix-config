@@ -77,7 +77,7 @@
   # since `inputs` is a single variable here, it's the set of flakes input above.
   # this also includes this flake as `self`.
   # `with builtins` makes all builtin functions available.
-  outputs = inputs: with builtins; let
+  outputs = {self, ...}@inputs: with builtins; let
     # `nixpkgs.lib` is a pretty common set of libraries, so I usually include it
     # when making functions outside of nixos modules.
     inherit (inputs.nixpkgs) lib;
@@ -168,17 +168,24 @@
         ];
         format = "install-iso";
       };
-      deploy = pkgs.writeShellScriptBin "deploy" ''
-        sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild --flake .#`${pkgs.nettools}/bin/hostname` switch
+      deploy = let
+        action = if self ? rev then "switch" else "test";
+        message = if self ? rev then "Clean repo, full switch" else "Dirty repo, only testing";
+      in pkgs.writeShellScriptBin "deploy" ''
+        echo ${message}
+        sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild --flake .#`${pkgs.nettools}/bin/hostname` ${action}
       '';
       default = inputs.self.packages.${system}.deploy;
     } 
     // foldl' (acc: host: 
       let
         config = utils.getHostConfig host;
+        action = if self ? rev then "switch" else "test";
+        message = if self ? rev then "Clean repo, full switch" else "Dirty repo, only testing";
         name = "deploy-${host}";
         value = pkgs.writeShellScriptBin "deploy-${host}" ''
-          ${pkgs.nixos-rebuild}/bin/nixos-rebuild --flake .#${host} --target-host ${config.net.url} --use-remote-sudo switch
+          echo ${message}
+          ${pkgs.nixos-rebuild}/bin/nixos-rebuild --flake .#${host} --target-host ${config.net.url} --use-remote-sudo ${action}
         '';
       in 
         (if 
