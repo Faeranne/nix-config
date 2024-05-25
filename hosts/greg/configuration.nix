@@ -188,4 +188,5 @@
       paperless.loadBalancer.servers = [ {url = "http://10.200.0.6:8096"; } ];
     };
   };
+  services.zfs.autoScrub.pools = [ "Storage" ];
 }
