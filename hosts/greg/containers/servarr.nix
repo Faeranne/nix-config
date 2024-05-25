@@ -19,6 +19,10 @@
         port = 8686;
         type = "tcp";
       };
+      bazarr = {
+        port = 6767;
+        type = "tcp";
+      };
       ombi = {
         port = 5000;
         type = "tcp";
@@ -44,6 +48,10 @@
     };
     "/var/lib/ombi" = {
       hostPath = "/Storage/volumes/ombi";
+      isReadOnly = false;
+    };
+    "/var/lib/bazarr" = {
+      hostPath = "/Storage/volumes/bazarr";
       isReadOnly = false;
     };
     "/transmission" = {
@@ -79,6 +87,10 @@
       lidarr = {
         enable = true;
         dataDir = "/var/lib/lidarr";
+        group = "users";
+      };
+      bazarr = {
+        enable = true;
         group = "users";
       };
       ombi.enable = true;

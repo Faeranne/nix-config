@@ -159,6 +159,11 @@
         service = "lidarr";
         entryPoints = [ "websecure" ];
       };
+      bazarr = {
+        rule = "Host(`bazarr.faeranne.com`)";
+        service = "bazarr";
+        entryPoints = [ "websecure" ];
+      };
       ombi = {
         rule = "Host(`request.faeranne.com`)";
         service = "ombi";
@@ -183,6 +188,7 @@
       sonarr.loadBalancer.servers = [ {url = "http://10.200.0.5:8989"; } ];
       radarr.loadBalancer.servers = [ {url = "http://10.200.0.5:7878"; } ];
       lidarr.loadBalancer.servers = [ {url = "http://10.200.0.5:8686"; } ];
+      bazarr.loadBalancer.servers = [ {url = "http://10.200.0.5:6767"; } ];
       ombi.loadBalancer.servers = [ {url = "http://10.200.0.5:5000"; } ];
       wizarr.loadBalancer.servers = [ {url = "http://10.88.1.3:5690"; } ];
       paperless.loadBalancer.servers = [ {url = "http://10.200.0.6:8096"; } ];
