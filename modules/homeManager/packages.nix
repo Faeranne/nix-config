@@ -12,5 +12,6 @@
     jackmix
     helvum
     ssh-agents
+    zip
   ];
 }
