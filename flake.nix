@@ -168,21 +168,30 @@
         ];
         format = "install-iso";
       };
-      rpi_base = inputs.nixos-generators.nixosGenerate {
-        system = "aarch64-linux";
-        inherit pkgs;
-        specialArgs = { 
-          inherit (inputs) self;
-        };
-        modules = [
-          ./modules/nixos/rpi.nix
-        ];
-        format = "sd-aarch64";
-      };
       deploy = pkgs.writeShellScriptBin "deploy" ''
         sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild --flake .#`${pkgs.nettools}/bin/hostname` switch
       '';
-    } // foldl' (acc: name:
+      default = inputs.self.packages.${system}.deploy;
+    } 
+    // foldl' (acc: host: 
+      let
+        config = utils.getHostConfig host;
+        name = "deploy-${host}";
+        value = pkgs.writeShellScriptBin "deploy-${host}" ''
+          ${pkgs.nixos-rebuild}/bin/nixos-rebuild --flake .#${host} --target-host ${config.net.url} --use-remote-sudo switch
+        '';
+      in 
+        (if 
+          builtins.hasAttr "net" config && builtins.hasAttr "url" config.net
+        then
+          {
+            ${name} = value;
+          }
+        else
+          {}
+        ) // acc
+    ) {} hosts
+    // foldl' (acc: name:
       #This creates a `<system>-disko` script that formats drives for whatever system I may be installing.
       #Every ssytem is evaluated through this script.
       ##TODO: I also need to add something to pre-generate new local system keys.
