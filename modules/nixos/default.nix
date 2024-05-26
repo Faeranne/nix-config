@@ -6,6 +6,7 @@
     inputs.home-manager.nixosModules.home-manager
     inputs.ragenix.nixosModules.default
     inputs.agenix-rekey.nixosModules.default
+    inputs.stylix.nixosModules.stylix
     ./base.nix
     ./graphical.nix
     ./emulation.nix

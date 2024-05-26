@@ -82,12 +82,11 @@
     # when making functions outside of nixos modules.
     inherit (inputs.nixpkgs) lib;
     inherit (inputs) local;
-    # flakeLibs hase `mkHost` and `mkUser` in it.  It needs `inputs` to do it's thing
+    # flakeLibs hase `mkHost` in it.  It needs `inputs` to do it's thing
     # so it's imported here.  I also inherit mkHost directly since I use it here.
     flakeLibs = import ./lib inputs;
-    inherit (flakeLibs) mkHost mkUser utils;
-    inherit (flakeLibs.utils) getFolders;
-    hosts = getFolders ./hosts;
+    inherit (flakeLibs) mkHost utils;
+    hosts = utils.allHosts;
     #This closes the let enclosure on `outputs`
   in {
     # this produces a set containing every host as a `nixosSystem` derivation.
@@ -116,9 +115,6 @@
       nodes = inputs.self.nixosConfigurations;
     };
 
-    homeConfigurations = { 
-      "nina@sarah" = mkUser "sarah" "nina";
-    };
   } // inputs.flake-utils.lib.eachDefaultSystem (system: let
     pkgs = import inputs.nixpkgs {
       inherit system;

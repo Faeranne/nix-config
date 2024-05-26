@@ -1,4 +1,4 @@
-{utils, inputs}: hostname: username: inputs.home-manager.lib.homeManagerConfiguration (let
+inputs: hostname: username: inputs.home-manager.lib.homeManagerConfiguration (let
     systemConfig = utils.getHostConfig hostname;
     userConfig = utils.getUserConfig username;
     system = utils.getSystemFromBase systemConfig;
