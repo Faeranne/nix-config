@@ -1,6 +1,10 @@
 {inputs, config, hostServer, systemConfig, lib, pkgs, ...}:{
 
   boot = {
+    kernelParams = [
+      "debug"
+      "netconsole=+r6665@/eth0,6665@${hostServer.net.ip}/${hostServer.net.mac}"
+    ];
     loader = {
       timeout = 10;
     };
@@ -11,10 +15,6 @@
   };
 
   fileSystems = {
-    "/" = { 
-      fsType = "tmpfs";
-      options = [ "mode=0755" ];
-    };
     "/nix/.ro-store" = {
       fsType = "nfs";
       device = "${hostServer.ip}:/nix/store";
@@ -43,8 +43,8 @@
     # /etc/NIXOS tag.
     # We don't enable these since all netboot systems are supposed to be stateless
     # and nixos-rebuild isn't used for them
-    #touch /etc/NIXOS
-    #${config.nix.package}/bin/nix-env -p /nix/var/nix/profiles/system --set /run/current-system
+    touch /etc/NIXOS
+    ${config.nix.package}/bin/nix-env -p /nix/var/nix/profiles/system --set /run/current-system
   '';
 
 }

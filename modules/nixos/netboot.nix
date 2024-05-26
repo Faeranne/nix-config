@@ -45,7 +45,7 @@
     # Prevent the firmware from smashing the framebuffer setup done by the mainline kernel
     # when attempting to show low-voltage or overtemperature warnings.
     avoid_warnings=1
-
+    disable_splash=1
   '';
   # This can be used to rebuild the target with the needed specialArgs for the host
   extendTarget = target: host: target.extendModules {
@@ -60,11 +60,11 @@
   };
   netbootLines = lib.strings.concatMapStrings (serv: let
     targetConfig = netbootConfigs.${serv};
-    target = extendTarget inputs.self.nixosConfigurations.${serv} {ip = systemConfig.ip;};
+    target = extendTarget inputs.self.nixosConfigurations.${serv} {net = systemConfig.net;};
     hostId = targetConfig.hostId;
     topLevel = target.config.system.build.toplevel;
     commandlineTxt = pkgs.writeText "commandline.txt" ''
-      init=${target.config.system.build.toplevel}/init ${toString target.config.boot.kernelParams} 
+      init=${target.config.system.build.toplevel}/init initrd=initrd ${toString target.config.boot.kernelParams} 
     '';
   in ''
       mkdir -p $out/${hostId}/{boot,dtbs}

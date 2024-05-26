@@ -160,10 +160,6 @@ in{
     "/persist" = lib.mkIf isImpermanent {neededForBoot = true;};
     "/nix" = {
       neededForBoot = true;
-    } // (if (isNetboot) then {
-      device = "greg:/nix";
-      fsType = "nfs";
-    } else {
-    });
+    };
   };
 }
