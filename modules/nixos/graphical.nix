@@ -84,6 +84,9 @@ in {
       enable = true;
       plugins = with pkgs.xfce; [ thunar-archive-plugin thunar-volman thunar-media-tags-plugin ];
     };
+    file-roller = lib.mkIf isSway {
+      enable = true;
+    };
   };
   hardware.pulseaudio.enable = false;
   hardware.opengl.enable = true;

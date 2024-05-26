@@ -77,7 +77,7 @@
   # since `inputs` is a single variable here, it's the set of flakes input above.
   # this also includes this flake as `self`.
   # `with builtins` makes all builtin functions available.
-  outputs = inputs: with builtins; let
+  outputs = {self, ...}@inputs: with builtins; let
     # `nixpkgs.lib` is a pretty common set of libraries, so I usually include it
     # when making functions outside of nixos modules.
     inherit (inputs.nixpkgs) lib;
@@ -168,18 +168,37 @@
         ];
         format = "install-iso";
       };
-      rpi_base = inputs.nixos-generators.nixosGenerate {
-        system = "aarch64-linux";
-        inherit pkgs;
-        specialArgs = { 
-          inherit (inputs) self;
-        };
-        modules = [
-          ./modules/nixos/rpi.nix
-        ];
-        format = "sd-aarch64";
-      };
-    } // foldl' (acc: name:
+      deploy = let
+        action = if self ? rev then "switch" else "test";
+        message = if self ? rev then "Clean repo, full switch" else "Dirty repo, only testing";
+      in pkgs.writeShellScriptBin "deploy" ''
+        echo ${message}
+        sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild --flake .#`${pkgs.nettools}/bin/hostname` ${action}
+      '';
+      default = inputs.self.packages.${system}.deploy;
+    } 
+    // foldl' (acc: host: 
+      let
+        config = utils.getHostConfig host;
+        action = if self ? rev then "switch" else "test";
+        message = if self ? rev then "Clean repo, full switch" else "Dirty repo, only testing";
+        name = "deploy-${host}";
+        value = pkgs.writeShellScriptBin "deploy-${host}" ''
+          echo ${message}
+          ${pkgs.nixos-rebuild}/bin/nixos-rebuild --flake .#${host} --target-host ${config.net.url} --use-remote-sudo ${action}
+        '';
+      in 
+        (if 
+          builtins.hasAttr "net" config && builtins.hasAttr "url" config.net
+        then
+          {
+            ${name} = value;
+          }
+        else
+          {}
+        ) // acc
+    ) {} hosts
+    // foldl' (acc: name:
       #This creates a `<system>-disko` script that formats drives for whatever system I may be installing.
       #Every ssytem is evaluated through this script.
       ##TODO: I also need to add something to pre-generate new local system keys.

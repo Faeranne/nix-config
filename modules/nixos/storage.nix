@@ -41,6 +41,17 @@ in{
     };
   };
 
+  services = {
+    zfs = {
+      autoScrub = {
+        enable = true;
+        pools = [
+          "zroot"
+        ];
+      };
+    };
+  };
+
   disko = {
     devices = {
       #If we use impermanence and are *not* memory constrained

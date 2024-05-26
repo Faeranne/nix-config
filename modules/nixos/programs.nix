@@ -19,11 +19,16 @@ in {
   programs = {
     zsh.enable = true;
   };
-  programs.steam = {
-    enable = hasSteam;
-    remotePlay.openFirewall = true;
-    localNetworkGameTransfers.openFirewall = true;
-    #gamescopeSession.enable = true;
+  programs = {
+    steam = {
+      enable = hasSteam;
+      remotePlay.openFirewall = true;
+      localNetworkGameTransfers.openFirewall = true;
+      #gamescopeSession.enable = true;
+    };
+    adb = {
+      enable = true;
+    };
   };
   hardware.steam-hardware.enable = hasSteam;
   environment.systemPackages = with pkgs; (
