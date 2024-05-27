@@ -19,6 +19,7 @@
     initramfs initrd followkernel
     enable_gic=1
     armstub=armstub8-gic.bin
+    dtparam=sd_poll_once
 
     # Otherwise the resolution will be weird in most cases, compared to
     # what the pi3 firmware does by default.
@@ -64,7 +65,7 @@
     hostId = targetConfig.hostId;
     topLevel = target.config.system.build.toplevel;
     commandlineTxt = pkgs.writeText "commandline.txt" ''
-      init=${target.config.system.build.toplevel}/init initrd=initrd ${toString target.config.boot.kernelParams} 
+      init=${topLevel}/init initrd=initrd ${toString target.config.boot.kernelParams} 
     '';
   in ''
       mkdir -p $out/${hostId}/{boot,dtbs}

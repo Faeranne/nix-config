@@ -6,11 +6,11 @@
     "rpi"
     "server"
     "impermanence"
-    "lowmem"
+   #"lowmem"
     "netboot"
   ];
   # the machine-id of this system.
-  hostId = "8bcb0597";
+  hostId = "9d6541c6";
   # Primary network interface as reported by `ip addr`
   netdev = "eth0";
   # Root disk devices for this system.  Prefer `by-path` where possible,
@@ -23,14 +23,10 @@
   sudo = [ "nina" ];
   # Elements used for security management.
   security = {
-    pubkey = "age1ytw5hv3k50qnh6yn0ana3l932q7azkx0l2fg9zp9h02gknvqx4yq7yvcgl";
+    pubkey = "age1j4vfw8e0vv2p86hz974t3y6gzk5ey8q3vlfutdsd2a56tncakemsf9rzrz";
     preset = [
     ];
     generate = {
     };
-  };
-  netboot = {
-    id = "C0A80171";
-    mac = "01-dc-a6-32-ed-28-be";
   };
 }

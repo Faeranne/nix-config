@@ -6,8 +6,8 @@
     ];
 
   boot.initrd.availableKernelModules = [ "xhci_pci" ];
-  boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ ];
+  boot.initrd.kernelModules = [ "genet" "broadcom" ];
+  boot.kernelModules = config.boot.initrd.kernelModules;
   boot.extraModulePackages = [ ];
 
   # We rely on Tow-boot to ensure a uniform platform
@@ -16,6 +16,4 @@
     efi.canTouchEfiVariables = lib.mkOverride 110 false;
     generic-extlinux-compatible.enable = lib.mkOverride 110 false;
   };
-
-  zramSwap.enable = true;
 }

@@ -158,7 +158,7 @@ in{
     #if the system isn't impermanet. (Note that nixos modules do a lot more to actually hide this value, but
     #it's not actually possible to set a value to nothing in nix, so this is kinda what it ends up looking like)
     "/persist" = lib.mkIf isImpermanent {neededForBoot = true;};
-    "/nix" = {
+    "/nix" = lib.mkIf (!isNetboot)  {
       neededForBoot = true;
     };
   };

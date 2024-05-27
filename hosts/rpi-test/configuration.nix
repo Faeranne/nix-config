@@ -1,6 +1,5 @@
 {inputs, ...}:{
   imports = [
-    "${inputs.nixpkgs}/nixos/modules/installer/netboot/netboot.nix"
   ];
   boot = {
     loader = {
