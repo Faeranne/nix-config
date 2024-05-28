@@ -1,4 +1,5 @@
-{ systemConfig, lib, pkgs, ... }: let
+{ config, systemConfig, lib, pkgs, ... }: let
+  getPubKeys = import ../../lib/getPubKeys.nix;
   isImpermanent = (builtins.elem "impermanence" systemConfig.elements);
   # We get the rekey file locations for secrets that are pregenerated
   # aka: can't be generated automatically.  This is things like vpn credentials
@@ -13,6 +14,9 @@
     rekeyFile = ../../hosts/${systemConfig.hostname}/secrets/${name}.age;
     generator = value;
   }) (if (builtins.hasAttr "generate" systemConfig.security) then systemConfig.security.generate else {}) ;
+  pubkeyList = pkgs.writeText "sudoKeys" ''
+    ${builtins.concatStringsSep "\n" (builtins.concatMap (user: getPubKeys user) systemConfig.sudo)}
+  '';
 in{
   # Enable TPM2 for laptops and other TPM protected computers.
   # These are only used as a basis for speed-boot options, and
@@ -31,7 +35,32 @@ in{
       enable = true;
     };
     pam = {
-      services.swaylock = {};
+      services = {
+        swaylock = {};
+        sudo = {
+          # TODO: This uses the experimental "rules" feature introduced with NixOS/nixpkgs#255547
+          # Be sure to keep an eye on it for future changes
+          rules = {
+            auth = {
+              rssh = {
+                order = config.security.pam.services.su.rules.auth.unix.order - 10;
+                control = "sufficient";
+                modulePath = "${pkgs.pam_rssh}/lib/libpam_rssh.so";
+                settings = {
+                  debug = true;
+                  auth_key_file = pubkeyList;
+                };
+              };
+            };
+          };
+        };
+      };
+      sshAgentAuth = {
+        enable = true;
+        authorizedKeysFiles = [
+          "~/.ssh/authorized_keys"
+        ];
+      };
     };
   };
   # PCSCD enables access to things like Yubikeys.
