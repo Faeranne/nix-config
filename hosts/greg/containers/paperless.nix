@@ -36,7 +36,7 @@
         address = containerConfig.ip;
         user = "paperless";
         passwordFile = "/run/secrets/paperless_superuser";
-        extraConfig = {
+        settings = {
           PAPERLESS_URL="https://paperless.faeranne.com";
           PAPERLESS_TRUSTED_PROXIES="10.200.0.1";
           PAPERLESS_USE_X_FORWARD_HOST=true;

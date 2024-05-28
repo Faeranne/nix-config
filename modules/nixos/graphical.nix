@@ -46,12 +46,14 @@ in {
         '';
       };
     };
+    displayManager = {
+      sddm = {
+        enable = isKde && (! isGnome);
+      };
+    };
     xserver = {
       enable = false;
       displayManager = {
-        sddm = {
-          enable = isKde && (! isGnome);
-        };
         gdm = {
           enable = isGnome;
         };

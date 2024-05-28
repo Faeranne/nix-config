@@ -58,9 +58,6 @@ in{
       };
       sshAgentAuth = {
         enable = true;
-        authorizedKeysFiles = [
-          "~/.ssh/authorized_keys"
-        ];
       };
     };
   };
