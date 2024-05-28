@@ -1,6 +1,7 @@
 { config, systemConfig, lib, pkgs, ... }: let
   getPubKeys = import ../../lib/getPubKeys.nix;
   isImpermanent = (builtins.elem "impermanence" systemConfig.elements);
+  isServer = (builtins.elem "server" systemConfig.elements);
   # We get the rekey file locations for secrets that are pregenerated
   # aka: can't be generated automatically.  This is things like vpn credentials
   pregenEntries = lib.genAttrs (if (builtins.hasAttr "preset" systemConfig.security) then (systemConfig.security.preset) else []) (name: {
@@ -37,7 +38,7 @@ in{
     pam = {
       services = {
         swaylock = {};
-        sudo = {
+        sudo = lib.mkIf isServer {
           # TODO: This uses the experimental "rules" feature introduced with NixOS/nixpkgs#255547
           # Be sure to keep an eye on it for future changes
           rules = {
