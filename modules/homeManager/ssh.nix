@@ -4,7 +4,9 @@
   programs.ssh = {
     forwardAgent = true;
   };
-  systemd.user.sessionVariables = {
-    SSH_ASKPASS = "${pkgs.ksshaskpass}/bin/ksshaskpass";
+  systemd.user.services.ssh-agent = {
+    ENVIRONMENT = {
+      SSH_ASKPASS = "${pkgs.ksshaskpass}/bin/ksshaskpass";
+    };
   };
 }
