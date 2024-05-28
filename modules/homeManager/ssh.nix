@@ -4,4 +4,7 @@
   programs.ssh = {
     forwardAgent = true;
   };
+  systemd.user.sessionVariables = {
+    SSH_ASKPASS = "${pkgs.ksshaskpass}/bin/ksshaskpass";
+  };
 }
