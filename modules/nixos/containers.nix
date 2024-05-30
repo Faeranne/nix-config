@@ -7,14 +7,23 @@ in {
     echo "$priv"
   '';
   networking = {
-    bridges.brCont.interfaces = [];
-    interfaces.brCont.ipv4.addresses = [{
-      address = "10.200.0.1";
-      prefixLength = 16;
-    }];
+    bridges = {
+      brCont.interfaces = [];
+      brIso.interfaces = [];
+    };
+    interfaces = {
+      brCont.ipv4.addresses = [{
+        address = "10.200.0.1";
+        prefixLength = 16;
+      }];
+      brIso.ipv4.addresses = [{
+        address = "10.200.0.1";
+        prefixLength = 16;
+      }];
+    };
 
     firewall = {
-      trustedInterfaces = [ "podman+" "brCont" ];
+      trustedInterfaces = [ "podman+" "brCont" "brIso" ];
     };
 
     nat = lib.mkIf containersEnabled {

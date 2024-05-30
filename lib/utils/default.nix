@@ -3,6 +3,7 @@ rec {
   #Defaults
 
   baseContainerIp = "10.200.0";
+  baseIsolationIp = "10.210.0";
   wireguardBaseIp = "10.150";
 
   #miniUtils
@@ -202,12 +203,15 @@ rec {
       #We bump the Ip address up 2 since ids start at 0, and 1 is occupied by
       #the host.
       containerIpEnd = acc.currentId+2;
-      containerIp = "${baseContainerIp}.${toString containerIpEnd}";
+      #Note that the Ip changed if we enable isolation. this is due to the bridge changing, and allows us to completely
+      #isolate a container from any outside world influence.  For instance, when the container should use a
+      #VPN exclusively.  Using an Isolation Network allows us to still forward selected ports as needed.
+      containerIp = "${if containerConfig.network.isolate then baseIsolationIp else baseContainerIp}.${toString containerIpEnd}";
       containerWgIp = "${wireguardBaseIp}.${toString hostConfig.id}.${toString containerIpEnd}";
       containerWgPort = containerIpEnd+35600;
     in
       acc // {
-        ${container} = containerConfig // {inherit host; name = container; wireguardPort = containerWgPort; wireguardIp = containerWgIp; ip = containerIp; id = acc.currentId;};
+        ${container} = containerConfig // {inherit host; name = container; wireguardPort = containerWgPort; wireguardIp = containerWgIp; ip = containerIp; id = acc.currentId; ipEnd = containerIpEnd;};
         #When passing forward, we update `currentId`.
         currentId = nextId;
       }

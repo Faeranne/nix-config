@@ -18,7 +18,7 @@ containerConfig: let
     (if isUdp then [ containerConfig.network.ports.${portName}.port ] else []) ++ acc
   ) [] portNames;
 
-in {config, systemConfig, ...}:let
+in {config, systemConfig, lib, ...}:let
   /*
     Secret paths are based on the system config's `age.secrets` set, so we gotta do this *inside* the nixos
     module space.  We first make sure the container config contains a `secrets` array. if it does, we can
@@ -38,6 +38,8 @@ in {config, systemConfig, ...}:let
 in {
   age.secrets."wg${containerConfig.name}" = {
     rekeyFile = ../hosts/${systemConfig.hostname}/secrets/wireguard-${containerConfig.name}.age;
+    group = "systemd-network";
+    mode = "770";
     generator = {
       script = "wireguard";
       tags = [ "wireguard" ];
@@ -45,6 +47,10 @@ in {
   };
   systemd.network.netdevs."wg${containerConfig.name}" = {
     enable = true;
+    netdevConfig = {
+      Kind = "wireguard";
+      Name = "wg${containerConfig.name}";
+    };
     wireguardConfig = {
       PrivateKeyFile = config.age.secrets."wg${containerConfig.name}".path;
       ListenPort = 51821+containerConfig.id;
@@ -72,7 +78,8 @@ in {
       */
       localAddress = "${containerConfig.ip}/16";
       #Host bridge is always `brCont` due to being set in `modules/nixos/containers.nix`, so we just static it here.
-      hostBridge = "brCont";
+      hostBridge = if (!containerConfig.network.isolate) then "brCont" else "brIso";
+      interfaces = if (builtins.hasAttr "forward" containerConfig.network) then containerConfig.network.forward else [];
       specialArgs = {
         inherit containerConfig;
       };
@@ -91,7 +98,7 @@ in {
         */
         networking = {
           useHostResolvConf = lib.mkForce false;
-          defaultGateway = "10.200.0.1";
+          defaultGateway = if (!containerConfig.network.isolate) then "10.200.0.1" else "10.210.0.1";
           firewall.allowedTCPPorts = tcpPorts;
           firewall.allowedUDPPorts = tcpPorts;
         };
