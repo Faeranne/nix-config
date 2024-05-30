@@ -28,6 +28,7 @@
         type = "tcp";
       };
     };
+    isolate = false;
   };
   bindMounts = {
     "/var/lib/sonarr" = {

@@ -7,6 +7,7 @@
       port = 8096;
       type = "tcp";
     };
+    isolate = false;
   };
   bindMounts = {
     "/var/lib/paperless" = {

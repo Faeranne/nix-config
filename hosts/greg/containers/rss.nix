@@ -7,6 +7,7 @@
       port = 80;
       type = "tcp";
     };
+    isolate = false;
   };
   bindMounts = {
     "/var/lib/freshrss" = {
