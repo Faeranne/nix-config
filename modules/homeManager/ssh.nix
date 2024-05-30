@@ -5,8 +5,8 @@
     forwardAgent = true;
   };
   systemd.user.services.ssh-agent = {
-    ENVIRONMENT = {
-      SSH_ASKPASS = "${pkgs.ksshaskpass}/bin/ksshaskpass";
+    Service = {
+      Environment = "SSH_ASKPASS=${pkgs.kdePackages.ksshaskpass}/bin/ksshaskpass";
     };
   };
 }
