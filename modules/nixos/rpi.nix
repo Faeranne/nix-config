@@ -1,5 +1,7 @@
 {pkgs, lib, self, ...}:let
-  keys = import ../../lib/getPubKeys.nix "nina";
+  util = import ../../lib/utils;
+  inherit (util) getUserConfig;
+  keys = (getUserConfig "nina").authorizedKeys;
 in {
   users.extraUsers = {
     nixos.openssh.authorizedKeys.keys = keys;

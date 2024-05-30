@@ -10,5 +10,4 @@
   avatar = ./resources/avatar.png;
   wallpaper = ./resources/background.png;
   passwordPath = ./password.age;
-  ssh_keys = import ./keys.nix;
 }

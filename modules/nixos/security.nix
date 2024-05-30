@@ -1,5 +1,6 @@
 { config, systemConfig, lib, pkgs, ... }: let
-  getPubKeys = import ../../lib/getPubKeys.nix;
+  util = import ../../lib/utils;
+  inherit (util) getUserConfig;
   isImpermanent = (builtins.elem "impermanence" systemConfig.elements);
   isServer = (builtins.elem "server" systemConfig.elements);
   # We get the rekey file locations for secrets that are pregenerated
@@ -16,7 +17,7 @@
     generator = value;
   }) (if (builtins.hasAttr "generate" systemConfig.security) then systemConfig.security.generate else {}) ;
   pubkeyList = pkgs.writeText "sudoKeys" ''
-    ${builtins.concatStringsSep "\n" (builtins.concatMap (user: getPubKeys user) systemConfig.sudo)}
+    ${builtins.concatStringsSep "\n" (builtins.concatMap (user: (getUserConfig user).authorizedKeys) systemConfig.sudo)}
   '';
 in{
   # Enable TPM2 for laptops and other TPM protected computers.
