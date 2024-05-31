@@ -38,6 +38,7 @@
     preset = [
       "openvpn_pass"
       "openvpn_user"
+      "mullvad_address"
     ];
     generate = {
       freshrss = {

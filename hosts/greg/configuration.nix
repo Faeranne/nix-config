@@ -10,17 +10,16 @@
       environment = {
         PUID="999";
         GUID="100";
-        VPN_SERVICE_PROVIDER="private internet access";
-        SERVER_REGIONS="Switzerland";
-        TZ="AmericaIndiana";
-        VPN_PORT_FORWARDING="on";
-        VPN_PORT_FORWARDING_STATUS_FILE="/mnt/gluetun_port/forwarded_port";
+        VPN_SERVICE_PROVIDER="mullvad";
+        VPN_TYPE="wireguard";
+        SERVER_COUNTRIES="Sweden";
+        SERVER_CITIES="Gothenburg";
+        TZ="America/Indiana/Indianapolis";
       };
       volumes = [
         "/Storage/volumes/gluetun:/gluetun"
-        "${config.age.secrets."openvpn_user".path}:/run/secrets/openvpn_user"
-        "${config.age.secrets."openvpn_pass".path}:/run/secrets/openvpn_password"
-        "/Storage/volumes/gluetun_port:/mnt/gluetun_port"
+        "${config.age.secrets."mullvad".path}:/run/secrets/wireguard_private_key"
+        "${config.age.secrets."mullvad_address".path}:/run/secrets/wireguard_addresses"
       ];
       extraOptions = [
         "--cap-add=NET_ADMIN"
