@@ -48,6 +48,10 @@
         script = "passphrase";
         tags = [ "pregen" ];
       };
+      mullvad = {
+        script = "wireguard";
+        tags = [ "fixed" ];
+      };
     };
   };
 }

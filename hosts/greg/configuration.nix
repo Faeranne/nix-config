@@ -104,18 +104,6 @@
       }
     ];
   };
-  age.secrets = {
-    freshrss.rekeyFile = ./secrets/freshrss.age;
-    openvpn_user.rekeyFile = ./secrets/openvpn_user.age;
-    openvpn_pass.rekeyFile = ./secrets/openvpn_pass.age;
-    paperless_superuser = {
-      rekeyFile = ./secrets/paperless_superuser.age;
-      generator = {
-        script = "passphrase";
-        tags = [ "pregen" ];
-      };
-    };
-  };
   services.traefik.dynamicConfigOptions.http = {
     routers = {
       dashboard = {
