@@ -7,8 +7,8 @@
   inputs = { 
     # This is the base nixpkgs repo.  Contains almost anything you
     # could need.
-    nixpkgs.url = "github:NixOS/nixpkgs";
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/23.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-23.11";
     # Flake utils does some cool things with flakes. there's more 
     # details where they're used
     flake-utils.url = "github:numtide/flake-utils/main";
