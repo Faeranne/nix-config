@@ -72,6 +72,12 @@
         home-manager.follows = "home-manager";
       };
     };
+    yazi = {
+      url = "github:sxyazi/yazi";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
   };
 
   # since `inputs` is a single variable here, it's the set of flakes input above.
@@ -225,4 +231,8 @@
       ];
     };
   });
+  nixConfig = {
+    extra-substituters = [ "https://yazi.cachix.org" ];
+    extra-trusted-public-keys = [ "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k=" ];
+  };
 }

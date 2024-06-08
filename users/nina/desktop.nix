@@ -56,8 +56,15 @@ in {
         indicator = true;
       };
     };
-    wayland.windowManager.sway.config.output = {
-      "*" = {
+    wayland.windowManager.sway.config = {
+      assigns = {
+        "4" = [
+          {app_id = "vesktop";}
+        ];
+      };
+      output = {
+        "*" = {
+        };
       };
     };
     home.packages = with pkgs; [

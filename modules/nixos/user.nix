@@ -19,6 +19,7 @@
     #can't define them per-user at this level
     extraSpecialArgs = {
       inherit systemConfig;
+      inherit inputs;
     };
     #This will loop through each user and generate a set with
     #${username}=result set.  Note that each result

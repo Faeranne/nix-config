@@ -1,4 +1,4 @@
-{config, pkgs, lib, systemConfig, userConfig, ...}: let
+{inputs, config, pkgs, lib, systemConfig, userConfig, ...}: let
   isGnome = (builtins.elem "gnome" systemConfig.elements);
   isKde = (builtins.elem "kde" systemConfig.elements);
   isSway = (builtins.elem "sway" systemConfig.elements);
@@ -43,6 +43,14 @@ in {
       swaylock = {
         enable = true;
       };
+      foot = {
+        enable = true;
+        server.enable = true;
+      };
+      yazi = {
+        enable = true;
+        #package = inputs.yazi.packages.${pkgs.system}.default;
+      };
       rofi = {
         enable = true;
         package = pkgs.rofi;
@@ -59,7 +67,7 @@ in {
           rofi-pulse-select
           rofi-file-browser
         ];
-        terminal = "${pkgs.kitty}/bin/kitty";
+        terminal = "${config.programs.foot.package}/bin/foot";
       };
     };
     wayland.windowManager.sway = {
@@ -75,9 +83,28 @@ in {
       swaynag.enable = true;
       config = {
         modifier = "Mod4";
-        terminal = "kitty";
+        terminal = "foot";
         menu = "${config.programs.rofi.finalPackage}/bin/rofi -show drun";
         bars = [];
+        workspaceLayout = "tabbed";
+        workspaceOutputAssign = [
+          {
+            output = "Dell Inc. DELL P2210 6H6FX214352S";
+            workspace = "1";
+          }
+          {
+            output = "ViewSonic Corporation VP2468 Series UN8170400211";
+            workspace = "2";
+          }
+          {
+            output = "Dell Inc. DELL P2210 U828K116922M";
+            workspace = "3";
+          }
+          {
+            output = "Dell Inc. DELL P2210 0VW5M1C8H57S";
+            workspace = "4";
+          }
+        ];
         output = {
           "Dell Inc. DELL P2210 0VW5M1C8H57S" = {
             transform = "270";
