@@ -66,6 +66,9 @@ in {
         "*" = {
         };
       };
+      startup = [
+        { command = "vesktop"; }
+      ];
     };
     home.packages = with pkgs; [
       obsidian
