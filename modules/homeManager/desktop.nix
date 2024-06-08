@@ -148,6 +148,24 @@ in {
       lutris
       samba
     ];
+    systemd.user.services = {
+      swayinhibit = {
+        Unit = {
+          Description = "Idle Inhibit based on audio";
+          ConditionEnvironment = "WAYLAND_DISPLAY";
+          PartOf = ["graphical-session.target" ];
+        };
+        Service = {
+          Type = "simple";
+          Restart = "always";
+          Environment = [ "PATH=${lib.makeBinPath [ pkgs.bash ]}" ];
+          ExecStart = "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit";     
+        };
+        Install = {
+          WantedBy = [ "sway-session.target" ];
+        };
+      };
+    };
     services = {
       swayidle = {
         enable = true;
