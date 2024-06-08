@@ -50,6 +50,7 @@ in {
       yazi = {
         enable = true;
         #package = inputs.yazi.packages.${pkgs.system}.default;
+        enableZshIntegration = true;
       };
       rofi = {
         enable = true;
@@ -147,6 +148,7 @@ in {
       jackmix
       lutris
       samba
+      swayimg
     ];
     systemd.user.services = {
       swayinhibit = {
