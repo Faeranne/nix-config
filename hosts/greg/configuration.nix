@@ -182,4 +182,5 @@
     };
   };
   services.zfs.autoScrub.pools = [ "Storage" ];
+  services.xserver.videoDrivers = [ "nvidia" ];
 }
