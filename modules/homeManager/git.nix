@@ -37,7 +37,6 @@ in
       matchBlocks = lib.mkIf (isDesktop || isLaptop) {
         "github.com" = {
           user = "git";
-          identityFile = "/home/${userConfig.username}/.ssh/id_github";
         };
       };
     };
