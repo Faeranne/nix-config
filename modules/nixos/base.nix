@@ -3,6 +3,10 @@
   system = {
     configurationRevision = if self ? rev then self.rev else if self ? dirtyRev then self.dirtyRev else "dirty";
     stateVersion = "23.11"; # Did you read the comment?
+    # Since nixos.label is only really used when running a boot switch, which doesn't happen
+    # normally in a dirty repo, I'm only including it.  Dirty just reminds me that I intentionally
+    # escaped my normal methods
+    nixos.label = if self ? rev then "git-rev ${builtins.substr 0 8 self.rev}" else "dirty";
   };
   # Base elements
 
