@@ -20,7 +20,7 @@
     # scratch.  This helps prevent weird state from building up.
     impermanence.url = "github:nix-community/impermanence";
     # Ragenix is a `rage` based secret management tool.  More details 
-    # are below
+    # are below in the `agenix-rekey` section of `outputs` below
     ragenix = {
       url = "github:yaxitech/ragenix";
       # `nixpkgs.follows` means that this input's input for nixpkgs will
@@ -51,7 +51,7 @@
       url = "github:faeranne/nix-technitium";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Home manager can be use to handle your home dotfiles.  I do a lot with this
+    # Home manager can be use to handle your home dotfiles among other things.  I do a lot with this
     # so checkout the `./modules/homeManager` directory for more details.
     # This is also a well documented flake, so check out https://github.com/nix-community/home-manager
     # for more details
@@ -65,6 +65,9 @@
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Stylix covers creating style files for quite a few programs, both at the system level
+    # and as part of home-manager.  This covers things like terminal colors, sway styling,
+    # waybar, and others.
     stylix = {
       url = "github:danth/stylix";
       inputs = {
@@ -72,6 +75,8 @@
         home-manager.follows = "home-manager";
       };
     };
+    # Yazi is a fancy terminal-based file manager. it supports image previews (using sixel),
+    # and looks really cool while supporting many of the non-terminal file manager features.
     yazi = {
       url = "github:sxyazi/yazi";
       inputs = {
@@ -83,9 +88,15 @@
   # since `inputs` is a single variable here, it's the set of flakes input above.
   # this also includes this flake as `self`.
   # `with builtins` makes all builtin functions available.
+  #TODO: Don't do this! I think builtin's is only used in 2 or 3 places in this scope, so this
+  #      is kinda dumb.
+  #TODO: stop relying on inputs for *everything*. I've already swapped back to nixpkgs and self here
+  #      but other variables should be broken back out too.
   outputs = {self, nixpkgs, ...}@inputs: with builtins; let
     # `nixpkgs.lib` is a pretty common set of libraries, so I usually include it
     # when making functions outside of nixos modules.
+    #TODO: Look into using `callPackage` instead so lib can be used less. It's probably
+    #      still gonna be needed here, but still should look into it (also for flakeLibs below)
     inherit (nixpkgs) lib;
     # flakeLibs hase `mkHost` and `mkUser` in it.  It needs `inputs` to do it's thing
     # so it's imported here.  I also inherit mkHost directly since I use it here.
@@ -101,6 +112,7 @@
     # this produces a set containing every host as a `nixosSystem` derivation.
     # Usually you'll set this manually, but by doing it this way, I can iterate over
     # the hosts in `./hosts` automatically, making it easier to maintain.
+    #TODO: I do this enough that maybe a `forEachHost` function is called for?
     nixosConfigurations = listToAttrs (map (hostname: let
       res = mkHost hostname;
       # simple let to make the results of `mkHost` easy to access
@@ -125,9 +137,13 @@
     };
 
     homeConfigurations = { 
-      "nina@sarah" = mkUser "sarah" "nina";
+      # standalone home-manager doesn't mix with nixos bakedin home-manager. gonna have to look into
+      # systemless home-manager config.
+      #"nina@sarah" = mkUser "sarah" "nina";
     };
 
+    #TODO: This comment references the now unused forAllSystems from flake-utils.
+    #      Need to change it to talk about the simpler way I use it now.
     # Packages and devShells require a set containing every system you might run this on.
     # to simplify this, since every system is compatable with these,
     # we use `forAllSystems` to make both contain a set with every system in it.
@@ -153,11 +169,21 @@
         ];
         format = "install-iso";
       };
+      # This allows me to run `nix run .#deploy` and get an appropriate nixos-rebuild call with
+      # minimal fuss.
       deploy = let
+        # If we're on a clean repo (everything is commited and no untracked files exist), then we
+        # do the full nixos-rebuild, including setting up the boot requirements.
+        # If it's still dirty, we just do a test, which will revert on reboot.
         action = if self ? rev then "switch" else "test";
+        # I include a message to let myself know if things are being setup for boot or not.
         message = if self ? rev then "Clean repo, full switch" else "Dirty repo, only testing";
       in pkgs.writeShellScriptBin "deploy" ''
         echo ${message}
+        # nettools/hostname grabs the hostname of the current system. We do this here instead of in
+        # the flake.nix because we can't introduce impurity at that stage.  Techinically it should always
+        # be the same regardless, since we never push this script to any other system, but you never know,
+        # and Nix really does care.
         sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild --flake .#`${pkgs.nettools}/bin/hostname` ${action}
       '';
       default = inputs.self.packages.${system}.deploy;
