@@ -7,6 +7,10 @@ rec {
   wireguardBaseIp = "10.150";
 
   #miniUtils
+
+  supportedSystems = [ "x86_64-linux" "x86_64-darwin" "aarch64-linux" "aarch64-darwin" ];
+  forAllSystemsBuilder = nixpkgs: nixpkgs.lib.genAttrs supportedSystems;
+
   #This splits a given file name off of it's extension and returns just the first part.
   #NOTE: this breaks with filenames with more than one . seperator.
   splitFileName = filename: (let

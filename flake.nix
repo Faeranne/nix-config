@@ -83,16 +83,18 @@
   # since `inputs` is a single variable here, it's the set of flakes input above.
   # this also includes this flake as `self`.
   # `with builtins` makes all builtin functions available.
-  outputs = {self, ...}@inputs: with builtins; let
+  outputs = {self, nixpkgs, ...}@inputs: with builtins; let
     # `nixpkgs.lib` is a pretty common set of libraries, so I usually include it
     # when making functions outside of nixos modules.
-    inherit (inputs.nixpkgs) lib;
-    inherit (inputs) local;
+    inherit (nixpkgs) lib;
     # flakeLibs hase `mkHost` and `mkUser` in it.  It needs `inputs` to do it's thing
     # so it's imported here.  I also inherit mkHost directly since I use it here.
     flakeLibs = import ./lib inputs;
     inherit (flakeLibs) mkHost mkUser utils;
     inherit (flakeLibs.utils) getFolders;
+    # because forAllSystems uses some stuff from nixpkgs. should probably look into making it a
+    # callPackage file instead.
+    forAllSystems = flakeLibs.utils.forAllSystemsBuilder nixpkgs;
     hosts = getFolders ./hosts;
     #This closes the let enclosure on `outputs`
   in {
@@ -125,44 +127,21 @@
     homeConfigurations = { 
       "nina@sarah" = mkUser "sarah" "nina";
     };
-  } // inputs.flake-utils.lib.eachDefaultSystem (system: let
-    pkgs = import inputs.nixpkgs {
-      inherit system;
-      # Overlays are weird, but pretty straight forward from a user perspective.
-      # Each overly in the overlays list is a function that takes two parameters
-      # the first is the *final result* of pkgs after every overlay is applied.
-      # This allows you to reference stuff from later overlays.  Yes, it's weird
-      # but is valid in nix's lazy evaluate language.  For now
-      # just don't try to set a key to something that relys on the future version
-      # of that key (eg: foo = final.foo)  This results in recursion.
-      # Instead, you can use the second value, which is the combination of the
-      # previous overlays `prev` value combine with the previous overlay's output
-      # the initial overaly just gets the default version of `nixpkgs` as you would
-      # normally expect
-      overlays = [ 
-        # We're adding the 23.11 stable version of nixpkgs to `stable` since a few
-        # packages (like things dependent on libpcsc) are broken in the current
-        # unstable version
-        (final: prev: {
-          stable = import inputs.nixpkgs-stable {
-            system = prev.system;
-            config.allowUnfree = true;
-          };
-        })
-        inputs.agenix-rekey.overlays.default
-      ];
-    };
-  in {
+
     # Packages and devShells require a set containing every system you might run this on.
     # to simplify this, since every system is compatable with these,
-    # we just use `eachDefaultSystem` to make both contain a set with every system in it.
+    # we use `forAllSystems` to make both contain a set with every system in it.
     # like `x86_64-linux` or `aarch64-linux`.  This does look a bit like magic since it will copy
     # `devShells.default` into `options.devShells.x86_64-linux.default` and so-on, but does make this
     # *much* easier to manage.
-    # --------
-    # The installer package results in an iso that can be flashed to a usb drive. this contains all
-    # the settings and packages needed to install a new system.  Just `dd if=result/iso/nixos*.iso of=<drive>`
-    packages = {
+    packages = forAllSystems (system: let
+      pkgs = import inputs.nixpkgs {
+        inherit system;
+        overlays = [
+          inputs.agenix-rekey.overlays.default
+        ];
+      };
+    in {
       installer = inputs.nixos-generators.nixosGenerate {
         system = "x86_64-linux";
         inherit pkgs;
@@ -182,8 +161,7 @@
         sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild --flake .#`${pkgs.nettools}/bin/hostname` ${action}
       '';
       default = inputs.self.packages.${system}.deploy;
-    } 
-    // foldl' (acc: host: 
+    } // foldl' (acc: host: 
       let
         config = utils.getHostConfig host;
         action = if self ? rev then "switch" else "test";
@@ -194,6 +172,9 @@
           ${pkgs.nixos-rebuild}/bin/nixos-rebuild --flake .#${host} --target-host ${config.net.url} --use-remote-sudo ${action}
         '';
       in 
+        # We only build a "deploy-host" program for hosts that have network configs already setup.
+        # This should probably be altered to better blacklist desktop and laptop configs
+        # since these will not have any way to remotely manage them.
         (if 
           builtins.hasAttr "net" config && builtins.hasAttr "url" config.net
         then
@@ -202,35 +183,42 @@
           }
         else
           {}
-        ) // acc
-    ) {} hosts
-    // foldl' (acc: name:
-      #This creates a `<system>-disko` script that formats drives for whatever system I may be installing.
-      #Every ssytem is evaluated through this script.
-      ##TODO: I also need to add something to pre-generate new local system keys.
-      {
-        "${name}-disko" = inputs.self.nixosConfigurations.${name}.config.system.build.diskoScript;
-      } // acc
-    ) {} hosts;
-    apps = {
-      "nina@sarah" = {
-        type = "app";
-        program = "${inputs.self.homeConfigurations."nina@sarah".activationPackage}/activate";
+        ) //
+        #This creates a `<system>-disko` script that formats drives for whatever system I may be installing.
+        #Every ssytem is evaluated through this script.
+        ##TODO: I also need to add something to pre-generate new local system keys.
+        {
+          "${host}-disko" = self.nixosConfigurations.${host}.config.system.build.diskoScript;
+        } // acc
+    ) {} hosts);
+    devShells = forAllSystems (system: let
+      pkgs = import inputs.nixpkgs {
+        inherit system;
+        overlays = [ 
+          (final: prev: {
+            stable = import inputs.nixpkgs-stable {
+              system = prev.system;
+              config.allowUnfree = true;
+            };
+          })
+          inputs.agenix-rekey.overlays.default
+        ];
       };
-    };
-    devShells.default = pkgs.mkShell {
-     shellHook = ''
-       age-plugin-yubikey --identity > /tmp/yubikey.pub
-     '';
-      #NOTE: we're using the stable version for the moment till nixos/nixpkgs#309297
-      # is merged.  libpcsclite is broken in the current unstable.
-      packages = with pkgs; [ 
-       agenix-rekey 
-       stable.age-plugin-yubikey
-       stable.age
-      ];
-    };
-  });
+    in {
+      default = pkgs.mkShell {
+       shellHook = ''
+         age-plugin-yubikey --identity > /tmp/yubikey.pub
+       '';
+        #NOTE: we're using the stable version for the moment till nixos/nixpkgs#309297
+        # is merged.  libpcsclite is broken in the current unstable.
+        packages = with pkgs; [ 
+         agenix-rekey 
+         age-plugin-yubikey
+         age
+        ];
+      };
+    });
+  };
   nixConfig = {
     extra-substituters = [ "https://yazi.cachix.org" ];
     extra-trusted-public-keys = [ "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k=" ];
