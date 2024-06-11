@@ -87,6 +87,14 @@ in {
         terminal = "foot";
         menu = "${config.programs.rofi.finalPackage}/bin/rofi -show drun";
         bars = [];
+        window.commands = [
+          {
+            command = "floating enable";
+            criteria = {
+              class = "steam_app_2670630";
+            };
+          }
+        ];
         workspaceLayout = "tabbed";
         workspaceOutputAssign = [
           {

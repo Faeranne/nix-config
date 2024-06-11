@@ -24,7 +24,14 @@ in {
       enable = hasSteam;
       remotePlay.openFirewall = true;
       localNetworkGameTransfers.openFirewall = true;
+      extraPackages = with pkgs; [
+        gamescope
+      ];
       #gamescopeSession.enable = true;
+    };
+    gamescope = {
+      enable = hasSteam;
+#      capSysNice = true;
     };
     adb = {
       enable = true;
