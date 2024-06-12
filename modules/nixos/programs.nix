@@ -4,6 +4,7 @@
   isSway = (builtins.elem "sway" systemConfig.elements);
   isGraphical = isGnome || isKde || isSway;
   hasSteam = builtins.elem "steam" systemConfig.elements;
+  hasBluetooth = builtins.elem "bluetooth" systemConfig.elements;
 in {
   boot.binfmt.registrations.appimage = {
     wrapInterpreterInShell = false;
@@ -15,6 +16,7 @@ in {
   };
   services = {
     flatpak.enable = isGraphical;
+    joycond.enable = hasSteam && hasBluetooth;
   };
   programs = {
     zsh.enable = true;
