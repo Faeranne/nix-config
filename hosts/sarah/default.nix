@@ -11,6 +11,7 @@
     "virtualization"
     "rgb"
     "steam"
+    "bluetooth"
   ];
   # architectures to emulate
   emulate = [ "aarch64-linux" ];
