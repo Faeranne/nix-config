@@ -67,7 +67,7 @@ in {
       excludePackages = with pkgs; [ xterm ];
     };
     pipewire = {
-      enable = true;
+      enable = isGraphical;
       audio.enable = true;
       alsa.enable = true;
       alsa.support32Bit = true;

@@ -52,6 +52,11 @@ in {
       # is merged.  libpcsclite is broken in the current unstable.
       stable.yubikey-manager
     ] ++
+    ( if isGraphical then 
+      [
+        mpv
+      ] else [] 
+    ) ++
     (if (
       pkgs.system == "x86_64-linux"
     ) then (
