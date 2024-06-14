@@ -76,6 +76,7 @@ in {
       freecad
       prismlauncher
       godot_4
+      ruffle
       #TODO: Fixes nixos/nixpkgs#310227 while waiting for nixos/nixpkgs#310696 to make it to release
       (vesktop.override { withSystemVencord = false; })
       transmission-remote-gtk
