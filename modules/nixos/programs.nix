@@ -16,7 +16,7 @@ in {
   };
   services = {
     flatpak.enable = isGraphical;
-    joycond.enable = hasSteam && hasBluetooth;
+    #joycond.enable = hasSteam && hasBluetooth;
   };
   programs = {
     zsh.enable = true;
