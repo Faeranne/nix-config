@@ -85,71 +85,26 @@
     };
   };
 
-  # since `inputs` is a single variable here, it's the set of flakes input above.
-  # this also includes this flake as `self`.
-  # `with builtins` makes all builtin functions available.
-  #TODO: Don't do this! I think builtin's is only used in 2 or 3 places in this scope, so this
-  #      is kinda dumb.
-  #TODO: stop relying on inputs for *everything*. I've already swapped back to nixpkgs and self here
-  #      but other variables should be broken back out too.
   outputs = {self, nixpkgs, ...}@inputs: with builtins; let
-    # `nixpkgs.lib` is a pretty common set of libraries, so I usually include it
-    # when making functions outside of nixos modules.
-    #TODO: Look into using `callPackage` instead so lib can be used less. It's probably
-    #      still gonna be needed here, but still should look into it (also for flakeLibs below)
     inherit (nixpkgs) lib;
-    # flakeLibs hase `mkHost` and `mkUser` in it.  It needs `inputs` to do it's thing
-    # so it's imported here.  I also inherit mkHost directly since I use it here.
     flakeLibs = import ./lib inputs;
-    inherit (flakeLibs) mkHost mkUser utils;
-    inherit (flakeLibs.utils) getFolders;
-    # because forAllSystems uses some stuff from nixpkgs. should probably look into making it a
-    # callPackage file instead.
-    forAllSystems = flakeLibs.utils.forAllSystemsBuilder nixpkgs;
-    hosts = getFolders ./hosts;
     #This closes the let enclosure on `outputs`
   in {
-    # this produces a set containing every host as a `nixosSystem` derivation.
-    # Usually you'll set this manually, but by doing it this way, I can iterate over
-    # the hosts in `./hosts` automatically, making it easier to maintain.
-    #TODO: I do this enough that maybe a `forEachHost` function is called for?
+    inherit flakeLibs;
     nixosConfigurations = listToAttrs (map (hostname: let
       res = mkHost hostname;
-      # simple let to make the results of `mkHost` easy to access
     in {
-      # at this point `res` contains a single key `configuration`, which already includes
-      # `inputs` and `inputs.self` in the module arguments, plus a special `systemConfig`
-      # which is built from the `config.nix` in each host folder.
-      # Check one of the `config.nix` files for more details.
-      # Main thing is we now turn this into a nixosSystem derivation to be eventually built
-      # by nixos-reload
       name = hostname;
       value = lib.nixosSystem res.configuration;
     }) hosts );
-    # Agenix handles securing some secrets.  This can include passwords, authentication tokens
-    # encryption key, etc.  It does so by using an age key who's public half is stored in
-    # `./secrets/identities/`.  For me, that is `yubikey.nix` as I use a yubikey to store the
-    # actual secret.  This requires some setup to work as per https://github.com/ryantm/agenix
-    # and https://github.com/oddlama/agenix-rekey.  I recommend reading both for more details.
     agenix-rekey = inputs.agenix-rekey.configure {
       userFlake = inputs.self;
       nodes = inputs.self.nixosConfigurations;
     };
 
     homeConfigurations = { 
-      # standalone home-manager doesn't mix with nixos bakedin home-manager. gonna have to look into
-      # systemless home-manager config.
-      #"nina@sarah" = mkUser "sarah" "nina";
     };
 
-    #TODO: This comment references the now unused forAllSystems from flake-utils.
-    #      Need to change it to talk about the simpler way I use it now.
-    # Packages and devShells require a set containing every system you might run this on.
-    # to simplify this, since every system is compatable with these,
-    # we use `forAllSystems` to make both contain a set with every system in it.
-    # like `x86_64-linux` or `aarch64-linux`.  This does look a bit like magic since it will copy
-    # `devShells.default` into `options.devShells.x86_64-linux.default` and so-on, but does make this
-    # *much* easier to manage.
     packages = forAllSystems (system: let
       pkgs = import inputs.nixpkgs {
         inherit system;
