@@ -92,6 +92,11 @@ in {
   };
   hardware.pulseaudio.enable = false;
   hardware.opengl.enable = true;
+
+  fonts.packages = if isGraphical then (with pkgs; [
+    nerdfonts
+  ]) else [];
+
   environment = {
     etc = {
       "greetd/environments".text = ''

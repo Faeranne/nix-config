@@ -19,6 +19,7 @@
       isReadOnly = false;
     };
   };
+  gpu = true;
   tmpfs = [
     "/cache"
   ];

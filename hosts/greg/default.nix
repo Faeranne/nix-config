@@ -4,12 +4,13 @@
   # most are defined in `systems/`
   elements = [ 
     "intel"
+    "nvidiagpu"
     "server"
     "impermanence"
     "traefik"
     "containers"
     "nfs"
-    "netboot-server"
+    #"netboot-server"
   ];
   # architectures to emulate
   emulate = [ "aarch64-linux" ];

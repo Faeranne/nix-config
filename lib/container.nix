@@ -80,6 +80,12 @@ in {
       #Host bridge is always `brCont` due to being set in `modules/nixos/containers.nix`, so we just static it here.
       hostBridge = if (!containerConfig.network.isolate) then "brCont" else "brIso";
       interfaces = if (builtins.hasAttr "forward" containerConfig.network) then containerConfig.network.forward else [];
+      allowedDevices = if (builtins.hasAttr "gpu" containerConfig && containerConfig.gpu) then [
+        {
+          modifier = "rw";
+          node = "/dev/dri/renderD128";
+        }
+      ] else [];
       specialArgs = {
         inherit containerConfig;
       };
