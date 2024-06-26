@@ -68,6 +68,8 @@
     nix-on-droid = {
       url = "github:nix-community/nix-on-droid/release-23.11";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs-docs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
     };
     # Stylix covers creating style files for quite a few programs, both at the system level
     # and as part of home-manager.  This covers things like terminal colors, sway styling,
