@@ -65,6 +65,10 @@
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-on-droid = {
+      url = "github:nix-community/nix-on-droid/release-24.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # Stylix covers creating style files for quite a few programs, both at the system level
     # and as part of home-manager.  This covers things like terminal colors, sway styling,
     # waybar, and others.
@@ -134,6 +138,12 @@
     agenix-rekey = inputs.agenix-rekey.configure {
       userFlake = inputs.self;
       nodes = inputs.self.nixosConfigurations;
+    };
+
+    nixOnDroidConfigurations.default = nix-on-droid.lib.nixOnDroidConfiguration {
+      modules = [
+        ./modules/droid
+      ];
     };
 
     homeConfigurations = { 
