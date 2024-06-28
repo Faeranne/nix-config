@@ -56,7 +56,7 @@
     # This is also a well documented flake, so check out https://github.com/nix-community/home-manager
     # for more details
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # This generates pre-made nix disk images. I use it to build uefi install mediums with my

@@ -1,5 +1,6 @@
 {userConfig, ...}:{
   stylix = {
+    enable = true;
     autoEnable = true;
     image = userConfig.wallpaper;
     polarity = "dark";
