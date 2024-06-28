@@ -1,6 +1,14 @@
 {...}:
 {
   programs = {
+    starship = {
+      enable = true;
+      settings = {
+        sudo = {
+          disabled = false;
+        };
+      };
+    };
     zsh = {
       enable = true;
       oh-my-zsh = {
@@ -11,15 +19,14 @@
         editor = {
           keymap = "vi";
           dotExpansion = true;
-        };
-        prompt = {
-          theme = "adam";
+          promptContext = true;
         };
         tmux = {
           autoStartLocal = true;
         };
         pmodules = [
           "tmux"
+          "git"
         ];
       };
     };
