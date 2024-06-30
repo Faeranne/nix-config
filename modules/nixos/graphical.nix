@@ -117,6 +117,7 @@ in {
       nerdfonts
       meslo-lgs-nf
       wofi
+      unstable.kicad
     ]) else []) ++ 
     (if isSway then (with pkgs; [
       grim 
