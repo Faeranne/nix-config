@@ -9,6 +9,7 @@
     # could need.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-23.11";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs";
     # Flake utils does some cool things with flakes. there's more 
     # details where they're used
     flake-utils.url = "github:numtide/flake-utils/main";

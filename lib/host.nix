@@ -38,6 +38,10 @@ in {
               system = prev.system;
               config.allowUnfree = true;
             };
+            unstable = import inputs.nixpkgs-unstable {
+              system = prev.system;
+              config.allowUnfree = true;
+            };
           })
         ];
       })
