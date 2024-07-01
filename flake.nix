@@ -99,7 +99,7 @@
   #      is kinda dumb.
   #TODO: stop relying on inputs for *everything*. I've already swapped back to nixpkgs and self here
   #      but other variables should be broken back out too.
-  outputs = {self, nixpkgs, ...}@inputs: with builtins; let
+  outputs = {self, nixpkgs, nix-on-droid, ...}@inputs: with builtins; let
     # `nixpkgs.lib` is a pretty common set of libraries, so I usually include it
     # when making functions outside of nixos modules.
     #TODO: Look into using `callPackage` instead so lib can be used less. It's probably
