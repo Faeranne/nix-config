@@ -1,6 +1,11 @@
-{userConfig, ...}:{
+{userConfig, systemConfig, ...}:let
+  isGnome = (builtins.elem "gnome" systemConfig.elements);
+  isKde = (builtins.elem "kde" systemConfig.elements);
+  isSway = (builtins.elem "sway" systemConfig.elements);
+  isGraphical = isGnome || isKde || isSway;
+in {
   stylix = {
-    enable = true;
+    enable = isGraphical;
     autoEnable = true;
     image = userConfig.wallpaper;
     polarity = "dark";
