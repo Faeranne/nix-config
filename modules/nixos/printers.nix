@@ -1,11 +1,11 @@
 {pkgs, pkgs-stable, ...}: {
   services.printing = {
     enable = true;
-    drivers = with pkgs.stable; [
+    drivers = with pkgs; [
       hplipWithPlugin
     ];
   };
-  environment.systemPackages = with pkgs.stable; [
+  environment.systemPackages = with pkgs; [
     hplipWithPlugin
   ];
 }
