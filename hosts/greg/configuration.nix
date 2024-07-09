@@ -1,5 +1,20 @@
 {config, ...}: {
   virtualisation.oci-containers.containers = {
+    "actual" = {
+      autoStart = true;
+      image = "actualbudget/actual-server:24.7.0";
+      ports = [
+        "5006:5006"
+      ];
+      environment = {
+      };
+      volumes = [
+        "/Storage/volumes/actual:/data"
+      ];
+      extraOptions = [
+        "--ip=10.88.1.4"
+      ];
+    };
     "gluetun" = {
       autoStart = true;
       image = "qmcgaw/gluetun";
@@ -166,6 +181,11 @@
         service = "paperless";
         entryPoints = [ "websecure" ];
       };
+      actual = {
+        rule = "Host(`actual.faeranne.com`)";
+        service = "actual";
+        entryPoints = [ "websecure" ];
+      };
     };
     services = {
       jellyfin.loadBalancer.servers = [ {url = "http://10.200.0.2:8096"; } ];
@@ -179,6 +199,7 @@
       ombi.loadBalancer.servers = [ {url = "http://10.200.0.5:5000"; } ];
       wizarr.loadBalancer.servers = [ {url = "http://10.88.1.3:5690"; } ];
       paperless.loadBalancer.servers = [ {url = "http://10.200.0.6:8096"; } ];
+      actual.loadBalancer.servers = [ {url = "http://10.88.1.4:5006"; } ];
     };
   };
   services.zfs.autoScrub.pools = [ "Storage" ];
