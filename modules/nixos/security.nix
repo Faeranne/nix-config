@@ -114,7 +114,7 @@ in{
       # Gotta include the age-plugin-yubikey package to support yubikey decryption.
       #NOTE: we're using the stable version for the moment till nixos/nixpkgs#309297
       # is merged.  libpcsclite is broken in the current unstable.
-      agePlugins = [ pkgs.stable.age-plugin-yubikey ];
+      agePlugins = [ pkgs.age-plugin-yubikey ];
       # No secrets are generated at this time, but this is set for those cases.
       generatedSecretsDir = ../../secrets/generated;
       # ~~Due to how derivations are generated, we gotta do all rekey operations on
