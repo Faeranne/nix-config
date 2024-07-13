@@ -109,6 +109,16 @@ in {
           firewall.allowedUDPPorts = tcpPorts;
         };
         services.resolved.enable = true;
+
+        time.timeZone = "America/Indiana/Indianapolis";
+        i18n.defaultLocale = "en_US.UTF-8";
+
+        nix = {
+          settings = {
+            experimental-features = [ "nix-command" "flakes" ];
+          };
+        };
+
         /*
           Right now everything is set to 23.11 since that is the current stable version as of this config being
           made.  Note that this should *not* be changed unless you are working from scratch.  The jist is that

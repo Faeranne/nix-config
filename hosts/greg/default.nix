@@ -40,6 +40,7 @@
       "openvpn_pass"
       "openvpn_user"
       "mullvad_address"
+      "github_runner1"
     ];
     generate = {
       freshrss = {
