@@ -6,7 +6,7 @@
   programs.corectrl.enable = true;
   networking = {
     firewall = {
-      allowedTCPPorts = [ 4747 4748 39595 ];
+      allowedTCPPorts = [ 4747 4748 39595 43751 ];
     };
   };
 }
