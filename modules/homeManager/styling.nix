@@ -6,7 +6,7 @@
 in {
   stylix = {
     enable = isGraphical;
-    autoEnable = true;
+    autoEnable = false;
     image = userConfig.wallpaper;
     polarity = "dark";
     opacity = {
