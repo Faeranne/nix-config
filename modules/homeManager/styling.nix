@@ -15,6 +15,8 @@ in {
     };
     targets = {
       firefox.profileNames = [ "default" ];
+      swaylock.enable = true;
+      vesktop.enable = false;
     };
   };
 }
