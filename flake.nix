@@ -90,6 +90,14 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
+
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+      };
+    };
   };
 
   # since `inputs` is a single variable here, it's the set of flakes input above.

@@ -1,7 +1,12 @@
-{pkgs, lib, ...}:
+{inputs, lib, ...}:
 {
+
+  imports = [
+    inputs.nixvim.homeManagerModules.nixvim
+  ];
+
   programs = {
-    neovim = {
+    nixvim = {
       enable = true;
       defaultEditor = lib.mkDefault true;
       viAlias = lib.mkDefault true;

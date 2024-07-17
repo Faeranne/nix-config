@@ -13,9 +13,45 @@ let
 in
 {
   programs = {
-    neovim = {
-      plugins = with pkgs.vimPlugins; [
+    nixvim = {
+      extraPlugins = with pkgs.vimPlugins; [
         vim-fugitive
+        (
+          fromGitHub 
+          "4a93122ae2139a12e2a56f064d086c05160b6835"
+          "segeljakt"
+          "vim-silicon"
+          "sha256-8pCHtApD/xXav2UBVOVhkaHg3YS4aNCZ73mog04bYuA="
+        )
+      ];
+      plugins = {
+        fugitive.enable = true;
+        gitgutter = {
+          enable = true;
+        };
+        airline = {
+          enable = true;
+        };
+        nvim-tree = {
+          enable = true;
+          openOnSetup = true;
+          openOnSetupFile = true;
+
+        };
+        nix = {
+          enable = true;
+        };
+        git-conflict.enable = true;
+        neocord.enable = true;
+        lsp = {
+          enable = true;
+          servers = {
+            nixd.enable = true;
+          };
+        };
+      };
+      /*
+      plugins = with pkgs.vimPlugins; [
         tabular
         nerdtree
         vim-nerdtree-syntax-highlight
@@ -60,6 +96,7 @@ in
         
         autocmd BufNewFile,BufRead *.mts  set filetype=typescript
       '';
+      */
     };
   };
 }
