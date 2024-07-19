@@ -21,7 +21,7 @@
   };
   gpu = true;
   tmpfs = [
-    "/cache"
+    "/cache:rw"
   ];
   config = {config, pkgs, containerConfig, ...}: {
     environment.systemPackages = with pkgs; [
