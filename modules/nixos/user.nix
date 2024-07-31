@@ -68,7 +68,7 @@
     uid = attrs.uid;
     group = name;
     extraGroups = (
-      ( if isSudo then [ "wheel" "docker" "tss" "adbusers" ] else [] ) ++ 
+      ( if isSudo then [ "wheel" "docker" "tss" "adbusers" "dialout" ] else [] ) ++ 
       ( if isGraphical then [ "audio" ] else [] ) ++
       ( if (isSudo && isVirtualize) then [ "vboxusers" ] else [] )
     );
