@@ -94,7 +94,10 @@
         enable = true;
         group = "users";
       };
-      ombi.enable = true;
+      ombi = {
+        enable = true;
+        group = "users";
+      };
     };
   };
 }

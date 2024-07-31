@@ -64,7 +64,6 @@ in {
         set it as an empty list.
       */
       tmpfs = if (builtins.hasAttr "tmpfs" containerConfig) then containerConfig.tmpfs else [];
-      inherit bindMounts;
       autoStart = true;
       privateNetwork = true;
       restartIfChanged = true;
@@ -80,10 +79,76 @@ in {
       #Host bridge is always `brCont` due to being set in `modules/nixos/containers.nix`, so we just static it here.
       hostBridge = if (!containerConfig.network.isolate) then "brCont" else "brIso";
       interfaces = if (builtins.hasAttr "forward" containerConfig.network) then containerConfig.network.forward else [];
+      bindMounts = bindMounts // (if (builtins.hasAttr "gpu" containerConfig && containerConfig.gpu) then {
+        "/dev/dri" = {
+          hostPath = "/dev/dri";
+          isReadOnly = false;
+        };
+        "/dev/shm" = {
+          hostPath = "/dev/shm";
+          isReadOnly = false;
+        };
+        "/dev/nvidia0" = {
+          hostPath = "/dev/nvidia0";
+          isReadOnly = false;
+        };
+        "/dev/nvidiactl" = {
+          hostPath = "/dev/nvidiactl";
+          isReadOnly = false;
+        };
+        "/dev/nvidia-modeset" = {
+          hostPath = "/dev/nvidia-modeset";
+          isReadOnly = false;
+        };
+        "/dev/nvidia-uvm" = {
+          hostPath = "/dev/nvidia-uvm";
+          isReadOnly = false;
+        };
+        "/dev/nvidia-uvm-tools" = {
+          hostPath = "/dev/nvidia-uvm-tools";
+          isReadOnly = false;
+        };
+        "/dev/nvidia-caps" = {
+          hostPath = "/dev/nvidia-caps";
+          isReadOnly = false;
+        };
+      } else {});
       allowedDevices = if (builtins.hasAttr "gpu" containerConfig && containerConfig.gpu) then [
         {
           modifier = "rw";
+          node = "/dev/dri";
+        }
+        {
+          modifier = "rw";
           node = "/dev/dri/renderD128";
+        }
+        {
+          modifier = "rw";
+          node = "/dev/shm";
+        }
+        {
+          modifier = "rw";
+          node = "/dev/nvidiactl";
+        }
+        {
+          modifier = "rw";
+          node = "/dev/nvidia0";
+        }
+        {
+          modifier = "rw";
+          node = "/dev/nvidia-modeset";
+        }
+        {
+          modifier = "rw";
+          node = "/dev/nvidia-uvm-tools";
+        }
+        {
+          modifier = "rw";
+          node = "/dev/nvidia-uvm";
+        }
+        {
+          modifier = "rw";
+          node = "/dev/nvidia-caps";
         }
       ] else [];
       specialArgs = {
