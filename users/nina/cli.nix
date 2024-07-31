@@ -4,6 +4,7 @@
     silicon
     pinentry
     passage
+    picocom
   ];
   programs = {
     atuin = {
