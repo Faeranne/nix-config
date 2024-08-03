@@ -2,7 +2,7 @@
   virtualisation.oci-containers.containers = {
     "actual" = {
       autoStart = true;
-      image = "actualbudget/actual-server:24.7.0";
+      image = "actualbudget/actual-server:24.8.0";
       ports = [
         "5006:5006"
       ];
