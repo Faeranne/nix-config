@@ -1,0 +1,3 @@
+{
+  grocy = import ./grocy.nix;
+}

@@ -42,11 +42,14 @@
   };
 
   networking = {
+    useNetworkd = true;
     firewall = {
       allowedTCPPortRanges = [ {from = 1714; to = 1764; } ];
       allowedUDPPortRanges = [ {from = 1714; to = 1764; } ];
     };
   };
+
+  systemd.network.enable = true;
 
   boot = {
     supportedFilesystems = [
@@ -162,6 +165,11 @@
       ];
     };
     generators = {
+      wireguard = {pkgs, file, ...}: ''
+        priv=$(${pkgs.wireguard-tools}/bin/wg genkey)
+        ${pkgs.wireguard-tools}/bin/wg pubkey <<< "$priv" > ${lib.escapeShellArg (lib.removeSuffix ".age" file + ".pub")}
+        echo "$priv"
+      '';
       yggdrasilKeyConf = {pkgs, file, ...}: ''
         pkey=$(${pkgs.openssl}/bin/openssl genpkey -algorithm ed25519 -outform pem | ${pkgs.openssl}/bin/openssl pkey -inform pem -text -noout)
         priv=$(echo "$pkey" | sed '3,5p;d' | tr -d "\n :")

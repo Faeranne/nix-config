@@ -137,6 +137,8 @@
 
     homeManagerModules = import ./modules/homeManager;
 
+    containerModules = import ./modules/containers;
+
     userModules = import ./users;
 
     devShells = forAllSystems (system: let
@@ -163,6 +165,7 @@
          agenix-rekey 
          age-plugin-yubikey
          age
+         python3
         ];
       };
     });
@@ -173,7 +176,6 @@
           inputs.agenix-rekey.overlays.default
         ];
       };
-      hosts = builtins.attrNames self.nixosConfigurations;
     in {
       # This allows me to run `nix run .#deploy` and get an appropriate nixos-rebuild call with
       # minimal fuss.

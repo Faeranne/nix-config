@@ -8,6 +8,7 @@
     hardware.cpu.amd
     hardware.gpu.amd
     self.userModules.nina
+    self.containerModules.grocy
   ];
 
   virtualisation.waydroid.enable = true;
