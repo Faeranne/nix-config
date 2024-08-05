@@ -4,10 +4,6 @@
       device = "none";
       fsType = "tmpfs";
     };
-    "/zroot" = {
-      device = "zroot";
-      fsType = "zfs";
-    };
     "/persist" = {
       device = "zroot/persist";
       fsType = "zfs";
