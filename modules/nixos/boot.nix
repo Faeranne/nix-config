@@ -1,7 +1,0 @@
-{...}:{
-  boot = {
-    supportedFilesystems = [
-      "vfat"
-    ];
-  };
-}

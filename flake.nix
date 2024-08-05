@@ -5,8 +5,7 @@
   # then are fetched as per <name>.url and passed as a set to the
   # function `outputs` below.
   inputs = { 
-    # This is the base nixpkgs repo.  Contains almost anything you
-    # could need.
+    # This is the base nixpkgs repo.  Contains almost anything you could need.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     #nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-23.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs";
@@ -107,40 +106,23 @@
   #      is kinda dumb.
   #TODO: stop relying on inputs for *everything*. I've already swapped back to nixpkgs and self here
   #      but other variables should be broken back out too.
-  outputs = {self, nixpkgs, nix-on-droid, ...}@inputs: with builtins; let
-    # `nixpkgs.lib` is a pretty common set of libraries, so I usually include it
-    # when making functions outside of nixos modules.
-    #TODO: Look into using `callPackage` instead so lib can be used less. It's probably
-    #      still gonna be needed here, but still should look into it (also for flakeLibs below)
-    inherit (nixpkgs) lib;
-    # flakeLibs hase `mkHost` and `mkUser` in it.  It needs `inputs` to do it's thing
-    # so it's imported here.  I also inherit mkHost directly since I use it here.
-    flakeLibs = import ./lib inputs;
-    inherit (flakeLibs) mkHost mkUser utils;
-    inherit (flakeLibs.utils) getFolders;
-    # because forAllSystems uses some stuff from nixpkgs. should probably look into making it a
-    # callPackage file instead.
-    forAllSystems = flakeLibs.utils.forAllSystemsBuilder nixpkgs;
-    hosts = getFolders ./hosts;
-    #This closes the let enclosure on `outputs`
+  outputs = {self, nixpkgs, ...}@inputs: let
+    forAllSystems = nixpkgs.lib.genAttrs [
+      "aarch64-linux"
+      "x86_64-linux"
+    ];
   in {
-    # this produces a set containing every host as a `nixosSystem` derivation.
-    # Usually you'll set this manually, but by doing it this way, I can iterate over
-    # the hosts in `./hosts` automatically, making it easier to maintain.
-    #TODO: I do this enough that maybe a `forEachHost` function is called for?
-    nixosConfigurations = listToAttrs (map (hostname: let
-      res = mkHost hostname;
-      # simple let to make the results of `mkHost` easy to access
-    in {
-      # at this point `res` contains a single key `configuration`, which already includes
-      # `inputs` and `inputs.self` in the module arguments, plus a special `systemConfig`
-      # which is built from the `config.nix` in each host folder.
-      # Check one of the `config.nix` files for more details.
-      # Main thing is we now turn this into a nixosSystem derivation to be eventually built
-      # by nixos-reload
-      name = hostname;
-      value = lib.nixosSystem res.configuration;
-    }) hosts );
+    nixosConfigurations = {
+      sarah = nixpkgs.lib.nixosSystem {
+        specialArgs = {
+          inherit (self) nixosModules;
+          inherit self inputs;
+        };
+        modules = [
+          ./hosts/sarah
+        ];
+      };
+    };
     # Agenix handles securing some secrets.  This can include passwords, authentication tokens
     # encryption key, etc.  It does so by using an age key who's public half is stored in
     # `./secrets/identities/`.  For me, that is `yubikey.nix` as I use a yubikey to store the
@@ -151,93 +133,12 @@
       nodes = inputs.self.nixosConfigurations;
     };
 
-    nixOnDroidConfigurations.default = nix-on-droid.lib.nixOnDroidConfiguration {
-      modules = [
-        ./modules/droid
-      ];
-    };
+    nixosModules = import ./modules/nixos;
 
-    homeConfigurations = { 
-      # standalone home-manager doesn't mix with nixos bakedin home-manager. gonna have to look into
-      # systemless home-manager config.
-      #"nina@sarah" = mkUser "sarah" "nina";
-    };
+    homeManagerModules = import ./modules/homeManager;
 
-    #TODO: This comment references the now unused forAllSystems from flake-utils.
-    #      Need to change it to talk about the simpler way I use it now.
-    # Packages and devShells require a set containing every system you might run this on.
-    # to simplify this, since every system is compatable with these,
-    # we use `forAllSystems` to make both contain a set with every system in it.
-    # like `x86_64-linux` or `aarch64-linux`.  This does look a bit like magic since it will copy
-    # `devShells.default` into `options.devShells.x86_64-linux.default` and so-on, but does make this
-    # *much* easier to manage.
-    packages = forAllSystems (system: let
-      pkgs = import inputs.nixpkgs {
-        inherit system;
-        overlays = [
-          inputs.agenix-rekey.overlays.default
-        ];
-      };
-    in {
-      installer = inputs.nixos-generators.nixosGenerate {
-        system = "x86_64-linux";
-        inherit pkgs;
-        specialArgs = { 
-          inherit (inputs) self;
-        };
-        modules = [
-          ./modules/nixos/install.nix
-        ];
-        format = "install-iso";
-      };
-      # This allows me to run `nix run .#deploy` and get an appropriate nixos-rebuild call with
-      # minimal fuss.
-      deploy = let
-        # If we're on a clean repo (everything is commited and no untracked files exist), then we
-        # do the full nixos-rebuild, including setting up the boot requirements.
-        # If it's still dirty, we just do a test, which will revert on reboot.
-        action = if self ? rev then "switch" else "test";
-        # I include a message to let myself know if things are being setup for boot or not.
-        message = if self ? rev then "Clean repo, full switch" else "Dirty repo, only testing";
-      in pkgs.writeShellScriptBin "deploy" ''
-        echo ${message}
-        # nettools/hostname grabs the hostname of the current system. We do this here instead of in
-        # the flake.nix because we can't introduce impurity at that stage.  Techinically it should always
-        # be the same regardless, since we never push this script to any other system, but you never know,
-        # and Nix really does care.
-        sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild --flake .#`${pkgs.nettools}/bin/hostname` ${action}
-      '';
-      default = inputs.self.packages.${system}.deploy;
-    } // foldl' (acc: host: 
-      let
-        config = utils.getHostConfig host;
-        action = if self ? rev then "switch" else "test";
-        message = if self ? rev then "Clean repo, full switch" else "Dirty repo, only testing";
-        name = "deploy-${host}";
-        value = pkgs.writeShellScriptBin "deploy-${host}" ''
-          echo ${message}
-          ${pkgs.nixos-rebuild}/bin/nixos-rebuild --flake .#${host} --target-host ${config.net.url} --use-remote-sudo ${action}
-        '';
-      in 
-        # We only build a "deploy-host" program for hosts that have network configs already setup.
-        # This should probably be altered to better blacklist desktop and laptop configs
-        # since these will not have any way to remotely manage them.
-        (if 
-          builtins.hasAttr "net" config && builtins.hasAttr "url" config.net
-        then
-          {
-            ${name} = value;
-          }
-        else
-          {}
-        ) //
-        #This creates a `<system>-disko` script that formats drives for whatever system I may be installing.
-        #Every ssytem is evaluated through this script.
-        ##TODO: I also need to add something to pre-generate new local system keys.
-        {
-          "${host}-disko" = self.nixosConfigurations.${host}.config.system.build.diskoScript;
-        } // acc
-    ) {} hosts);
+    userModules = import ./users;
+
     devShells = forAllSystems (system: let
       pkgs = import inputs.nixpkgs {
         inherit system;
@@ -265,9 +166,33 @@
         ];
       };
     });
-  };
-  nixConfig = {
-#   extra-substituters = [  ];
-#   extra-trusted-public-keys = [  ];
+    packages = forAllSystems (system: let
+      pkgs = import inputs.nixpkgs {
+        inherit system;
+        overlays = [
+          inputs.agenix-rekey.overlays.default
+        ];
+      };
+      hosts = builtins.attrNames self.nixosConfigurations;
+    in {
+      # This allows me to run `nix run .#deploy` and get an appropriate nixos-rebuild call with
+      # minimal fuss.
+      deploy = let
+        # If we're on a clean repo (everything is commited and no untracked files exist), then we
+        # do the full nixos-rebuild, including setting up the boot requirements.
+        # If it's still dirty, we just do a test, which will revert on reboot.
+        action = if self ? rev then "switch" else "test";
+        # I include a message to let myself know if things are being setup for boot or not.
+        message = if self ? rev then "Clean repo, full switch" else "Dirty repo, only testing";
+      in pkgs.writeShellScriptBin "deploy" ''
+        echo ${message}
+        # nettools/hostname grabs the hostname of the current system. We do this here instead of in
+        # the flake.nix because we can't introduce impurity at that stage.  Techinically it should always
+        # be the same regardless, since we never push this script to any other system, but you never know,
+        # and Nix really does care.
+        sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild --flake .#`${pkgs.nettools}/bin/hostname` ${action}
+      '';
+      default = inputs.self.packages.${system}.deploy;
+    });
   };
 }

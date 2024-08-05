@@ -1,39 +1,6 @@
-{config, pkgs, lib, systemConfig, ...}: let
-  isGnome = (builtins.elem "gnome" systemConfig.elements);
-  isKde = (builtins.elem "kde" systemConfig.elements);
-  isSway = (builtins.elem "sway" systemConfig.elements);
-  isGraphical = isGnome || isKde || isSway;
-in {
-  config = lib.mkIf isGraphical {
-    dconf = lib.mkIf isGnome {
-      settings = {
-        "org/gnome/shell" = {
-          disable-user-extensions = false;
-          enabled-extensions = [
-            "appindicatorsupport@rgcjonas.gmail.com"
-            "gsconnect@andyholmes.github.io"
-          ];
-          favorite-apps = [
-            "firefox.desktop"
-            "vesktop.desktop"
-            "org.gnome.Console.desktop"
-            "obsidian.desktop"
-            "thunderbird.desktop"
-            "org.gnome.Nautilus.desktop"
-          ];
-        };
-        "org/gnome/desktop/interface" = {
-          color-scheme = "prefer-dark";
-          enable-hot-corners = false;
-        };
-        "org/gnome/desktop/wm/preferences" = {
-          button-layout = "minimize,maximize,close";
-          workspaces-names = [
-            "Main"
-          ];
-        };
-      };
-    };
+{pkgs, lib, systemConfig, ...}: {
+  # Using xdg.portal as my trigger to identify desktop systems, vs server systems
+  config = lib.mkIf (builtins.trace true systemConfig.xdg.portal.enable){
     programs = {
       firefox = {
         enable = true;
@@ -42,8 +9,7 @@ in {
         enable = true;
         profiles.default = {
           isDefault = true;
-        };
-      };
+        }; };
     };
     services = {
       mako = {
@@ -56,12 +22,8 @@ in {
         indicator = true;
       };
     };
+    # TODO: fix monitor layout options.
     wayland.windowManager.sway.config = {
-      assigns = {
-        "4" = [
-          {app_id = "vesktop";}
-        ];
-      };
       output = {
         "*" = {
         };

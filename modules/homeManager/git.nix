@@ -1,8 +1,4 @@
-{pkgs, lib, userConfig, systemConfig, ...}: let
-  isDesktop = (builtins.elem "desktop" systemConfig.elements);
-  isLaptop = (builtins.elem "laptop" systemConfig.elements);
-in
-{
+{pkgs, lib, ...}: {
   programs = {
     git = {
       enable = true;
@@ -35,7 +31,7 @@ in
     gitui.enable = true;
     ssh = {
       enable = true;
-      matchBlocks = lib.mkIf (isDesktop || isLaptop) {
+      matchBlocks = {
         "github.com" = {
           user = "git";
         };

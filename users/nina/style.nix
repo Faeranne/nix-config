@@ -1,0 +1,3 @@
+{...}:{
+  image = ./resources/background.png;
+}

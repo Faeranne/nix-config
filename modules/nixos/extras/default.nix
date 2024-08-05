@@ -1,0 +1,3 @@
+{
+  storage = import ./storage.nix;
+}

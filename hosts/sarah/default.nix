@@ -1,35 +1,87 @@
-{
-  id = 3;
-  # base elements to implement on this host.
-  # most are defined in `systems/`
-  elements = [ 
-    "amd"
-    "desktop"
-    "impermanence"
-    "amdgpu"
-    "sway"
-    "virtualization"
-    "rgb"
-    "steam"
-    "bluetooth"
+{self, ...}:{
+  imports = with self.nixosModules; [
+    base 
+    emulation
+    gaming
+    desktop
+    extras.storage
+    hardware.cpu.amd
+    hardware.gpu.amd
+    self.userModules.nina
   ];
-  # architectures to emulate
-  emulate = [ "aarch64-linux" ];
-  # the machine-id of this system.
-  hostId = "586769c4";
-  # Primary network interface as reported by `ip addr`
-  netdev = "enp10s0";
-  ip = "192.168.1.80";
-  # Root disk devices for this system.  Prefer `by-path` where possible,
-  # but can be `by-id` if the path is not guarenteed, like on cloud servers.
-  storage = {
-    root = "/dev/disk/by-id/nvme-eui.002538560140299a";
+
+  virtualisation.waydroid.enable = true;
+  programs.corectrl.enable = true;
+
+  boot.binfmt.emulatedSystems = [];
+
+  networking = {
+    nat = {
+      externalInterface = "enp10s0";
+    };
+    hostName = "sarah";
+    hostId = "586769c4";
+    firewall = {
+      allowedTCPPorts = [ 4747 4748 39595 43751 6567 ];
+      allowedUDPPorts = [ 43751 6567 ];
+    };
   };
-  # Users to add to the system. will build Home-Manager installs for this system too.
-  users = [ "nina" ];
-  sudo = [ "nina" ];
-  # Elements used for security management.
-  security = {
-    pubkey = "age185avxte33jvaexyl5292nczj3drlhc5dnyv8svyyy8u4l0tfgpksz6encl";
+
+  fileSystems = {
+    "/boot" = {
+      device = "/dev/disk/by-uuid/A15D-1FC6";
+      fsType = "vfat";
+      options = [ "fmask=0022" "dmask=0022" ];
+    };
+  };
+
+  nixpkgs.hostPlatform = "x86_64-linux";
+
+  age.rekey.hostPubkey = "age185avxte33jvaexyl5292nczj3drlhc5dnyv8svyyy8u4l0tfgpksz6encl";
+
+  home-manager = {
+    backupFileExtension = "bak";
+    sharedModules = [
+      self.homeManagerModules.desktop
+      ({...}:{
+        wayland.windowManager.sway = {
+          config = {
+            workspaceOutputAssign = [
+              {
+                output = "Dell Inc. DELL P2210 6H6FX214352S";
+                workspace = "1";
+              }
+              {
+                output = "ViewSonic Corporation VP2468 Series UN8170400211";
+                workspace = "2";
+              }
+              {
+                output = "Dell Inc. DELL P2210 U828K116922M";
+                workspace = "3";
+              }
+              {
+                output = "Dell Inc. DELL P2210 0VW5M1C8H57S";
+                workspace = "4";
+              }
+            ];
+            output = {
+              "Dell Inc. DELL P2210 0VW5M1C8H57S" = {
+                transform = "270";
+                pos = "1920 -600";
+              };
+              "ViewSonic Corporation VP2468 Series UN8170400211" = {
+                pos = "0 0";
+              };
+              "Dell Inc. DELL P2210 U828K116922M" = {
+                pos = "240 -1050";
+              };
+              "Dell Inc. DELL P2210 6H6FX214352S" = {
+                pos = "-1680 0";
+              };
+            };
+          };
+        };
+      })
+    ];
   };
 }
