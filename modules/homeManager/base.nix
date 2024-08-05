@@ -1,4 +1,4 @@
-{userConfig, ...}: {
+{...}: {
   imports = [
     ./packages.nix
     ./ssh-agent.nix

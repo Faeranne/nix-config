@@ -1,7 +1,4 @@
 {config, pkgs, lib, ...}: {
-  imports = [
-    ./sway.nix
-  ];
   config =  let
     swaylock-bin = "${pkgs.swaylock}/bin/swaylock";
   in {
@@ -49,6 +46,53 @@
       samba
       swayimg
     ];
+    wayland.windowManager.sway = {
+      enable = true;
+      systemd = {
+        enable = true;
+        xdgAutostart = true;
+      };
+      wrapperFeatures = {
+        base = true;
+        gtk = true;
+      };
+      swaynag.enable = true;
+      config = {
+        modifier = "Mod4";
+        terminal = "foot";
+        menu = "${config.programs.rofi.finalPackage}/bin/rofi -show drun";
+        bars = [];
+        window.commands = [
+          {
+            command = "floating enable";
+            criteria = {
+              class = "steam_app_2670630";
+            };
+          }
+        ];
+        workspaceLayout = "tabbed";
+        keybindings = let
+          modifier = config.wayland.windowManager.sway.config.modifier;
+          menu = config.wayland.windowManager.sway.config.menu;
+          swaylock-bin = "${pkgs.swaylock}/bin/swaylock";
+        in lib.mkOptionDefault {
+          "${modifier}+g" = "exec TIMESTAMP=$(date +\"%Y%m%d%H%M\") grim /tmp/screenshot$TIMESTAMP.png && gimp /tmp/screenshot$TIMESTAMP.png && rm /tmp/screenshot$TIMESTAMP.png";
+          "${modifier}+Mod1+l" = "exec ${swaylock-bin} -fF";
+          "${modifier}+space" = "exec ${menu}";
+        };
+        input = {
+          "*" = {
+            xkb_layout = "us";
+            xkb_options = "caps:escape";
+            xkb_numlock = "enabled";
+          };
+        };
+        startup = [
+          { command = "mako"; }
+          { command = "kdeconnect-indicator"; }
+        ];
+      };
+    };
     systemd.user.services = {
       swayinhibit = {
         Unit = {

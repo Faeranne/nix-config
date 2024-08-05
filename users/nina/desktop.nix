@@ -24,10 +24,6 @@
     };
     # TODO: fix monitor layout options.
     wayland.windowManager.sway.config = {
-      output = {
-        "*" = {
-        };
-      };
       startup = [
         { command = "vesktop"; }
       ];
