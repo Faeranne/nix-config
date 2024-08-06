@@ -25,9 +25,9 @@
         ./containerDefault.nix
       ];
       networking = {
-      	firewall = {
-	  allowedTCPPorts = [ 80 ];
-	};
+        firewall = {
+          allowedTCPPorts = [ 80 ];
+        };
       };
       services.grocy = {
         enable = true;
