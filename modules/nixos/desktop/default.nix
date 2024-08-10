@@ -45,8 +45,7 @@
     in {
       enable = true;
       vt = 7;
-      settings.default_session.command = "${pkgs.sway}/bin/sway --config ${swayConfig}";
-      /*
+      #settings.default_session.command = "${pkgs.sway}/bin/sway --config ${swayConfig}";
       settings.default_session.command = ''
         ${pkgs.greetd.tuigreet}/bin/tuigreet \
           --time \
@@ -54,7 +53,6 @@
           --user-menu \
           --cmd sway
       '';
-      */
     };
     pipewire = {
       enable = true;
@@ -100,9 +98,8 @@
     etc = {
       "greetd/environments".text = ''
         sway
-        fish
-        bash
-        steam-gamescope
+        ${pkgs.zsh}/bin/zsh
+        ${pkgs.steam-gamescope}/bin/steam-gamescope
       '';
     };
     sessionVariables = {
