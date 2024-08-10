@@ -1,4 +1,9 @@
 {pkgs, ...}:{
+  boot = {
+    plymouth = {
+      enable = true;
+    };
+  };
   xdg.portal = {
     config = {
       common = {
@@ -82,6 +87,7 @@
     etc = {
       "greetd/environments".text = ''
         sway
+        steam-gamescope
       '';
     };
     sessionVariables = {
