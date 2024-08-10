@@ -33,9 +33,20 @@
       enable = true;
     };
     tumbler.enable = true;
-    greetd = {
+    greetd = let
+      swayConfig = pkgs.writeText "greetd-sway-config" ''
+        exec "${pkgs.greetd.gtkgreet}/bin/gtkgreet -l; swaymsg exit;
+        bindsym Mod4+shift+e exec swaynag \
+          -t warning \
+          -m 'What do you want to do?' \
+          -b 'Poweroff' 'systemctl poweroff' \
+          -b 'Reboot' 'systemctl reboot'
+      '';
+    in {
       enable = true;
       vt = 7;
+      settings.default_session.command = "${pkgs.sway}/bin/sway --config ${swayConfig}";
+      /*
       settings.default_session.command = ''
         ${pkgs.greetd.tuigreet}/bin/tuigreet \
           --time \
@@ -43,6 +54,7 @@
           --user-menu \
           --cmd sway
       '';
+      */
     };
     pipewire = {
       enable = true;
@@ -87,6 +99,8 @@
     etc = {
       "greetd/environments".text = ''
         sway
+        fish
+        bash
         steam-gamescope
       '';
     };
