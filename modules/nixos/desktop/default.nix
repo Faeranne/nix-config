@@ -1,4 +1,4 @@
-{pkgs, ...}:{
+{config, pkgs, ...}:{
   boot = {
     plymouth = {
       enable = true;
@@ -35,7 +35,7 @@
     tumbler.enable = true;
     greetd = let
       swayConfig = pkgs.writeText "greetd-sway-config" ''
-        exec "${pkgs.greetd.wlgreet}/bin/wlgreet --command sway; swaymsg exit;
+        exec "${config.programs.regreet.package}/bin/regreet; swaymsg exit;
         bindsym Mod4+shift+e exec swaynag \
           -t warning \
           -m 'What do you want to do?' \
@@ -84,6 +84,7 @@
       ];
     };
     file-roller.enable = true;
+    regreet.enable = true;
   };
 
   hardware = {
