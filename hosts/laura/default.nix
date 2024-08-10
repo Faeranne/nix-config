@@ -1,29 +1,67 @@
-{
-  id = 1;
-  # base elements to implement on this host.
-  # most are defined in `systems/`
-  elements = [ 
-    "intel"
-    "laptop"
-    "impermanence"
-    "gnome"
+{self, config, pkgs, ...}:{
+  imports = with self.nixosModules; [
+    base 
+    desktop
+    services.clamav
+    extras.storage
+    hardware.cpu.intel
+    self.userModules.nina
   ];
-  # architectures to emulate
-  emulate = [ "aarch64-linux" ];
-  # the machine-id of this system.
-  hostId = "76dc8f17";
-  # Primary network interface as reported by `ip addr`
-  netdev = "wpl108s0";
-  # Root disk devices for this system.  Prefer `by-path` where possible,
-  # but can be `by-id` if the path is not guarenteed, like on cloud servers.
-  storage = {
-    root = "/dev/disk/by-id/ata-SAMSUNG_SSD_PM871_M.2_2280_256GB_S208NXAGA31056";
+
+  age.secrets = {
+    "wglaura" = {
+      rekeyFile = self + "/secrets/laura/wireguard.age";
+      group = "systemd-network";
+      mode = "770";
+      generator = {
+        script = "wireguard";
+        tags = [ "wireguard" ];
+      };
+    };
   };
-  # Users to add to the system. will build Home-Manager installs for this system too.
-  users = [ "nina" ];
-  sudo = [ "nina" ];
-  # Elements used for security management.
-  security = {
-    pubkey = "age1x6yalmlph7h2de3flpk2a088cmhftpncv4czvu37j7fkdg6xtglse5p464";
+
+  virtualisation.waydroid.enable = true;
+  programs.corectrl.enable = true;
+
+  boot.binfmt.emulatedSystems = [];
+
+  networking = {
+    hostName = "laura";
+    hostId = "";
+    firewall = {
+      allowedTCPPorts = [ ];
+      allowedUDPPorts = [ ];
+    };
+  };
+
+  fileSystems = {
+    "/boot" = {
+      device = "/dev/disk/by-uuid/";
+      fsType = "vfat";
+      options = [ "fmask=0022" "dmask=0022" ];
+    };
+  };
+
+  nixpkgs.hostPlatform = "x86_64-linux";
+
+  age.rekey.hostPubkey = "";
+
+  home-manager = {
+    backupFileExtension = "bak";
+    sharedModules = [
+      self.homeManagerModules.desktop
+      ({...}:{
+        wayland.windowManager.sway = {
+          config = {
+            output = {
+              "Dell Inc. DELL P2210 0VW5M1C8H57S" = {
+                transform = "0";
+                pos = "0 0";
+              };
+            };
+          };
+        };
+      })
+    ];
   };
 }

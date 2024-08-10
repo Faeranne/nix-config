@@ -165,11 +165,6 @@
       ];
     };
     generators = {
-      wireguard = {pkgs, file, ...}: ''
-        priv=$(${pkgs.wireguard-tools}/bin/wg genkey)
-        ${pkgs.wireguard-tools}/bin/wg pubkey <<< "$priv" > ${lib.escapeShellArg (lib.removeSuffix ".age" file + ".pub")}
-        echo "$priv"
-      '';
       yggdrasilKeyConf = {pkgs, file, ...}: ''
         pkey=$(${pkgs.openssl}/bin/openssl genpkey -algorithm ed25519 -outform pem | ${pkgs.openssl}/bin/openssl pkey -inform pem -text -noout)
         priv=$(echo "$pkey" | sed '3,5p;d' | tr -d "\n :")

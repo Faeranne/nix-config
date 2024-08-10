@@ -1,7 +1,8 @@
-{self, config, ...}:{
+addConfig: {...}:{
   imports = [
-    (import ./containerBase.nix "grocy")
+    (import ./template.nix "grocy")
   ];
+  /*
   systemd.network = {
     networks.wggrocy = {
       address = [ "10.100.1.2/16" ];
@@ -10,19 +11,30 @@
       wireguardConfig = {
         ListenPort = 51821;
       };
+      wireguardPeers = [
+        {
+          wireguardPeerConfig = {
+            AllowedIPs = [
+              "10.100.1.1/32"
+            ];
+            Endpoint = "127.0.0.1:51820";
+            PersistentKeepalive = 15;
+            PublicKey = builtins.readFile (self + "/secrets/containers/sarah/wireguard.pub");
+          };
+        }
+      ];
     };
   };
+  */
   containers.grocy = {
-    localAddress = "/16";
     bindMounts = {
       "/var/lib/grocy" = {
-        hostPath = "/Storage/volumes/grocy";
         isReadOnly = false;
       };
     };
     config = {...}: {
       imports = [
-        ./containerDefault.nix
+        ./base.nix
       ];
       networking = {
         firewall = {
@@ -30,8 +42,8 @@
         };
       };
       services.grocy = {
+        inherit (addConfig) hostName;
         enable = true;
-        hostName = "grocy.faeranne.com";
         nginx.enableSSL = false;
         settings = {
           currency = "USD";

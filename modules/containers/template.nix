@@ -1,4 +1,5 @@
 name: {self, config, ...}:{
+  /*
   age.secrets = {
     "wg${name}" = {
       rekeyFile = self + "/secrets/containers/${name}/wireguard.age";
@@ -9,7 +10,6 @@ name: {self, config, ...}:{
         tags = [ "wireguard" ];
       };
     };
-
   };
   systemd.network = {
     networks."wg${name}" = {
@@ -29,13 +29,14 @@ name: {self, config, ...}:{
       };
     };
   };
+  */
   containers.${name} = {
     privateNetwork = true;
     restartIfChanged = true;
     autoStart = true;
     hostBridge = "brCont";
     interfaces = [
-      "wg${name}"
+#      "wg${name}"
     ];
   };
 }
