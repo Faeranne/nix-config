@@ -35,7 +35,7 @@
     tumbler.enable = true;
     greetd = let
       swayConfig = pkgs.writeText "greetd-sway-config" ''
-        exec "${pkgs.greetd.gtkgreet}/bin/gtkgreet -l; swaymsg exit;
+        exec "${pkgs.greetd.wlgreet}/bin/wlgreet -l; swaymsg exit;
         bindsym Mod4+shift+e exec swaynag \
           -t warning \
           -m 'What do you want to do?' \
