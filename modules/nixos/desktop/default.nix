@@ -99,7 +99,7 @@
       "greetd/environments".text = ''
         sway
         ${pkgs.zsh}/bin/zsh
-        ${pkgs.steam-gamescope}/bin/steam-gamescope
+        steam-gamescope
       '';
     };
     sessionVariables = {
