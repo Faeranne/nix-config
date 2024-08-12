@@ -101,12 +101,7 @@
 
   # since `inputs` is a single variable here, it's the set of flakes input above.
   # this also includes this flake as `self`.
-  # `with builtins` makes all builtin functions available.
-  #TODO: Don't do this! I think builtin's is only used in 2 or 3 places in this scope, so this
-  #      is kinda dumb.
-  #TODO: stop relying on inputs for *everything*. I've already swapped back to nixpkgs and self here
-  #      but other variables should be broken back out too.
-  outputs = {self, nixpkgs, ...}@inputs: let
+  outputs = {self, nixpkgs, agenix-rekey, ...}@inputs: let
     forAllSystems = nixpkgs.lib.genAttrs [
       "aarch64-linux"
       "x86_64-linux"
@@ -128,19 +123,22 @@
     # `./secrets/identities/`.  For me, that is `yubikey.nix` as I use a yubikey to store the
     # actual secret.  This requires some setup to work as per https://github.com/ryantm/agenix
     # and https://github.com/oddlama/agenix-rekey.  I recommend reading both for more details.
-    agenix-rekey = inputs.agenix-rekey.configure {
-      userFlake = inputs.self;
-      nodes = inputs.self.nixosConfigurations;
+    agenix-rekey = agenix-rekey.configure {
+      userFlake = self;
+      nodes = self.nixosConfigurations;
     };
 
+    # nixosModules makes the modules/nixos directory available to nixos builds.
     nixosModules = import ./modules/nixos;
 
+    # Same but for homemanager modules
     homeManagerModules = import ./modules/homeManager;
 
     containerModules = import ./modules/containers;
 
     userModules = import ./users;
 
+    # This is for handling agenix rekey and generate commands
     devShells = forAllSystems (system: let
       pkgs = import inputs.nixpkgs {
         inherit system;
@@ -151,6 +149,15 @@
               config.allowUnfree = true;
             };
           })
+          (final: prev: {
+            pythonPackagesOverlays = prev.pythonPackagesOverlays ++ [
+              (
+                python-final: python-prev: {
+                  diskinfo = self.nixosModules.python3.diskinfo;
+                }
+              )
+            ];
+          })
           inputs.agenix-rekey.overlays.default
         ];
       };
@@ -159,42 +166,38 @@
        shellHook = ''
          age-plugin-yubikey --identity > /tmp/yubikey.pub
        '';
-        #NOTE: we're using the stable version for the moment till nixos/nixpkgs#309297
-        # is merged.  libpcsclite is broken in the current unstable.
-        packages = with pkgs; [ 
-         agenix-rekey 
+       # there's a split here because the agenix-rekey package has the same name as the input,
+       # so we have to manually call agenix-rekey from the pkgs set to prevent it from breaking.
+       packages = (with pkgs; [ 
          age-plugin-yubikey
          age
          python3
-        ];
+       ]) ++ [
+         pkgs.agenix-rekey 
+       ];
       };
     });
+
+    # This imports everything from pkgs as usable commands.  Makes deploying easier,
+    # while making things like generating tokens and keys easier to script
     packages = forAllSystems (system: let
       pkgs = import inputs.nixpkgs {
         inherit system;
         overlays = [
           inputs.agenix-rekey.overlays.default
+          (final: prev: {
+            pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
+              (
+                python-final: python-prev: {
+                  diskinfo = self.packages.${system}.python3.diskinfo;
+                }
+              )
+            ];
+          })
         ];
       };
     in {
-      # This allows me to run `nix run .#deploy` and get an appropriate nixos-rebuild call with
-      # minimal fuss.
-      deploy = let
-        # If we're on a clean repo (everything is commited and no untracked files exist), then we
-        # do the full nixos-rebuild, including setting up the boot requirements.
-        # If it's still dirty, we just do a test, which will revert on reboot.
-        action = if self ? rev then "switch" else "test";
-        # I include a message to let myself know if things are being setup for boot or not.
-        message = if self ? rev then "Clean repo, full switch" else "Dirty repo, only testing";
-      in pkgs.writeShellScriptBin "deploy" ''
-        echo ${message}
-        # nettools/hostname grabs the hostname of the current system. We do this here instead of in
-        # the flake.nix because we can't introduce impurity at that stage.  Techinically it should always
-        # be the same regardless, since we never push this script to any other system, but you never know,
-        # and Nix really does care.
-        sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild --flake .#`${pkgs.nettools}/bin/hostname` ${action}
-      '';
-      default = inputs.self.packages.${system}.deploy;
-    });
+      default = self.packages.${system}.deploy;
+    } // pkgs.callPackages ./pkgs {inherit self inputs ;});
   };
 }

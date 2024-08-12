@@ -1,37 +1,35 @@
-{self, config, pkgs, ...}:{
+{self, config, pkgs, lib, ...}:{
   imports = with self.nixosModules; [
     base 
     desktop
     gaming
     services.clamav
     extras.storage
+    self.userModules.nina
     self.userModules.livingroom
   ];
 
-  age.secrets = {
-    "wgsarah" = {
-      rekeyFile = self + "/secrets/kyle/wireguard.age";
-      group = "systemd-network";
-      mode = "770";
-      generator = {
-        script = "wireguard";
-        tags = [ "wireguard" ];
+  services = {
+    greetd = {
+      settings = {
+        default_session.command = lib.mkForce ''
+          ${pkgs.greetd.tuigreet}/bin/tuigreet \
+            --time \
+            --asterisks \
+            --user-menu \
+            --cmd sway
+        '';
+        initial_session = {
+          command = "steam-gamescope";
+          user = "livingroom";
+        };
       };
     };
   };
 
-  boot.binfmt.emulatedSystems = [];
-
   networking = {
-    nat = {
-      externalInterface = "";
-    };
     hostName = "kyle";
-    hostId = "";
-    firewall = {
-      allowedTCPPorts = [  ];
-      allowedUDPPorts = [  ];
-    };
+    hostId = "a70ab5fe";
   };
 
   fileSystems = {
@@ -49,7 +47,6 @@
   home-manager = {
     backupFileExtension = "bak";
     sharedModules = [
-
     ];
   };
 }
