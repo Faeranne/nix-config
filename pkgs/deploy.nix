@@ -12,4 +12,4 @@ in pkgs.writeShellScriptBin "deploy" ''
   # be the same regardless, since we never push this script to any other system, but you never know,
   # and Nix really does care.
   sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild --flake .#`${pkgs.nettools}/bin/hostname` ${action}
-'';
+''

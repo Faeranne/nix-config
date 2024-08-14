@@ -59,6 +59,11 @@
     */
   };
 
+  services.udev.extraRules = ''
+    SUBSYSTEM=="usb", ATTRS{idVendor}=="1038", ATTRS{idProduct}=="12e0", MODE="0666"
+    SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1038", ATTRS{idProduct}=="12e0", MODE="0666"
+  '';
+
   virtualisation.waydroid.enable = true;
   programs.corectrl.enable = true;
 
