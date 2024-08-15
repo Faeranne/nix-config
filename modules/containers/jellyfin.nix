@@ -33,8 +33,7 @@
       "/dev/nvidia-modeset" = {
         hostPath = "/dev/nvidia-modeset";
         isReadOnly = false;
-      };
-      "/dev/nvidia-uvm" = {
+      }; "/dev/nvidia-uvm" = {
         hostPath = "/dev/nvidia-uvm";
         isReadOnly = false;
       };

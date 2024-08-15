@@ -4,6 +4,8 @@
     emulation
     containers
     extras.storage
+    hardware.cpu.intel
+    hardware.gpu.nvidia
     ./docker.nix
     ./traefik.nix
     ./containers.nix

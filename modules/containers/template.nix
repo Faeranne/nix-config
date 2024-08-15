@@ -1,5 +1,4 @@
 name: {self, inputs, config, ...}:{
-  /*
   age.secrets = {
     "wg${name}" = {
       rekeyFile = self + "/secrets/containers/${name}/wireguard.age";
@@ -11,6 +10,7 @@ name: {self, inputs, config, ...}:{
       };
     };
   };
+  /*
   systemd.network = {
     networks."wg${name}" = {
       matchConfig.name = "wg${name}";
@@ -38,8 +38,5 @@ name: {self, inputs, config, ...}:{
     specialArgs = {
       inherit inputs self;
     };
-    interfaces = [
-#      "wg${name}"
-    ];
   };
 }

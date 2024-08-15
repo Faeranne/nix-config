@@ -1,4 +1,4 @@
-{lib, ...}: {
+{pkgs, lib, ...}: {
   age.generators.wireguard = {pkgs, file, ...}: ''
     priv=$(${pkgs.wireguard-tools}/bin/wg genkey)
     ${pkgs.wireguard-tools}/bin/wg pubkey <<< "$priv" > ${lib.escapeShellArg (lib.removeSuffix ".age" file + ".pub")}
@@ -22,6 +22,19 @@
     nat = {
       enable = true;
       internalInterfaces = [ "podman+" "ve-+" "vb-+" "brCont" ];
+    };
+  };
+  systemd.services."netns@" = {
+    description = "%I network namespace";
+    before = ["network.target"];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      PrivateNetwork = false;
+      ExecStart = "${pkgs.writers.writeDash "netns-up" ''
+        ${pkgs.iproute}/bin/ip netns add $1
+      ''} %I";
+      ExecStop = "${pkgs.iproute}/bin/ip netns del %I";
     };
   };
 }
