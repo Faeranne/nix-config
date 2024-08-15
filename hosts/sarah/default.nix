@@ -25,38 +25,7 @@
   };
 
   systemd.network = {
-    /*
-    networks."wgsarah" = {
-      matchConfig.name = "wgsarah";
-      address = [ "10.100.1.1/16" ];
-      networkConfig = {
-        IPForward = true;
-      };
-    };
-    netdevs."wgsarah" = {
-      enable = true;
-      netdevConfig = {
-        Kind = "wireguard";
-        Name = "wgsarah";
-      };
-      wireguardConfig = {
-        PrivateKeyFile = config.age.secrets."wgsarah".path;
-        ListenPort = 51820;
-      };
-      wireguardPeers = [
-        {
-          wireguardPeerConfig = {
-            AllowedIPs = [
-              "10.100.1.2/32"
-            ];
-            Endpoint = "127.0.0.1:51821";
-            PersistentKeepalive = 15;
-            PublicKey = builtins.readFile (self + "/secrets/containers/grocy/wireguard.pub");
-          };
-        }
-      ];
-    };
-    */
+
   };
 
   services.udev.extraRules = ''

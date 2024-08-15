@@ -1,4 +1,4 @@
-addConfig: {...}:{
+{...}:{
   imports = [
     (import ./template.nix "grocy")
   ];
@@ -32,7 +32,7 @@ addConfig: {...}:{
         isReadOnly = false;
       };
     };
-    config = {...}: {
+    config = {hostName, ...}: {
       imports = [
         ./base.nix
       ];
@@ -42,7 +42,7 @@ addConfig: {...}:{
         };
       };
       services.grocy = {
-        inherit (addConfig) hostName;
+        inherit hostName;
         enable = true;
         nginx.enableSSL = false;
         settings = {

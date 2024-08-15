@@ -1,6 +1,6 @@
 {self, ...}:{
   imports = [
-    (self.containerModules.grocy {hostName = "grocy.faeranne.com";})
+    self.containerModules.grocy
     self.containerModules.jellyfin
   ];
   containers = {
@@ -17,6 +17,8 @@
           hostPath = "/Storage/volumes/jellyfin";
         };
       };
+      specialArgs = {
+      };
     };
     grocy = {
       localAddress = "10.200.0.3";
@@ -24,6 +26,29 @@
         "/var/lib/grocy" = {
           hostPath = "/Storage/volumes/grocy";
         };
+      };
+      specialArgs = {
+        hostName = "grocy.faeranne.com";
+      };
+    };
+    paperless = {
+      localAddress = "10.200.0.4";
+      bindMounts = {
+      };
+    };
+    rss = {
+      localAddress = "10.200.0.5";
+      bindMounts = {
+      };
+    };
+    runners = {
+      localAddress = "10.200.0.6";
+      bindMounts = {
+      };
+    };
+    servarr = {
+      localAddress = "10.200.0.7";
+      bindMounts = {
       };
     };
   };
