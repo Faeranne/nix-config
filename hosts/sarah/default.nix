@@ -6,6 +6,7 @@
     desktop
     containers
     services.clamav
+    services.printers
     extras.storage
     hardware.cpu.amd
     hardware.gpu.amd
