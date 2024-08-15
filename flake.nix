@@ -97,11 +97,18 @@
         home-manager.follows = "home-manager";
       };
     };
+
+    nix-topology = {
+      url = "github:oddlama/nix-topology";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
   };
 
   # since `inputs` is a single variable here, it's the set of flakes input above.
   # this also includes this flake as `self`.
-  outputs = {self, nixpkgs, agenix-rekey, ...}@inputs: let
+  outputs = {self, nixpkgs, agenix-rekey, nix-topology, ...}@inputs: let
     forAllSystems = nixpkgs.lib.genAttrs [
       "aarch64-linux"
       "x86_64-linux"
@@ -114,7 +121,18 @@
           inherit self inputs;
         };
         modules = [
+          nix-topology.nixosModules.default
           ./hosts/sarah
+        ];
+      };
+      greg = nixpkgs.lib.nixosSystem {
+        specialArgs = {
+          inherit (self) nixosModules;
+          inherit self inputs;
+        };
+        modules = [
+          nix-topology.nixosModules.default
+          ./hosts/greg
         ];
       };
     };
@@ -138,11 +156,13 @@
 
     userModules = import ./users;
 
+
     # This is for handling agenix rekey and generate commands
     devShells = forAllSystems (system: let
       pkgs = import inputs.nixpkgs {
         inherit system;
         overlays = [ 
+          nix-topology.overlays.default
           (final: prev: {
             stable = import inputs.nixpkgs-stable {
               system = prev.system;
@@ -178,6 +198,21 @@
       };
     });
 
+    topology = forAllSystems (system: let
+      pkgs = import inputs.nixpkgs {
+        inherit system;
+        overlays = [
+          nix-topology.overlays.default
+        ];
+      };
+    in import nix-topology {
+      inherit pkgs;
+      modules = [
+        ./modules/topology
+        { nixosConfigurations = self.nixosConfigurations; }
+      ];
+    });
+
     # This imports everything from pkgs as usable commands.  Makes deploying easier,
     # while making things like generating tokens and keys easier to script
     packages = forAllSystems (system: let
@@ -185,6 +220,7 @@
         inherit system;
         overlays = [
           inputs.agenix-rekey.overlays.default
+          nix-topology.overlays.default
           (final: prev: {
             pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
               (

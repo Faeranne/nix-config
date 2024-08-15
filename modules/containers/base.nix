@@ -1,4 +1,7 @@
-{lib, ...}:{
+{inputs, lib, ...}:{
+  imports = [
+    inputs.nix-topology.nixosModules.default
+  ];
   networking = {
     useHostResolvConf = lib.mkForce false;
   };

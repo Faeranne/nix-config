@@ -1,30 +1,4 @@
-/*
-{
-  security = {
-    preset = [
-      "openvpn_pass"
-      "openvpn_user"
-      "mullvad_address"
-      "github_runner1"
-    ];
-    generate = {
-      freshrss = {
-        script = "passphrase";
-        tags = [ "pregen" ];
-      };
-      paperless_superuser = {
-        script = "passphrase";
-        tags = [ "pregen" ];
-      };
-      mullvad = {
-        script = "wireguard";
-        tags = [ "fixed" ];
-      };
-    };
-  };
-}
-*/
-{self, ...}: {
+{config, self, ...}: {
   imports = with self.nixosModules; [
     base 
     emulation
@@ -61,6 +35,20 @@
       device = "/dev/disk/by-uuid/CC42-7BE8";
       fsType = "vfat";
       options = [ "fmask=0022" "dmask=0022" ];
+    };
+  };
+
+  topology.self = {
+    name = "Greg";
+    hardware = {
+      info = "Server Computer";
+    };
+    interfaces.eno1 = {
+      addresses = ["192.168.1.10"];
+      network = "home";
+      physicalConnections = [
+        (config.lib.topology.mkConnection "switch1" "eth1")
+      ];
     };
   };
 

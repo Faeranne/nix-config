@@ -24,8 +24,18 @@
     };
   };
 
-  systemd.network = {
-
+  topology.self = {
+    name = "Sarah";
+    hardware = {
+      info = "Desktop Computer";
+    };
+    interfaces.enp10s0 = {
+      addresses = ["192.168.1.80"];
+      network = "home";
+      physicalConnections = [
+        (config.lib.topology.mkConnection "switch2" "eth2")
+      ];
+    };
   };
 
   services.udev.extraRules = ''

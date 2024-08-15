@@ -1,4 +1,4 @@
-name: {self, config, ...}:{
+name: {self, inputs, config, ...}:{
   /*
   age.secrets = {
     "wg${name}" = {
@@ -35,6 +35,9 @@ name: {self, config, ...}:{
     restartIfChanged = true;
     autoStart = true;
     hostBridge = "brCont";
+    specialArgs = {
+      inherit inputs self;
+    };
     interfaces = [
 #      "wg${name}"
     ];

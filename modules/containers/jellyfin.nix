@@ -100,6 +100,11 @@
 
       nixpkgs.config.allowUnfree = true;
 
+      services = {
+        xserver.videoDrivers = [ "nvidia" ];
+        jellyfin.enable = true;
+      };
+
       hardware.opengl = {
         enable = true;
         driSupport = true;
@@ -123,10 +128,6 @@
         yt-dlp
       ];
 
-      services.jellyfin = {
-        xserver.videoDrivers = [ "nvidia" ];
-        enable = true;
-      };
     };
   };
 }
