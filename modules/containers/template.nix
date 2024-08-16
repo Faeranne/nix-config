@@ -31,10 +31,10 @@ name: {self, inputs, config, ...}:{
   };
   */
   containers.${name} = {
-    privateNetwork = true;
+    #privateNetwork = true;
     restartIfChanged = true;
     autoStart = true;
-    hostBridge = "brCont";
+    #hostBridge = "brCont";
     specialArgs = {
       inherit inputs self;
     };

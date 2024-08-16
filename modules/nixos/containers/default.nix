@@ -24,17 +24,4 @@
       internalInterfaces = [ "podman+" "ve-+" "vb-+" "brCont" ];
     };
   };
-  systemd.services."netns@" = {
-    description = "%I network namespace";
-    before = ["network.target"];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      PrivateNetwork = false;
-      ExecStart = "${pkgs.writers.writeDash "netns-up" ''
-        ${pkgs.iproute}/bin/ip netns add $1
-      ''} %I";
-      ExecStop = "${pkgs.iproute}/bin/ip netns del %I";
-    };
-  };
 }

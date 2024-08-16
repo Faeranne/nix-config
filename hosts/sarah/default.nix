@@ -60,7 +60,23 @@
       allowedTCPPorts = [ 4747 4748 39595 43751 6567 ];
       allowedUDPPorts = [ 43751 6567 ];
     };
+    wireguard.interfaces = {
+      wgsarah = {
+        ips = ["10.100.1.3/32"];
+        privateKeyFile = config.age.secrets.wgsarah.path;
+        listenPort = 51820;
+        peers = [
+          {
+            name = "grocy";
+            endpoint = "127.0.0.1:${toString self.nixosConfigurations.sarah.config.networking.wireguard.interfaces.wggrocy.listenPort}";
+            publicKey = builtins.readFile (self + "/secrets/containers/grocy/wireguard.pub");
+            allowedIPs = self.nixosConfigurations.sarah.config.networking.wireguard.interfaces.wggrocy.ips;
+          }
+        ];
+      };
+    };
   };
+
 
   fileSystems = {
     "/boot" = {

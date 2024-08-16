@@ -45,6 +45,9 @@
         isReadOnly = false;
       };
     };
+    extraFlags = [
+      "--network-namespace-path=/run/netns/grocy"
+    ];
     config = {config, hostName, ...}: {
       imports = [
         ./base.nix
