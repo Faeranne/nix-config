@@ -113,29 +113,10 @@
       "aarch64-linux"
       "x86_64-linux"
     ];
+    lib = import ./lib inputs;
   in {
-    nixosConfigurations = {
-      sarah = nixpkgs.lib.nixosSystem {
-        specialArgs = {
-          inherit (self) nixosModules;
-          inherit self inputs;
-        };
-        modules = [
-          nix-topology.nixosModules.default
-          ./hosts/sarah
-        ];
-      };
-      greg = nixpkgs.lib.nixosSystem {
-        specialArgs = {
-          inherit (self) nixosModules;
-          inherit self inputs;
-        };
-        modules = [
-          nix-topology.nixosModules.default
-          ./hosts/greg
-        ];
-      };
-    };
+    inherit lib;
+    nixosConfigurations = import ./hosts inputs;
     # Agenix handles securing some secrets.  This can include passwords, authentication tokens
     # encryption key, etc.  It does so by using an age key who's public half is stored in
     # `./secrets/identities/`.  For me, that is `yubikey.nix` as I use a yubikey to store the

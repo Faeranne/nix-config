@@ -5,8 +5,9 @@
     gaming
     services.clamav
     extras.storage
+    hardware.cpu.intel
     self.userModules.nina
-    self.userModules.livingroom
+    #self.userModules.livingroom
   ];
 
   services = {
@@ -40,9 +41,23 @@
     };
   };
 
+  topology.self = {
+    name = "Kyle";
+    hardware = {
+      info = "Gaming Computer";
+    };
+    interfaces.eno1 = {
+      addresses = ["192.168.1.105"];
+      network = "home";
+      physicalConnections = [
+        {node = "switch3"; interface = "eth2";}
+      ];
+    };
+  };
+
   nixpkgs.hostPlatform = "x86_64-linux";
 
-  age.rekey.hostPubkey = "";
+  age.rekey.hostPubkey = "age185avxte33jvaexyl5292nczj3drlhc5dnyv8svyyy8u4l0tfgpksz6encl";
 
   home-manager = {
     backupFileExtension = "bak";

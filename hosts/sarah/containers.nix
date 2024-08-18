@@ -1,10 +1,12 @@
-{self, ...}:{
+{self, config, myLib, ...}: let
+  mkPeer = myLib.mkPeer "sarah";
+in {
   imports = [
     self.containerModules.grocy
+    self.containerModules.paperless
   ];
   containers = {
     grocy = {
-      localAddress = "10.200.0.3";
       bindMounts = {
         "/var/lib/grocy" = {
           hostPath = "/persist/container/grocy";
@@ -14,17 +16,30 @@
         hostName = "grocy.faeranne.com";
       };
     };
+    paperless = {
+      bindMounts = {
+        "/var/lib/paperless" = {
+          hostPath = "/persist/container/paperless";
+        };
+      };
+      specialArgs = {
+        hostName = "paperless.faeranne.com";
+      };
+    };
   };
   networking.wireguard.interfaces = {
-    wggrocy = {
-      listenPort = 51821;
+    "wggrocy" = {
       peers = [
-        {
-          name = "sarah";
-          endpoint = "127.0.0.1:${toString self.nixosConfigurations.sarah.config.networking.wireguard.interfaces.wgsarah.listenPort}";
-          publicKey = builtins.readFile (self + "/secrets/sarah/wireguard.pub");
-          allowedIPs = self.nixosConfigurations.sarah.config.networking.wireguard.interfaces.wgsarah.ips;
-        }
+        (mkPeer "sarah" "sarah")
+        (mkPeer "sarah" "paperless")
+        (mkPeer "greg" "greg")
+      ];
+    };
+    "wgpaperless" = {
+      peers = [
+        (mkPeer "sarah" "grocy")
+        (mkPeer "sarah" "sarah")
+        (mkPeer "greg" "greg")
       ];
     };
   };

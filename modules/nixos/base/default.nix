@@ -9,6 +9,9 @@
     inputs.stylix.nixosModules.stylix
     ./users.nix
   ];
+  _module.args = {
+    myLib = self.lib pkgs.system;
+  };
   system = {
     configurationRevision = if self ? rev then self.rev else if self ? dirtyRev then self.dirtyRev else "dirty";
     stateVersion = "23.11"; # Did you read the comment?
@@ -34,6 +37,9 @@
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
     };
+    extraOptions = ''
+      include ${config.age.secrets.flake-accessTokens.path};
+    '';
     gc = {
       automatic = true;
       dates = "weekly";
@@ -189,8 +195,16 @@
         ${pkgs.yggdrasil}/bin/yggdrasil -useconf -subnet <<< "$privConf" > ${lib.escapeShellArg (lib.removeSuffix ".age" file + ".net")}
         echo "$privConf"
       '';
+      wireguard = {pkgs, file, ...}: ''
+        priv=$(${pkgs.wireguard-tools}/bin/wg genkey)
+        ${pkgs.wireguard-tools}/bin/wg pubkey <<< "$priv" > ${lib.escapeShellArg (lib.removeSuffix ".age" file + ".pub")}
+        echo "$priv"
+      '';
     };
     secrets = {
+      flake-accessTokens = {
+        rekeyFile = self + "/secrets/accessTokens.age";
+      };
       yggdrasil = {
         rekeyFile = self + "/hosts/${config.networking.hostName}/secrets/yggdrasil.age";
         generator = {

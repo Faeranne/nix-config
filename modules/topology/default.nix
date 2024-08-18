@@ -1,50 +1,40 @@
-{config, ...}: let 
-  inherit (config.lib.topology) 
-  mkInternet
-  mkConnection
-  mkRouter
-  mkSwitch
-  ;
+{self, config, lib, ...}: let 
+  inherit (config.lib.topology) mkInternet;
 in {
-  nodes = {
-    internet = mkInternet {
-      connections = mkConnection "router" "wan2";
+  imports = [
+    ./home.nix
+  ];
+  options = {
+    networks = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.submodule ({...}:{
+        options = {
+          router = lib.mkOption {
+            type = lib.types.str;
+          };
+        };
+      }));
     };
-    switch1 = mkSwitch "Rack PoE Switch" {
-      interfaceGroups = [
-        ["eth1" "eth3" "eth5" "eth7" "eth9" "eth11" "eth13" "eth15"]
-        ["eth2" "eth4" "eth6" "eth8" "eth10" "eth12" "eth14" "eth16"]
-        ["sfp1" "sfp2"]
-      ];
-      connections.sfp2 = mkConnection "router" "sfp1";
-      interfaces.sfp2 = {
-        addresses = ["192.168.1.90"];
-        network = "home";
-      };
-    };
-    switch2 = mkSwitch "Bedroom Switch" {
-      interfaceGroups = [
-        ["eth1" "eth2" "eth3" "eth4" "eth5" "eth6" "eth7" "eth8"]
-      ];
-      connections.eth1 = mkConnection "switch1" "eth2";
-      interfaces.eth1 = {
-        addresses = ["192.168.1.178"];
-        network = "home";
-      };
-    };
-    router = mkRouter "Unifi USG Pro 4" {
-      interfaceGroups = [
-        ["eth1" "eth2" "sfp1" "sfp2"]
-        ["wan1" "wan2"]
-      ];
-      interfaces.sfp1 = {
-        addresses = ["192.168.1.1"];
-        network = "home";
-      };
+    nodes = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.submodule ({...}:{
+        options = {
+          primaryNetwork = lib.mkOption {
+            type = lib.types.str;
+          };
+          primaryInterface = lib.mkOption {
+            type = lib.types.str;
+          };
+        };
+      }));
     };
   };
-  networks.home = {
-    name = "Home Network";
-    cidrv4 = "192.168.1.1/24";
+  config = {
+    nodes = {
+      internet = mkInternet {
+      };
+    };
+    networks.internet = {
+      name = "Internet";
+      cidrv4 = "0.0.0.0/0";
+    };
   };
 }

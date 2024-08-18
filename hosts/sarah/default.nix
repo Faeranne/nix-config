@@ -1,4 +1,6 @@
-{self, config, pkgs, ...}:{
+{self, config, myLib, ...}: let
+  mkPeer = myLib.mkPeer "sarah";
+in{
   imports = with self.nixosModules; [
     base 
     emulation
@@ -30,7 +32,8 @@
     name = "Sarah";
     hardware = {
       info = "Desktop Computer";
-    };
+    }; primaryNetwork = "home";
+    primaryInterface = "enp10s0";
     interfaces.enp10s0 = {
       addresses = ["192.168.1.80"];
       network = "home";
@@ -57,21 +60,17 @@
     hostName = "sarah";
     hostId = "586769c4";
     firewall = {
-      allowedTCPPorts = [ 4747 4748 39595 43751 6567 ];
+      allowedTCPPorts = [ 4747 4748 39595 43751 6567 52820 ];
       allowedUDPPorts = [ 43751 6567 ];
     };
     wireguard.interfaces = {
       wgsarah = {
-        ips = ["10.100.1.3/32"];
+        ips = ["10.100.2.2/32"];
         privateKeyFile = config.age.secrets.wgsarah.path;
-        listenPort = 51820;
+        listenPort = 52820;
         peers = [
-          {
-            name = "grocy";
-            endpoint = "127.0.0.1:${toString self.nixosConfigurations.sarah.config.networking.wireguard.interfaces.wggrocy.listenPort}";
-            publicKey = builtins.readFile (self + "/secrets/containers/grocy/wireguard.pub");
-            allowedIPs = self.nixosConfigurations.sarah.config.networking.wireguard.interfaces.wggrocy.ips;
-          }
+          (mkPeer "sarah" "grocy")
+          (mkPeer "sarah" "paperless")
         ];
       };
     };

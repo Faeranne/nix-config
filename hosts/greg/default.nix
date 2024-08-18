@@ -1,4 +1,6 @@
-{config, self, ...}: {
+{self, config, myLib, ...}: let
+  mkPeer = myLib.mkPeer "sarah";
+in{
   imports = with self.nixosModules; [
     base 
     emulation
@@ -9,6 +11,7 @@
     ./docker.nix
     ./traefik.nix
     ./containers.nix
+    ./security.nix
     self.userModules.nina
   ];
 
@@ -18,7 +21,7 @@
     hostName = "greg";
     hostId = "ccd933cc";
     firewall = {
-      allowedTCPPorts = [ 25565 9091 80 443 ];
+      allowedTCPPorts = [ 25565 9091 80 443 52821 ];
     };
     nat = {
       externalInterface = "eno1";
@@ -29,6 +32,16 @@
           proto = "tcp";
         }
       ];
+    };
+    wireguard.interfaces = {
+      wggreg = {
+        ips = ["10.100.2.3/32"];
+        privateKeyFile = config.age.secrets.wggreg.path;
+        listenPort = 52821;
+        peers = [
+          (mkPeer "sarah" "sarah")
+        ];
+      };
     };
   };
 
@@ -45,6 +58,8 @@
     hardware = {
       info = "Server Computer";
     };
+    primaryNetwork = "home";
+    primaryInterface = "eno1";
     interfaces.eno1 = {
       addresses = ["192.168.1.10"];
       network = "home";

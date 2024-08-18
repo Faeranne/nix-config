@@ -3,6 +3,13 @@
     (import ./template.nix "jellyfin")
   ];
 
+  networking.wireguard.interfaces = {
+    "wgjellyfin" = {
+      ips = ["10.100.1.5/32"];
+      listenPort = 51823;
+    };
+  };
+
   containers.jellyfin = {
     bindMounts = {
       "/media" = {

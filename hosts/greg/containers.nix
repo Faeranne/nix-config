@@ -1,11 +1,11 @@
-{self, ...}:{
+{self, myLib, ...}: let
+  mkPeer = myLib.mkPeer "greg";
+in {
   imports = [
-    self.containerModules.grocy
     self.containerModules.jellyfin
   ];
   containers = {
     jellyfin = {
-      localAddress = "10.200.0.2";
       bindMounts = {
         "/media" = {
           hostPath = "/Storage/media";
@@ -20,16 +20,12 @@
       specialArgs = {
       };
     };
-    grocy = {
-      localAddress = "10.200.0.3";
-      bindMounts = {
-        "/var/lib/grocy" = {
-          hostPath = "/Storage/volumes/grocy";
-        };
-      };
-      specialArgs = {
-        hostName = "grocy.faeranne.com";
-      };
+  };
+  networking.wireguard.interfaces = {
+    "wgjellyfin" = {
+      peers = [
+        (mkPeer "greg" "greg")
+      ];
     };
   };
 }

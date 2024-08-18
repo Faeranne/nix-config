@@ -10,26 +10,22 @@ name: {self, inputs, config, ...}:{
       };
     };
   };
-  /*
-  systemd.network = {
-    networks."wg${name}" = {
-      matchConfig.name = "wg${name}";
-      networkConfig = {
-        IPForward = true;
-      };
+  systemd.services."wireguard-wggrocy" = {
+    bindsTo = ["netns@${name}.service"];
+    after = ["netns@${name}.service"];
+  };
+  networking = {
+    firewall = {
+      allowedTCPPorts = [ config.networking.wireguard.interfaces."wg${name}".listenPort ];
     };
-    netdevs."wg${name}" = {
-      enable = true;
-      netdevConfig = {
-        Kind = "wireguard";
-        Name = "wg${name}";
-      };
-      wireguardConfig = {
-        PrivateKeyFile = config.age.secrets."wg${name}".path;
+    wireguard.interfaces = {
+      "wg${name}" = {
+        privateKeyFile = config.age.secrets."wg${name}".path;
+        socketNamespace = "init";
+        interfaceNamespace = "${name}";
       };
     };
   };
-  */
   containers.${name} = {
     #privateNetwork = true;
     restartIfChanged = true;
@@ -38,5 +34,8 @@ name: {self, inputs, config, ...}:{
     specialArgs = {
       inherit inputs self;
     };
+    extraFlags = [
+      "--network-namespace-path=/run/netns/${name}"
+    ];
   };
 }

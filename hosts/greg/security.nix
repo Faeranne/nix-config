@@ -1,29 +1,3 @@
-/*
-{
-  security = {
-    preset = [
-      "openvpn_pass"
-      "openvpn_user"
-      "mullvad_address"
-      "github_runner1"
-    ];
-    generate = {
-      freshrss = {
-        script = "passphrase";
-        tags = [ "pregen" ];
-      };
-      paperless_superuser = {
-        script = "passphrase";
-        tags = [ "pregen" ];
-      };
-      mullvad = {
-        script = "wireguard";
-        tags = [ "fixed" ];
-      };
-    };
-  };
-}
-*/
 {self, ...}:{
   age.secrets = {
     "openvpn_pass" = {

@@ -27,7 +27,7 @@
 
   networking = {
     hostName = "laura";
-    hostId = "";
+    hostId = "abcd1234";
     firewall = {
       allowedTCPPorts = [ ];
       allowedUDPPorts = [ ];
@@ -42,9 +42,16 @@
     };
   };
 
+  topology.self = {
+    name = "Laura";
+    hardware = {
+      info = "Laptop";
+    };
+  };
+
   nixpkgs.hostPlatform = "x86_64-linux";
 
-  age.rekey.hostPubkey = "";
+  age.rekey.hostPubkey = "age185avxte33jvaexyl5292nczj3drlhc5dnyv8svyyy8u4l0tfgpksz6encl";
 
   home-manager = {
     backupFileExtension = "bak";

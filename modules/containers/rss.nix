@@ -2,6 +2,12 @@
   imports = [
     (import ./template.nix "paperless")
   ];
+  networking.wireguard.interfaces = {
+    "wgjellyfin" = {
+      ips = ["10.100.1.6/32"];
+      listenPort = 51824;
+    };
+  };
   containers.paperless = {
     bindMounts = {
     };
