@@ -16,7 +16,7 @@ name: {self, inputs, config, ...}:{
   };
   networking = {
     firewall = {
-      allowedTCPPorts = [ config.networking.wireguard.interfaces."wg${name}".listenPort ];
+      allowedUDPPorts = [ config.networking.wireguard.interfaces."wg${name}".listenPort ];
     };
     wireguard.interfaces = {
       "wg${name}" = {

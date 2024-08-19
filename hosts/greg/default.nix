@@ -39,7 +39,9 @@ in{
         privateKeyFile = config.age.secrets.wggreg.path;
         listenPort = 52821;
         peers = [
-          (mkPeer "sarah" "sarah")
+          (mkPeer "sarah")
+          (mkPeer "jellyfin")
+          (mkPeer "servarr")
         ];
       };
     };

@@ -1,16 +1,26 @@
-{...}:{
+{self, myLib, pkgs, ...}:let
+  containerName = "jellyfin";
+  inherit (myLib) getWireguardHost;
+  myHost = self.topology.${pkgs.system}.config.nodes.${containerName}.parent;
+  mkPeer = myLib.mkPeer myHost;
+in {
   imports = [
-    (import ./template.nix "jellyfin")
+    (import ./template.nix containerName)
   ];
 
   networking.wireguard.interfaces = {
-    "wgjellyfin" = {
+    "wg${containerName}" = {
       ips = ["10.100.1.5/32"];
       listenPort = 51823;
+      peers = [
+        (mkPeer "greg")
+        (mkPeer "sarah")
+        (mkPeer "servarr")
+      ];
     };
   };
 
-  containers.jellyfin = {
+  containers.${containerName} = {
     bindMounts = {
       "/media" = {
         isReadOnly = false;
