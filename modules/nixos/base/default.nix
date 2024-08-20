@@ -38,7 +38,7 @@
       experimental-features = [ "nix-command" "flakes" ];
     };
     extraOptions = ''
-      include ${config.age.secrets.flake-accessTokens.path};
+      !include ${config.age.secrets.flake-accessTokens.path};
     '';
     gc = {
       automatic = true;
@@ -204,6 +204,8 @@
     secrets = {
       flake-accessTokens = {
         rekeyFile = self + "/secrets/accessTokens.age";
+        mode = "770";
+        group = "nixbld";
       };
       yggdrasil = {
         rekeyFile = self + "/hosts/${config.networking.hostName}/secrets/yggdrasil.age";
@@ -236,6 +238,11 @@
       base0D = "50d8dc";
       base0E = "008fff";
       base0F = "5d1bb0";
+    };
+    targets = {
+      plymouth.enable = true;
+      nixos-icons.enable = true;
+      console.enable = true;
     };
   };
 
