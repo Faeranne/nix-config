@@ -13,9 +13,6 @@ in {
       ips = ["10.100.1.5/32"];
       listenPort = 51823;
       peers = [
-        (mkPeer "greg")
-        (mkPeer "sarah")
-        (mkPeer "servarr")
       ];
     };
   };

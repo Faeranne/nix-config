@@ -1,27 +1,27 @@
 {self, ...}:{
   age.secrets = {
     "openvpn_pass" = {
-      rekeyFile = self + "/secrets/containers/greg/wireguard.age";
+      rekeyFile = self + "/secrets/containers/wireguard.age";
       group = "systemd-network";
       mode = "770";
     };
     "openvpn_user" = {
-      rekeyFile = self + "/secrets/containers/greg/wireguard.age";
+      rekeyFile = self + "/secrets/containers/wireguard.age";
       group = "systemd-network";
       mode = "770";
     };
     "mullvad_address" = {
-      rekeyFile = self + "/secrets/containers/greg/wireguard.age";
+      rekeyFile = self + "/secrets/containers/wireguard.age";
       group = "systemd-network";
       mode = "770";
     };
     "github_runner" = {
-      rekeyFile = self + "/secrets/containers/greg/wireguard.age";
+      rekeyFile = self + "/secrets/containers/wireguard.age";
       group = "systemd-network";
       mode = "770";
     };
     freshrss = {
-      rekeyFile = self + "/secrets/containers/greg/freshrss.age";
+      rekeyFile = self + "/secrets/containers/freshrss.age";
       group = "systemd-network";
       mode = "770";
       generator = {
@@ -30,7 +30,7 @@
       };
     };
     paperless_superuser = {
-      rekeyFile = self + "/secrets/containers/greg/wireguard.age";
+      rekeyFile = self + "/secrets/containers/wireguard.age";
       group = "systemd-network";
       mode = "770";
       generator = {

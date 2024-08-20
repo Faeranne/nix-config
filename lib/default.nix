@@ -41,5 +41,5 @@ inputs: system: let
     ip = builtins.elemAt config.nodes.${target}.interfaces.${interface}.addresses 0;
   in ip);
 in {
-  inherit mkPeer pairedIP nodeIP getWireguardHost;
+  inherit mkPeer pairedIP nodeIP getWireguardHost mkGateway;
 }

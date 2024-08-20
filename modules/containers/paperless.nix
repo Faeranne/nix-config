@@ -1,4 +1,4 @@
-{self, myLib, pkgs, ...}:let
+{self, myLib, config, pkgs, ...}:let
   containerName = "paperless";
   inherit (myLib) getWireguardHost;
   myHost = self.topology.${pkgs.system}.config.nodes.${containerName}.parent;
@@ -24,6 +24,10 @@ in {
       };
       "/var/lib/paperless/media" = {
         isReadOnly = false;
+      };
+      "/run/secrets/paperless_superuser" = {
+        isReadOnly = false;
+        hostPath = "${config.age.secrets.paperless_superuser.path}";
       };
     };
     config = let 
