@@ -19,43 +19,33 @@ in {
       '';
     };
     nat = {
-      internalInterfaces = [ "wggreg" ];
+      internalInterfaces = [ "wggateway" ];
     };
     wireguard.interfaces = {
       "wggreg" = {
         peers = [
-          (mkPeer "rss")
-          (mkPeer "jellyfin")
-          (mkPeer "paperless")
-          (mkPeer "servarr")
-          (mkPeer "firefox-sync")
         ];
       };
       "wgrss" = {
         peers = [
-          (mkGateway "greg")
+          mkGateway
         ];
       };
       "wgjellyfin" = {
         peers = [
-          (mkGateway "greg")
+          mkGateway
           (mkPeer "servarr")
         ];
       };
       "wgpaperless" = {
         peers = [
-          (mkGateway "greg")
+          mkGateway
         ];
       };
       "wgservarr" = {
         peers = [
-          (mkGateway "greg")
+          mkGateway
           (mkPeer "jellyfin")
-        ];
-      };
-      "wgfirefox-sync" = {
-        peers = [
-          (mkGateway "greg")
         ];
       };
     };
@@ -108,6 +98,7 @@ in {
       };
       specialArgs = {
         hostName = "paperless.faeranne.com";
+        trustedProxy = "10.200.1.8";
       };
     };
     servarr = {

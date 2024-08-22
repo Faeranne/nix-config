@@ -9,11 +9,9 @@ Things different from normal containers:
 
 A new container can be created using the following template:
 ```nix
-{self, myLib, pkgs, ...}:let
-  containerName = "container-name";
-  inherit (myLib) getWireguardHost;
+{self, config, myLib, pkgs, ...}:let
+  containerName = "<containername>";
   myHost = self.topology.${pkgs.system}.config.nodes.${containerName}.parent;
-  mkPeer = myLib.mkPeer myHost;
 in {
   imports = [
     (import ./template.nix containerName)
@@ -21,22 +19,36 @@ in {
 
   networking.wireguard.interfaces = {
     "wg${containerName}" = {
-      ips = ["10.100.1.5/32"]; #Prefer 10.100.1.x ips for containers
-      listenPort = 51823; #listenPort must be globally unique.
+      ips = ["10.100.1.x/32"]; #Prefer 10.100.1.x ips for containers
       peers = [
-        #See mkPeer below for more info
       ];
     };
   };
 
   containers.${containerName} = {
     bindMounts = {
-      "/media" = { #Prefer not including host path here, save it for the host itself
+      "/var/lib/service" = { #Prefer not including host path here, save it for the host itself
+        isReadOnly = false;
+      };
+      #Secrets should be added with hostPath here.
+      "/run/secrets/freshrss" = {
+        hostPath = "${config.age.secrets.freshrss.path}";
         isReadOnly = false;
       };
     };
 
-    config = {pkgs, ...}: {
+    specialArgs = {
+      # set `port` to be the outbound port of whatever service is used here
+      port = 80;
+      # or use `ports` to set multiple service ports
+      #ports = { someService = 81 };
+      # Don't set both
+    };
+
+    config = {hostName, port, lib, toForward, ...}: {
+      # hostName is the fully qualified hostName associated with this contianer
+      # hostNames is the same but as a set of services `{ someService = "host.domain.tld"; }`
+      # port(s) is as above.
       imports = [
         # Covers some basic values, as well as fixing some potentially buggy networking issues
         ./base.nix
@@ -44,7 +56,8 @@ in {
 
       networking = {
         firewall = { # Make sure to add any ports needed for wireguard
-          allowedTCPPorts = [ 8096 ];
+          allowedTCPPorts = [ port ];
+          #allowedTCPPorts = builtins.attrValues ports; #This gets all the ports defined, rather than a single;
         };
       };
     };
@@ -58,6 +71,5 @@ in {
 This function accepts 2 values, the host of the interface being added to, and the second is the name of the
 interface to add.  This automatically searches all configs for the target interface using `getWireguardHost`.
 
-`mkGateway` is the same as `mkPeer`, but uses the target as a gateway for all traffic. make sure the target
-is setup to handle that, or the container might not work.  If you do not set a `mkGateway`, the container will
-not have access to the public internet at all.
+`mkGateway` is the same as `mkPeer`, but sets up the container's host wireguard as the outbound gateway.
+This function only accepts the host of the container as a value.

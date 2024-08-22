@@ -6,13 +6,11 @@ in{
     emulation
     gaming
     desktop
-    containers
     services.clamav
     services.printers
     extras.storage
     hardware.cpu.amd
     hardware.gpu.amd
-    ./containers.nix
     self.userModules.nina
   ];
 
@@ -60,7 +58,7 @@ in{
     hostName = "sarah";
     hostId = "586769c4";
     firewall = {
-      allowedTCPPorts = [ 4747 4748 39595 43751 6567 52820 ];
+      allowedTCPPorts = [ 4747 4748 39595 43751 6567 ];
       allowedUDPPorts = [ 43751 6567 ];
     };
     wireguard.interfaces = {
@@ -69,8 +67,6 @@ in{
         privateKeyFile = config.age.secrets.wgsarah.path;
         listenPort = 52820;
         peers = [
-          (mkPeer "jellyfin")
-          (mkPeer "greg")
         ];
       };
     };

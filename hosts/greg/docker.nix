@@ -1,5 +1,18 @@
 {config, ...}:{
   virtualisation.oci-containers.containers = {
+    "fasten" = {
+      autoStart = true;
+      image = "ghcr.io/fastenhealth/fasten-onprem:sandbox";
+      ports = [
+      ];
+      environment = {
+      };
+      volumes = [
+      ];
+      extraOptions = [
+        "--ip=10.88.1.6"
+      ];
+    };
     "actual" = {
       autoStart = true;
       image = "actualbudget/actual-server:24.8.0";
@@ -89,6 +102,9 @@
         OPS="faeranne";
         SPAWN_PROTECTION="0";
       };
+      extraOptions = [
+        "--ip=10.88.1.5"
+      ];
     };
     "wizarr" = {
       autoStart = true;

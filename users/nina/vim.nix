@@ -16,6 +16,7 @@ in
     nixvim = {
       extraPlugins = with pkgs.vimPlugins; [
         vim-fugitive
+        vim-airline-themes
         (
           fromGitHub 
           "4a93122ae2139a12e2a56f064d086c05160b6835"

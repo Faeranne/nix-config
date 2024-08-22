@@ -30,9 +30,10 @@ in {
         hostPath = "${config.age.secrets.paperless_superuser.path}";
       };
     };
+
     config = let 
       hostConfig = config;
-    in {config, hostName, ...}: {
+    in {config, hostName, trustedProxy, ...}: {
       imports = [
         ./base.nix
       ];
@@ -52,7 +53,7 @@ in {
             # Takes the list of addresses from the host network brCont (which is hardcoded for containers in `template.nix`
             # and fetches the address of the first entry.  This allows the container bridge address scope to be adjusted
             # without rewriting all containers.
-            PAPERLESS_TRUSTED_PROXIES=(builtins.elemAt hostConfig.networking.interfaces.brCont.ipv4.addresses 0).address;
+            PAPERLESS_TRUSTED_PROXIES=toString trustedProxy;
             PAPERLESS_USE_X_FORWARD_HOST=true;
             PAPERLESS_TASK_WORKERS=2;
             PAPERLESS_THREADS_PER_WORKER=1;

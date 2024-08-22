@@ -28,7 +28,11 @@ in {
       };
     };
 
-    config = {pkgs, hostName, ...}: {
+    specialArgs = {
+      port = 80;
+    };
+
+    config = {hostName, port, ...}: {
       imports = [
         # Covers some basic values, as well as fixing some potentially buggy networking issues
         ./base.nix
@@ -36,7 +40,7 @@ in {
 
       networking = {
         firewall = { # Make sure to add any ports needed for wireguard
-          allowedTCPPorts = [ 80 ];
+          allowedTCPPorts = [ port ];
         };
       };
       services.freshrss = {

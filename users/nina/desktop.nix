@@ -11,6 +11,7 @@
           isDefault = true;
         }; };
     };
+
     services = {
       mako = {
         enable = true;
@@ -32,6 +33,7 @@
       obsidian
       discord
       freecad
+      keepassxc
       prismlauncher
       godot_4
       ruffle

@@ -9,7 +9,6 @@ in{
     hardware.cpu.intel
     hardware.gpu.nvidia
     ./docker.nix
-    ./traefik.nix
     ./containers.nix
     ./security.nix
     self.userModules.nina
@@ -25,23 +24,17 @@ in{
     };
     nat = {
       externalInterface = "eno1";
-      forwardPorts = [
-        {
-          destination = "10.88.1.2:9091";
-          sourcePort = 9091;
-          proto = "tcp";
-        }
-      ];
     };
     wireguard.interfaces = {
+      wghub = {
+        ips = [ "10.110.1.2/32" ];
+        listenPort = 52821;
+      };
       wggreg = {
         ips = ["10.100.2.3/32"];
         privateKeyFile = config.age.secrets.wggreg.path;
-        listenPort = 52821;
+        listenPort = 52822;
         peers = [
-          (mkPeer "sarah")
-          (mkPeer "jellyfin")
-          (mkPeer "servarr")
         ];
       };
     };

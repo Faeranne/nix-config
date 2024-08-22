@@ -21,6 +21,8 @@ in {
     };
   };
 
+
+
   containers.${containerName} = {
     bindMounts = {
       "/var/lib/sonarr" = {
@@ -55,14 +57,34 @@ in {
       };
     };
 
-    config = {config, ...}: {
+    specialArgs = {
+      hostNames = {
+        sonarr = "sonarr.faeranne.com";
+        radarr = "radarr.faeranne.com";
+        lidarr = "lidarr.faeranne.com";
+        prowlarr = "prowlarr.faeranne.com";
+        bazarr = "bazarr.faeranne.com";
+        ombi = "request.faeranne.com";
+      };
+      ports = {
+        sonarr = 8989;
+        radarr = 7878;
+        lidarr = 8686;
+        prowlarr = 9696;
+        bazarr = 6767;
+        ombi = 5000;
+      };
+    };
+    config = {ports, lib, ...}: let
+      portList = lib.mapAttrsToList (service: port: port) ports;
+    in {
       imports = [
         ./base.nix
       ];
 
       networking = {
         firewall = {
-          allowedTCPPorts = [ 9696 8989 7878 8686 config.services.bazarr.listenPort config.services.ombi.port ];
+          allowedTCPPorts = portList;
         };
       };
 

@@ -1,4 +1,4 @@
-name: {self, inputs, config, ...}:{
+name: {self, inputs, myLib, config, ...}:{
   age.secrets = {
     "wg${name}" = {
       rekeyFile = self + "/secrets/containers/${name}/wireguard.age";
@@ -10,27 +10,31 @@ name: {self, inputs, config, ...}:{
       };
     };
   };
-  systemd.services."wireguard-wggrocy" = {
-    bindsTo = ["netns@${name}.service"];
-    after = ["netns@${name}.service"];
+  systemd.services = {
+    "container@${name}" = {
+      after = ["wireguard-wg${name}"];
+    };
+    "wireguard-wg${name}" = {
+      bindsTo = ["netns@${name}.service"];
+      after = ["netns@${name}.service" "netns@container.service"];
+    };
   };
   networking = {
-    firewall = {
+    firewall.interfaces.wghub = {
       allowedUDPPorts = [ config.networking.wireguard.interfaces."wg${name}".listenPort ];
     };
     wireguard.interfaces = {
       "wg${name}" = {
         privateKeyFile = config.age.secrets."wg${name}".path;
-        socketNamespace = "init";
+        socketNamespace = "container";
         interfaceNamespace = "${name}";
+        peers = [ (myLib.mkGateway config.networking.hostName) ];
       };
     };
   };
   containers.${name} = {
-    #privateNetwork = true;
     restartIfChanged = true;
     autoStart = true;
-    #hostBridge = "brCont";
     specialArgs = {
       inherit inputs self;
     };

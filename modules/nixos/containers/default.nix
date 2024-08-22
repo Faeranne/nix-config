@@ -1,22 +1,31 @@
-{pkgs, lib, ...}: {
-  networking = {
-    bridges = {
-      brCont.interfaces = [];
+{config, self, ...}: {
+  age.secrets = {
+    "wghub" = {
+      rekeyFile = self + "/secrets/containers/${config.networking.hostName}/wireguard.age";
+      group = "systemd-network";
+      mode = "770";
+      generator = {
+        script = "wireguard";
+        tags = [ "wireguard" ];
+      };
     };
-    interfaces = {
-      brCont.ipv4.addresses = [{
-        address = "10.200.0.1";
-        prefixLength = 16;
-      }];
-    };
+  };
+  systemd.services."wireguard-wghub" = {
+    bindsTo = ["netns@container.service"];
+    after = ["netns@container.service"];
+  };
 
-    firewall = {
-      trustedInterfaces = [ "podman+" "brCont" ];
+  networking = {
+    wireguard.interfaces = {
+      "wghub" = {
+        privateKeyFile = config.age.secrets."wghub".path;
+        socketNamespace = "init";
+        interfaceNamespace = "container";
+      };
     };
 
     nat = {
       enable = true;
-      internalInterfaces = [ "podman+" "ve-+" "vb-+" "brCont" ];
     };
   };
 }
