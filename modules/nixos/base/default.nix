@@ -50,7 +50,9 @@
   networking = {
     useNetworkd = true;
     firewall = {
+      allowedTCPPorts = [ 22000 ];
       allowedTCPPortRanges = [ {from = 1714; to = 1764; } ];
+      allowedUDPPorts = [ 22000 21027 ];
       allowedUDPPortRanges = [ {from = 1714; to = 1764; } ];
     };
   };

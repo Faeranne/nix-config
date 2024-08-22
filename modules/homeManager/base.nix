@@ -7,6 +7,7 @@
     ./zsh.nix
     ./git.nix
     ./styling.nix
+    ./syncthing.nix
   ];
   home = {
     stateVersion = "23.11";
