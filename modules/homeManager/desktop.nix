@@ -112,7 +112,6 @@
       };
     };
     services = {
-      syncthing.tray.enable = true;
       swayidle = {
         enable = true;
         systemdTarget = "sway-session.target";

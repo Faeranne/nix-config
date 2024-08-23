@@ -27,6 +27,7 @@
     wayland.windowManager.sway.config = {
       startup = [
         { command = "vesktop"; }
+        { command = "${pkgs.syncthingtray-minimal}/bin/syncthingtray"; }
       ];
     };
     home.packages = with pkgs; [
