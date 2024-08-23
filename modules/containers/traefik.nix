@@ -1,6 +1,6 @@
-{self, config, myLib, pkgs, ...}:let
-  containerName = "rss";
-  myHost = self.topology.${pkgs.system}.config.nodes.${containerName}.parent;
+{config, myLib, ...}:let
+  # Traefik is dependent on the host, so we're gonna make each traefik unique
+  containerName = "traefik-${config.networking.hostName}";
 in {
   imports = [
     (import ./template.nix containerName)
@@ -9,7 +9,6 @@ in {
   networking.wireguard.interfaces = {
     "wg${containerName}" = {
       ips = ["10.100.1.7/32"]; #Prefer 10.100.1.x ips for containers
-      listenPort = 51825; #listenPort must be globally unique.
       peers = [
       ];
     };

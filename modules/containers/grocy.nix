@@ -1,4 +1,4 @@
-{config, ...}:{
+{...}:{
   imports = [
     (import ./template.nix "grocy")
   ];
@@ -6,7 +6,6 @@
     wireguard.interfaces = {
       "wggrocy" = {
         ips = ["10.100.1.3/32"];
-        listenPort = 51821;
       };
     };
   };
@@ -16,7 +15,7 @@
         isReadOnly = false;
       };
     };
-    config = {config, hostName, ...}: {
+    config = {hostName, ...}: {
       imports = [
         ./base.nix
       ];

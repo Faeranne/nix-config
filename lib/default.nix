@@ -1,12 +1,11 @@
 inputs: system: let
   inherit (inputs) self;
-  inherit (inputs.nixpkgs.lib) removeSuffix mapAttrs concatMapAttrs genAttrs;
+  inherit (inputs.nixpkgs.lib) assertMsg removeSuffix mapAttrs concatMapAttrs genAttrs foldlAttrs;
   getWireguardHost = (wireName: let
-    hosts = builtins.attrNames self.nixosConfigurations;
-    host = builtins.foldl' (acc: name: 
-      if (builtins.hasAttr "wg${wireName}" self.nixosConfigurations.${name}.config.networking.wireguard.interfaces) then name else acc
-    ) "" hosts;
-  in host);
+    host = foldlAttrs (acc: name: value: 
+      if (builtins.hasAttr "wg${wireName}" value.config.networking.wireguard.interfaces) then name else acc
+    ) "" self.nixosConfigurations;
+  in assert assertMsg (host != "") "Could not find wg${wireName} in any host"; host);
   mkPeer = (local: goal: let
     remote = getWireguardHost goal;
     remoteConfig = self.nixosConfigurations.${remote}.config;
@@ -18,11 +17,6 @@ inputs: system: let
     endpoint = "${toString remoteIp}:${toString goalWireguard.listenPort}";
     publicKey = builtins.readFile publicKeyFile;
     allowedIPs = goalWireguard.ips;
-  });
-  mkGateway = (local: let
-    peer = mkPeer local local;
-  in peer // {
-    allowedIPs = ["0.0.0.0/0"];
   });
   gatherContainers = (
     concatMapAttrs (host: hostInstance: let
@@ -56,5 +50,5 @@ inputs: system: let
     ) self.nixosConfigurations
   );
 in {
-  inherit mkPeer getWireguardHost mkGateway gatherContainers;
+  inherit mkPeer getWireguardHost gatherContainers;
 }

@@ -1,8 +1,5 @@
-{self, myLib, config, pkgs, ...}:let
+{config, ...}:let
   containerName = "paperless";
-  inherit (myLib) getWireguardHost;
-  myHost = self.topology.${pkgs.system}.config.nodes.${containerName}.parent;
-  mkPeer = myLib.mkPeer myHost;
 in {
   imports = [
     (import ./template.nix containerName)
@@ -11,7 +8,6 @@ in {
   networking.wireguard.interfaces = {
     "wg${containerName}" = {
       ips = ["10.100.1.4/32"];
-      listenPort = 51822;
       peers = [
       ];
     };
@@ -31,9 +27,7 @@ in {
       };
     };
 
-    config = let 
-      hostConfig = config;
-    in {config, hostName, trustedProxy, ...}: {
+    config = {config, hostName, trustedProxy, ...}: {
       imports = [
         ./base.nix
       ];

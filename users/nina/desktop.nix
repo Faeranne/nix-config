@@ -1,6 +1,6 @@
 {pkgs, lib, systemConfig, ...}: {
   # Using xdg.portal as my trigger to identify desktop systems, vs server systems
-  config = lib.mkIf (builtins.trace true systemConfig.xdg.portal.enable){
+  config = lib.mkIf systemConfig.xdg.portal.enable{
     programs = {
       firefox = {
         enable = true;
@@ -12,7 +12,17 @@
         }; };
     };
 
+    systemd.user.targets = {
+      "tray" = {
+        Unit = {
+          After = [
+            "sway-session.target"
+          ];
+        };
+      };
+    };
     services = {
+      syncthing.tray.enable =true;
       mako = {
         enable = true;
         output = "ViewSonic Corporation VP2468 Series UN8170400211";
@@ -27,7 +37,6 @@
     wayland.windowManager.sway.config = {
       startup = [
         { command = "vesktop"; }
-        { command = "${pkgs.syncthingtray-minimal}/bin/syncthingtray"; }
       ];
     };
     home.packages = with pkgs; [

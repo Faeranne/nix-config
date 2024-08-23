@@ -1,8 +1,5 @@
 {self, myLib, config, pkgs, ...}:let
   containerName = "firefox-sync";
-  inherit (myLib) getWireguardHost;
-  myHost = self.topology.${pkgs.system}.config.nodes.${containerName}.parent;
-  mkPeer = myLib.mkPeer myHost;
 in {
   imports = [
     (import ./template.nix containerName)
@@ -11,7 +8,6 @@ in {
   networking.wireguard.interfaces = {
     "wg${containerName}" = {
       ips = ["10.100.1.9/32"]; #Prefer 10.100.1.x ips for containers
-      listenPort = 51827; #listenPort must be globally unique.
       peers = [
         #See mkPeer below for more info
       ];

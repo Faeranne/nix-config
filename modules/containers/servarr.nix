@@ -1,22 +1,13 @@
-{self, myLib, pkgs, ...}:let
+{...}:let
   containerName = "servarr";
-  inherit (myLib) getWireguardHost;
-  myHost = self.topology.${pkgs.system}.config.nodes.${containerName}.parent;
-  mkPeer = myLib.mkPeer myHost;
 in {
   imports = [
     (import ./template.nix containerName)
   ];
-
   networking = {
     wireguard.interfaces = {
       "wg${containerName}" = {
         ips = ["10.100.1.6/32"];
-        listenPort = 51824;
-        peers = [
-          (mkPeer "jellyfin")
-          (mkPeer "greg")
-        ];
       };
     };
   };
@@ -58,14 +49,6 @@ in {
     };
 
     specialArgs = {
-      hostNames = {
-        sonarr = "sonarr.faeranne.com";
-        radarr = "radarr.faeranne.com";
-        lidarr = "lidarr.faeranne.com";
-        prowlarr = "prowlarr.faeranne.com";
-        bazarr = "bazarr.faeranne.com";
-        ombi = "request.faeranne.com";
-      };
       ports = {
         sonarr = 8989;
         radarr = 7878;

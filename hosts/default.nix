@@ -4,7 +4,7 @@ inputs: let
       inherit (inputs) self;
       inherit inputs;
   };
-in {
+in rec {
   sarah = inputs.nixpkgs.lib.nixosSystem {
     inherit specialArgs;
     modules = [
@@ -19,6 +19,16 @@ in {
       inputs.nix-topology.nixosModules.default
     ];
   };
+  /*
+  gregTest = inputs.nixpkgs.lib.nixosSystem {
+    inherit specialArgs;
+    modules = [
+      ./greg
+      ./greg/testing.nix
+      inputs.nix-topology.nixosModules.default
+    ];
+  };
+  */
   laura = inputs.nixpkgs.lib.nixosSystem {
     inherit specialArgs;
     modules = [

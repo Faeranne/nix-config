@@ -1,6 +1,5 @@
 {self, myLib, ...}: let
   mkPeer = myLib.mkPeer "greg";
-  mkGateway = myLib.mkGateway "greg";
 in {
   imports = [
     self.containerModules.jellyfin
@@ -10,42 +9,32 @@ in {
     self.containerModules.paperless
   ];
   networking = {
-    firewall = {
-      extraStopCommands = ''
-        iptables -D FORWARD -i wggreg -o wggreg -j REJECT --reject-with icmp-adm-prohibited
-      '';
-      extraCommands = ''
-        iptables -I FORWARD -i wggreg -o wggreg -j REJECT --reject-with icmp-adm-prohibited
-      '';
-    };
-    nat = {
-      internalInterfaces = [ "wggateway" ];
-    };
     wireguard.interfaces = {
-      "wggreg" = {
-        peers = [
-        ];
-      };
       "wgrss" = {
+        listenPort = 51822;
         peers = [
-          mkGateway
         ];
       };
       "wgjellyfin" = {
+        listenPort = 51823;
         peers = [
-          mkGateway
           (mkPeer "servarr")
         ];
       };
       "wgpaperless" = {
+        listenPort = 51824;
         peers = [
-          mkGateway
         ];
       };
       "wgservarr" = {
+        listenPort = 51825;
         peers = [
-          mkGateway
           (mkPeer "jellyfin")
+        ];
+      };
+      "wgfirefox-sync" = {
+        listenPort = 51826;
+        peers = [
         ];
       };
     };
@@ -135,6 +124,14 @@ in {
         };
       };
       specialArgs = {
+        hostNames = {
+          sonarr = "sonarr.faeranne.com";
+          radarr = "radarr.faeranne.com";
+          lidarr = "lidarr.faeranne.com";
+          prowlarr = "prowlarr.faeranne.com";
+          bazarr = "bazarr.faeranne.com";
+          ombi = "request.faeranne.com";
+        };
       };
     };
   };
