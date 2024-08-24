@@ -8,7 +8,7 @@
   home-manager = {
     backupFileExtension = "bak";
     sharedModules = [
-      self.homeManagerModules.default
+      self.homeModules.default
     ];
     useGlobalPkgs = true;
     useUserPackages = true;

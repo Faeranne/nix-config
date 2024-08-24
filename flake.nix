@@ -131,7 +131,7 @@
     nixosModules = import ./modules/nixos;
 
     # Same but for homemanager modules
-    homeManagerModules = import ./modules/homeManager;
+    homeModules = import ./modules/homeManager;
 
     containerModules = import ./modules/containers;
 
@@ -196,7 +196,7 @@
 
     # This imports everything from pkgs as usable commands.  Makes deploying easier,
     # while making things like generating tokens and keys easier to script
-    packages = forAllSystems (system: let
+    legacyPackages = forAllSystems (system: let
       pkgs = import inputs.nixpkgs {
         inherit system;
         overlays = [
@@ -206,7 +206,7 @@
             pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
               (
                 python-final: python-prev: {
-                  diskinfo = self.packages.${system}.python3.diskinfo;
+                  diskinfo = self.legacyPackages.${system}.diskinfo;
                 }
               )
             ];
@@ -214,7 +214,8 @@
         ];
       };
     in {
-      default = self.packages.${system}.deploy;
+      default = self.legacyPackages.${system}.deploy;
     } // pkgs.callPackages ./pkgs {inherit self inputs ;});
+    packages = forAllSystems (system: nixpkgs.lib.filterAttrs (_: v: nixpkgs.lib.isDerivation v) self.legacyPackages.${system});
   };
 }

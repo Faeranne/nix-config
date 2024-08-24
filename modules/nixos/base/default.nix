@@ -8,6 +8,7 @@
     inputs.agenix-rekey.nixosModules.default
     inputs.stylix.nixosModules.stylix
     ./users.nix
+    ./testing.nix
   ];
   _module.args = {
     myLib = self.lib pkgs.system;

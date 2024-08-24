@@ -1,4 +1,4 @@
-{config, pkgs, ...}:{
+{self, config, pkgs, ...}:{
   boot = {
     plymouth = {
       enable = true;
@@ -122,6 +122,11 @@
       swappy
       wl-clipboard
       f3d
+    ];
+  };
+  home-manager = {
+    sharedModules = [
+      self.homeModules.desktop
     ];
   };
 }

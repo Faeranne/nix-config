@@ -19,16 +19,6 @@ in rec {
       inputs.nix-topology.nixosModules.default
     ];
   };
-  /*
-  gregTest = inputs.nixpkgs.lib.nixosSystem {
-    inherit specialArgs;
-    modules = [
-      ./greg
-      ./greg/testing.nix
-      inputs.nix-topology.nixosModules.default
-    ];
-  };
-  */
   laura = inputs.nixpkgs.lib.nixosSystem {
     inherit specialArgs;
     modules = [

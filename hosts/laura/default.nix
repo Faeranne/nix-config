@@ -56,7 +56,6 @@
   home-manager = {
     backupFileExtension = "bak";
     sharedModules = [
-      self.homeManagerModules.desktop
       ({...}:{
         wayland.windowManager.sway = {
           config = {
