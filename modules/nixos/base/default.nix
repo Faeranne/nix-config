@@ -7,6 +7,7 @@
     inputs.ragenix.nixosModules.default
     inputs.agenix-rekey.nixosModules.default
     inputs.stylix.nixosModules.stylix
+    inputs.nix-topology.nixosModules.default
     ./users.nix
     ./testing.nix
   ];

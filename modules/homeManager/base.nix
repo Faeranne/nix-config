@@ -1,5 +1,5 @@
 {inputs, pkgs, ...}: {
-  _modules.args = {
+  _module.args = {
     nur-no-packages = import inputs.nur {
       nurpkgs = pkgs;
     };
@@ -14,7 +14,6 @@
     ./styling.nix
     ./syncthing.nix
     inputs.nur.nixosModules.nur
-    inputs.nix-topology.nixosModules.default
   ];
   home = {
     /*

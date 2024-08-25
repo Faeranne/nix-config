@@ -1,12 +1,12 @@
 {config, lib, ...}:{
-  system.activationScripts = {
-    agenixNewGeneration.text = lib.mkVMOverride "";
-    agenixInstall.text = lib.mkVMOverride ''
-      ln -sfT /agenix /run/agenix
-    '';
-    agenixChown.text = lib.mkVMOverride "";
-  };
   virtualisation.vmVariant = {
+    system.activationScripts = {
+      agenixNewGeneration.text = lib.mkVMOverride "";
+      agenixInstall.text = lib.mkVMOverride ''
+        ln -sfT /agenix /run/agenix
+      '';
+      agenixChown.text = lib.mkVMOverride "";
+    };
     virtualisation = {
       graphics = false;
       sharedDirectories = {
