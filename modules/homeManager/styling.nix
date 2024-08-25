@@ -12,6 +12,7 @@
       sway.enable = true;
       vesktop.enable = false;
       foot.enable = true;
+      gtk.enable = true;
       nixvim.enable = true;
       waybar.enable = true;
       yazi.enable = true;
