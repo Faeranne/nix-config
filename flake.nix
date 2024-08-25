@@ -104,6 +104,10 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
+
+    nur = {
+      url = "github:nix-community/NUR";
+    };
   };
 
   # since `inputs` is a single variable here, it's the set of flakes input above.

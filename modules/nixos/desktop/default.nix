@@ -1,4 +1,9 @@
-{self, config, pkgs, ...}:{
+{self, config, pkgs, lib, ...}:{
+  virtualisation.vmVariant = {
+    virtualisation = {
+      graphics = lib.mkForce true;
+    };
+  };
   boot = {
     plymouth = {
       enable = true;

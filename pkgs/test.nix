@@ -15,6 +15,7 @@ in foldlAttrs (acc: host: system:
     "test-${host}" = pkgs.writers.writeBashBin "install_system" {} ''
       rm -rf /tmp/vmManagement/
       ${secretList}
+      mkdir -p /tmp/vmManagement/persist/
     '';
   }
 ) {} self.nixosConfigurations

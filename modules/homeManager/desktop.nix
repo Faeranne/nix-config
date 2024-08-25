@@ -2,9 +2,77 @@
   config =  let
     swaylock-bin = "${pkgs.swaylock}/bin/swaylock";
   in {
+    home = {
+      /*
+      persistence."/persist/home/nina" = {
+        directories = [
+          ".mozilla"
+        ];
+        files = [
+        ];
+        allowOther = false;
+      };
+      */
+    };
     programs = {
       firefox = {
         enable = true;
+        /*
+        profiles = {
+          default = {
+            extensions = (with pkgs.nur.repos.bandithedoge.firefoxAddons; [
+              augmented-steam
+              betterviewer
+              downloadthemall
+              enhanced-github
+              indie-wiki-buddy
+              lovely-forks
+              pronoundb
+              sponsorblock
+              steam-database
+              tridactyl
+              ublock-origin
+              violentmonkey
+            ]) ++ (with pkgs.nur.repos.ethancedwards8.firefox-addons; [
+              enhancer-for-youtube
+            ]) ++ (with pkgs.nur.repos.rycee.firefox-addons; [
+              awesome-rss
+              betterttv
+              consent-o-matic
+              container-tab-groups
+              darkreader
+              duckduckgo-privacy-essentials
+              gsconnect
+              kagi-search
+              keepassxc-browser
+              modrinthify
+              mullvad
+              multi-account-containers
+              private-relay
+              return-youtube-dislikes
+              shinigami-eyes
+              temporary-containers
+              tetro-plus
+            ]);
+            settings = {
+              "extensions.autoDisableScopes" = 0;
+            };
+            search = {
+              engines = {
+                "Kagi" = {
+                  urls = [{
+                    template = "https://kagi.com/search?q={searchTerms}";
+                  }];
+                  iconUpdateURL = "https://assets.kagi.com/v2/favicon-32x32.png";
+                  definedAliases = [ "@kagi" ];
+                };
+              };
+              force = true;
+              default = "Kagi";
+            };
+          };
+        };
+        */
       };
       swaylock = {
         enable = true;
@@ -36,16 +104,18 @@
         terminal = "${config.programs.foot.package}/bin/foot";
       };
     };
-    home.packages = with pkgs; [
-      jami 
-      gimp
-      inkscape
-      raysession
-      jackmix
-      lutris
-      samba
-      swayimg
-    ];
+    home = {
+      packages = with pkgs; [
+        jami 
+        gimp
+        inkscape
+        raysession
+        jackmix
+        lutris
+        samba
+        swayimg
+      ];
+    };
     wayland.windowManager.sway = {
       enable = true;
       systemd = {

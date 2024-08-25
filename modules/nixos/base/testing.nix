@@ -18,7 +18,7 @@
         "persist" = {
           target = "/persist";
           source = "/tmp/vmManagement/persist";
-          securityModel = "passthrough";
+          securityModel = "mapped-xattr";
         };
       };
       diskImage = null;

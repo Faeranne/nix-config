@@ -10,9 +10,14 @@
     ./users.nix
     ./testing.nix
   ];
+
   _module.args = {
+    nur-no-packages = import inputs.nur {
+      nurpkgs = pkgs;
+    };
     myLib = self.lib pkgs.system;
   };
+
   system = {
     configurationRevision = if self ? rev then self.rev else if self ? dirtyRev then self.dirtyRev else "dirty";
     stateVersion = "23.11"; # Did you read the comment?
@@ -29,9 +34,11 @@
   nixpkgs = {
     config.allowUnfree = true;
     overlays = [
+      inputs.nur.overlay
       (final: prev: {
         kicad = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.kicad; 
       })
+
     ];
   };
   nix = {
@@ -114,18 +121,6 @@
   };
 
   environment = {
-    persistence."/persist" = {
-      directories = [
-        "/var/lib/tpm"
-        "/var/logs"
-        "/etc/nixos"
-        "/home"
-      ];
-      hideMounts = true;
-      files = [
-        "/etc/machine-id"
-      ];
-    };
     systemPackages = with pkgs; (
       [
         appimagekit

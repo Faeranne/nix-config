@@ -9,6 +9,7 @@
     backupFileExtension = "bak";
     sharedModules = [
       self.homeModules.default
+      inputs.impermanence.nixosModules.home-manager.impermanence
     ];
     useGlobalPkgs = true;
     useUserPackages = true;
