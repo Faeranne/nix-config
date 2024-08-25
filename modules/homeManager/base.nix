@@ -16,16 +16,9 @@
     inputs.nur.nixosModules.nur
   ];
   home = {
-    /*
     persistence."/persist/home/nina" = {
-      directories = [
-      ];
-      files = [
-        ".ssh/known_hosts"
-      ];
       allowOther = false;
     };
-    */
     stateVersion = "23.11";
   };
   programs.home-manager.enable = true;

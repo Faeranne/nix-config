@@ -7,10 +7,10 @@
         directories = [
           ".mozilla"
           ".local/share/Steam"
+          ".config/vesktop"
         ];
         files = [
         ];
-        allowOther = false;
       };
     };
     programs = {
