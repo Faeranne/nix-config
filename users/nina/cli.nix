@@ -13,6 +13,7 @@
         "projects"
         "src"
         "workspace"
+        "nix-config"
       ];
       files = [
       ];
