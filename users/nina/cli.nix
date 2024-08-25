@@ -1,11 +1,23 @@
 {pkgs, ...}:
 {
-  home.packages = with pkgs; [
-    silicon
-    pinentry
-    passage
-    picocom
-  ];
+  home = {
+    packages = with pkgs; [
+      silicon
+      pinentry
+      passage
+      picocom
+    ];
+    persistence."/persist/home/nina" = {
+      directories = [
+        ".mozilla"
+        "projects"
+        "src"
+        "workspace"
+      ];
+      files = [
+      ];
+    };
+  };
   programs = {
     atuin = {
       enable = true;

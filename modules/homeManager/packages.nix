@@ -1,14 +1,14 @@
 {pkgs, ...}: {
   home = {
-    /*
     persistence."/persist/home/nina" = {
       directories = [
         ".passage"
+        ".config"
+        ".local"
       ];
       files = [
       ];
     };
-    */
     packages = with pkgs; [
       wget
       htop

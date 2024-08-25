@@ -3,7 +3,6 @@
     swaylock-bin = "${pkgs.swaylock}/bin/swaylock";
   in {
     home = {
-      /*
       persistence."/persist/home/nina" = {
         directories = [
           ".mozilla"
@@ -12,7 +11,6 @@
         ];
         allowOther = false;
       };
-      */
     };
     programs = {
       firefox = {
