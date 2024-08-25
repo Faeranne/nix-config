@@ -6,6 +6,7 @@
       persistence."/persist/home/nina" = {
         directories = [
           ".mozilla"
+          ".local/share/Steam"
         ];
         files = [
         ];
