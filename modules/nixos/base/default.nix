@@ -239,7 +239,10 @@
       base0F = "5d1bb0";
     };
     targets = {
-      plymouth.enable = true;
+      plymouth = {
+        enable = true;
+        logo = self + "/resources/labs-color-nix-snowflake.png";
+      };
       nixos-icons.enable = true;
       console.enable = true;
     };
