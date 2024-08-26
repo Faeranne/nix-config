@@ -15,6 +15,14 @@
           ".config/jami"
           ".config/godot"
           ".config/keepassxc"
+          "Desktop"
+          "Documents"
+          "Downloads"
+          "Games"
+          "Music"
+          "My Games"
+          "Pictures"
+          "Videos"
         ];
         files = [
         ];
