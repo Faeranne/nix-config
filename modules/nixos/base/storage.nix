@@ -31,7 +31,6 @@
           "/var/lib/tpm"
           "/var/logs"
           "/etc/nixos"
-          "/home"
         ];
         hideMounts = true;
         files = [
@@ -39,9 +38,12 @@
         ];
       };
     };
+    programs = {
+      fuse.userAllowOther = true;
+    };
     system.activationScripts = let
-      cfg = config.enironment.createDir;
-      allDirs = lib.concatMapAttrs (acc: name: value: acc + ''
+      cfg = config.environment.createDir;
+      allDirs = lib.foldl' (acc: value: acc + ''
         mkdir --mode="${value.perms}" "$${value.path}"
         chown "${value.user}:${value.group}" "${value.path}"
       '') "" cfg;
@@ -52,4 +54,4 @@
       };
     };
   };
-};
+}

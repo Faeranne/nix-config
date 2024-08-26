@@ -10,6 +10,7 @@
     inputs.nix-topology.nixosModules.default
     ./users.nix
     ./testing.nix
+    ./storage.nix
   ];
 
   _module.args = {

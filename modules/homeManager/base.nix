@@ -17,7 +17,7 @@
   ];
   home = {
     persistence."/persist/home/nina" = {
-      allowOther = false;
+      allowOther = true;
     };
     stateVersion = "23.11";
   };
