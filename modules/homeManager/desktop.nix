@@ -6,8 +6,15 @@
       persistence."/persist/home/nina" = {
         directories = [
           ".mozilla"
-          ".local/share/Steam"
+          {
+            directory = ".local/share/Steam";
+            method = "symlink";
+          }
           ".config/vesktop"
+          ".config/kdeconnect"
+          ".config/jami"
+          ".config/godot"
+          ".config/keepassxc"
         ];
         files = [
         ];

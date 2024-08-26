@@ -9,13 +9,10 @@
     ];
     persistence."/persist/home/nina" = {
       directories = [
-        ".mozilla"
         "projects"
         "src"
         "workspace"
         "nix-config"
-      ];
-      files = [
       ];
     };
   };
