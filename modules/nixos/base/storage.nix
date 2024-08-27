@@ -44,7 +44,7 @@
     system.activationScripts = let
       cfg = config.environment.createDir;
       allDirs = lib.foldl' (acc: value: acc + ''
-        mkdir --mode="${value.perms}" "$${value.path}"
+        mkdir -p --mode="${value.perms}" "$${value.path}"
         chown "${value.user}:${value.group}" "${value.path}"
       '') "" cfg;
     in {

@@ -6,6 +6,7 @@
       persistence."/persist/home/nina" = {
         directories = [
           ".mozilla"
+          ".thunderbird"
           {
             directory = ".local/share/Steam";
             method = "symlink";
