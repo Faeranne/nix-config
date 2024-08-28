@@ -38,7 +38,7 @@
             extensions = (with pkgs.nur.repos.bandithedoge.firefoxAddons; [
               augmented-steam
               betterviewer
-              downloadthemall
+              downthemall
               enhanced-github
               indie-wiki-buddy
               lovely-forks
@@ -67,8 +67,9 @@
               return-youtube-dislikes
               shinigami-eyes
               temporary-containers
-              tetro-plus
+              tetrio-plus
             ]);
+
             settings = {
               "extensions.autoDisableScopes" = 0;
             };

@@ -45,7 +45,7 @@
   };
   nix = {
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
+      experimental-features = [ "nix-command" "flakes" "ca-derivations"];
     };
     extraOptions = ''
       !include ${config.age.secrets.flake-accessTokens.path};
