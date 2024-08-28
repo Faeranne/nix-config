@@ -3,7 +3,7 @@
     persistence."/persist/home/nina" = {
       directories = [
         ".passage"
-        ".local/share/syncthing"
+        ".local/state/syncthing"
       ];
       files = [
       ];
