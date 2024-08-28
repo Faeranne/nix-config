@@ -17,6 +17,7 @@ in {
     bindMounts = {
       "/media" = { #Prefer not including host path here, save it for the host itself
         isReadOnly = false;
+        create = true;
       };
       "/run/secrets/github_runner1" = {
         isReadOnly = false;

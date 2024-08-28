@@ -11,6 +11,7 @@ in{
     ./docker.nix
     ./containers.nix
     ./security.nix
+    ./testing.nix
     self.userModules.nina
   ];
 
@@ -28,14 +29,10 @@ in{
     wireguard.interfaces = {
       wghub = {
         ips = [ "10.110.1.2/32" ];
-        listenPort = 52821;
+        listenPort = 51821;
       };
-      wggreg = {
-        ips = ["10.100.2.3/32"];
-        privateKeyFile = config.age.secrets.wggreg.path;
-        listenPort = 52822;
-        peers = [
-        ];
+      wggateway = {
+        ips = [ "10.120.1.2/32" ];
       };
     };
   };

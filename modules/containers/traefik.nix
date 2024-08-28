@@ -16,26 +16,29 @@ in {
 
   containers.${containerName} = {
     bindMounts = {
-      "/var/lib/freshrss" = { #Prefer not including host path here, save it for the host itself
+      "/etc/traefik" = {
         isReadOnly = false;
-      };
-      "/run/secrets/freshrss" = {
-        hostPath = "${config.age.secrets.freshrss.path}";
-        isReadOnly = false;
+        create = true;
       };
     };
 
     specialArgs = {
       port = 80;
+      extraRouters = {
+      };
+      extraServices = {
+      };
+      toForward = [
+      ];
     };
 
-    config = {hostName, port, lib, toForward, ...}: let
+    config = {hostName, port, lib, toForward, extraServices, extraRouters, ...}: let
       containers = myLib.gatherContainers;
       services = lib.genAttrs toForward (serv: let 
-        path = (lib.splitString "." serv); # path starts out as "container.service" getAttrFromPath requires it as a list.
+        path = (lib.splitString "."  serv); # path starts out as "container.service" getAttrFromPath requires it as a list.
         # this and set turn it into something getAttrFromPath expects ([ "container" "services" "service"]
-        set = (builtins.elemAt path 0) ++ [ "services" ] ++ (builtins.elemAt path 1);
-        ip = (lib.getAttrFromPath (builtins.elemAt path 0)).ip;
+        set = [(builtins.elemAt path 0)] ++ [ "services" ] ++ [(builtins.elemAt path 1)];
+        ip = (lib.getAttrFromPath [(builtins.elemAt path 0)] containers).ip;
         service = lib.getAttrFromPath set containers;
       in {
         inherit ip;
@@ -53,21 +56,48 @@ in {
         };
       };
       services = {
-        traefik.dynamicConfigOptions.http = {
-          routers = (builtins.mapAttrs (name: value: {
-            rule = "Host(`${value.hostName}`)";
-            service = name;
-            entryPoints = [ "websecure" ];
-          }) services) // {
-            dashboard = {
-              rule = "Host(`${hostName}`)";
-              service = "api@internal";
-              entryPoints = [ "websecure" ];
+        traefik = {
+          enable = true;
+          dataDir = "/etc/traefik";
+          staticConfigOptions = {
+            entryPoints = {
+              internal.address = "127.0.0.1:81";
+              web = {
+                address = ":${toString port}";
+                http.redirections.entryPoint = {
+                  to = "websecure";
+                  scheme = "https";
+                };
+              };
+              websecure = {
+                address = ":443";
+                http.tls.certResolver = "leresolver";
+              };
             };
+            certificatesresolers.leresolver.acme = {
+              email = "system@projectmakeit.com";
+              storage = "/etc/traefik/acme.json";
+              httpchallenge.entrypoint = "web";
+            };
+            api.dashboard = true;
+            ping.entrypoint = "internal";
           };
-          services = builtins.mapAttrs (name: value: {
-            loadBalancer.servers = [ {url = "http://${value.ip}:${toString value.port}"; } ];
-          }) services;
+          dynamicConfigOptions.http = {
+            routers = (builtins.mapAttrs (name: value: {
+              rule = "Host(`${value.hostName}`)";
+              service = name;
+              entryPoints = [ "websecure" ];
+            }) services) // {
+              dashboard = {
+                rule = "Host(`${hostName}`)";
+                service = "api@internal";
+                entryPoints = [ "websecure" ];
+              };
+            } // extraRouters;
+            services = (builtins.mapAttrs (name: value: {
+              loadBalancer.servers = [ {url = "http://${value.ip}:${toString value.port}"; } ];
+            }) services) // extraServices;
+          };
         };
       };
     };

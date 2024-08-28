@@ -1,60 +1,95 @@
-{config, self, ...}: {
-  age.secrets = {
-    "wghub" = {
-      rekeyFile = self + "/secrets/containers/${config.networking.hostName}/wireguard-hub.age";
-      group = "systemd-network";
-      mode = "770";
-      generator = {
-        script = "wireguard";
-        tags = [ "wireguard" ];
-      };
-    };
-    "wggateway" = {
-      rekeyFile = self + "/secrets/containers/${config.networking.hostName}/wireguard-gateway.age";
-      group = "systemd-network";
-      mode = "770";
-      generator = {
-        script = "wireguard";
-        tags = [ "wireguard" ];
-      };
+{config, self, lib, ...}: {
+  options = {
+    containers = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.submodule ({...}:{
+        options = {
+          bindMounts = lib.mkOption {
+            type = lib.types.attrsOf (lib.types.submodule ({...}:{
+              options = {
+                create = lib.mkOption {
+                  type = lib.types.bool;
+                  default = false;
+                };
+                owner = lib.mkOption {
+                  type = lib.types.str;
+                  default = "root:root";
+                };
+              };
+            }));
+          };
+        };
+      }));
     };
   };
-  systemd.services."wireguard-wghub" = {
-    bindsTo = ["netns@container.service"];
-    after = ["netns@container.service"];
-  };
-
-  networking = {
-    firewall = {
-      extraStopCommands = ''
-        iptables -D FORWARD -i wggateway -o wggateway -j REJECT --reject-with icmp-adm-prohibited
-      '';
-      extraCommands = ''
-        iptables -I FORWARD -i wggateway -o wggateway -j REJECT --reject-with icmp-adm-prohibited
-      '';
-    };
-
-    wireguard.interfaces = {
-
-      # Is used to join container wireguards between hosts
+  config = let
+    cfg = config.containers;
+    foldPaths = lib.foldlAttrs (acc: _: value: let
+      res = if (value.create) then [{
+        inherit (value) owner;
+        path = value.hostPath;
+        permissions = "777";
+      }] else [];
+    in acc ++ res) [];
+    createMounts = lib.foldlAttrs (acc: _: value: acc ++ (foldPaths value.bindMounts)) [] cfg;
+  in {
+    environment.createDir = createMounts;
+    age.secrets = {
       "wghub" = {
-        privateKeyFile = config.age.secrets."wghub".path;
-        socketNamespace = "init";
-        interfaceNamespace = "container";
+        rekeyFile = self + "/secrets/containers/${config.networking.hostName}/wireguard-hub.age";
+        group = "systemd-network";
+        mode = "770";
+        generator = {
+          script = "wireguard";
+          tags = [ "wireguard" ];
+        };
       };
-
-      # Allows local container wireguards to access the internet
       "wggateway" = {
-        privateKeyFile = config.age.secrets."wggateway".path;
-        listenPort = 51820;
-        socketNamespace = "container";
-        interfaceNamespace = "init";
+        rekeyFile = self + "/secrets/containers/${config.networking.hostName}/wireguard-gateway.age";
+        group = "systemd-network";
+        mode = "770";
+        generator = {
+          script = "wireguard";
+          tags = [ "wireguard" ];
+        };
       };
     };
+    systemd.services."wireguard-wghub" = {
+      bindsTo = ["netns@container.service"];
+      after = ["netns@container.service"];
+    };
 
-    nat = {
-      enable = true;
-      internalInterfaces = [ "wggateway" ];
+    networking = {
+      firewall = {
+        extraStopCommands = ''
+          iptables -D FORWARD -i wggateway -o wggateway -j REJECT --reject-with icmp-adm-prohibited
+        '';
+        extraCommands = ''
+          iptables -I FORWARD -i wggateway -o wggateway -j REJECT --reject-with icmp-adm-prohibited
+        '';
+      };
+
+      wireguard.interfaces = {
+
+        # Is used to join container wireguards between hosts
+        "wghub" = {
+          privateKeyFile = config.age.secrets."wghub".path;
+          socketNamespace = "init";
+          interfaceNamespace = "container";
+        };
+
+        # Allows local container wireguards to access the internet
+        "wggateway" = {
+          privateKeyFile = config.age.secrets."wggateway".path;
+          listenPort = 51820;
+          socketNamespace = "container";
+          interfaceNamespace = "init";
+        };
+      };
+
+      nat = {
+        enable = true;
+        internalInterfaces = [ "wggateway" ];
+      };
     };
   };
 }

@@ -17,12 +17,15 @@ in {
     bindMounts = {
       "/media" = {
         isReadOnly = false;
+        create = true;
       };
       "/var/lib/jellyfin" = {
         isReadOnly = false;
+        create = true;
       };
       "/config" = {
         isReadOnly = false;
+        create = true;
       };
       "/dev/dri" = {
         hostPath = "/dev/dri";
@@ -95,15 +98,18 @@ in {
         node = "/dev/nvidia-caps";
       }
     ];
+    specialArgs = {
+      port = 8096;
+    };
 
-    config = {pkgs, ...}: {
+    config = {pkgs, port, ...}: {
       imports = [
         ./base.nix
       ];
 
       networking = {
         firewall = {
-          allowedTCPPorts = [ 8096 ];
+          allowedTCPPorts = [ port ];
         };
       };
 

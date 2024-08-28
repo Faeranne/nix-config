@@ -1,6 +1,6 @@
-inputs: system: let
+inputs: let
   inherit (inputs) self;
-  inherit (inputs.nixpkgs.lib) assertMsg removeSuffix mapAttrs concatMapAttrs genAttrs foldlAttrs;
+  inherit (inputs.nixpkgs.lib) assertMsg removePrefix removeSuffix mapAttrs concatMapAttrs genAttrs foldlAttrs;
   getWireguardHost = (wireName: let
     host = foldlAttrs (acc: name: value: 
       if (builtins.hasAttr "wg${wireName}" value.config.networking.wireguard.interfaces) then name else acc
@@ -22,29 +22,30 @@ inputs: system: let
     concatMapAttrs (host: hostInstance: let
       hostConfig = hostInstance.config;
       hostWireguards = hostConfig.networking.wireguard.interfaces;
+      agePath = hostConfig.age.secretsDir + "/";
     in mapAttrs (container: containerInstance:
       let
         specialArgs = containerInstance.specialArgs;
         wg = hostWireguards."wg${container}";
-        ports = if (builtins.hasAttrs "ports" specialArgs) then
+        ports = if (builtins.hasAttr "ports" (builtins.trace specialArgs specialArgs)) then
           specialArgs.ports
         else
           {${container} = specialArgs.port;};
-        hostNames = if (builtins.hasAttrs "hostNames" specialArgs) then
+        hostNames = if (builtins.hasAttr "hostNames" specialArgs) then
           specialArgs.hostNames
         else
           {${container} = specialArgs.hostName;};
         serviceNames = builtins.attrNames hostNames;
+        secretName = removePrefix agePath wg.privateKeyFile;
+        rekey = hostConfig.age.secrets.${secretName}.rekeyFile;
       in {
         inherit host;
         ip = (removeSuffix "/32" (builtins.elemAt wg.ips 0));
         port = wg.listenPort;
-        publicKeyFile = (removeSuffix ".age" wg.rekeyFile + ".pub");
+        publicKeyFile = (removeSuffix ".age" rekey + ".pub");
         services = genAttrs serviceNames (service: {
-          ${service} = {
-            hostName = hostNames.${service};
-            port = ports.${service};
-          };
+          hostName = hostNames.${service};
+          port = ports.${service};
         });
       }) hostConfig.containers
     ) self.nixosConfigurations

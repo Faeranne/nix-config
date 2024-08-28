@@ -27,6 +27,7 @@ in {
     bindMounts = {
       "/var/lib/mysql" = { #Prefer not including host path here, save it for the host itself
         isReadOnly = false;
+        create = true;
       };
       "/run/secrets/foxsync" = {
         isReadOnly = true;

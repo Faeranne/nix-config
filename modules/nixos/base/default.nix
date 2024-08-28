@@ -17,7 +17,7 @@
     nur-no-packages = import inputs.nur {
       nurpkgs = pkgs;
     };
-    myLib = self.lib pkgs.system;
+    myLib = self.lib;
   };
 
   system = {

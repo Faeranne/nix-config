@@ -6,4 +6,5 @@
   githubrunner = import ./githubrunner.nix;
   firefox-sync = import ./firefox-sync.nix;
   rss = import ./rss.nix;
+  traefik = import ./traefik.nix;
 }

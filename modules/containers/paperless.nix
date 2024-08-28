@@ -17,9 +17,11 @@ in {
     bindMounts = {
       "/var/lib/paperless" = {
         isReadOnly = false;
+        create = true;
       };
       "/var/lib/paperless/media" = {
         isReadOnly = false;
+        create = true;
       };
       "/run/secrets/paperless_superuser" = {
         isReadOnly = false;

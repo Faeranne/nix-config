@@ -18,33 +18,43 @@ in {
     bindMounts = {
       "/var/lib/sonarr" = {
         isReadOnly = false;
+        create = true;
       };
       "/var/lib/radarr" = {
         isReadOnly = false;
+        create = true;
       };
       "/var/lib/lidarr" = {
         isReadOnly = false;
+        create = true;
       };
       "/var/lib/private/prowlarr" = {
         isReadOnly = false;
+        create = true;
       };
       "/var/lib/ombi" = {
         isReadOnly = false;
+        create = true;
       };
       "/var/lib/bazarr" = {
         isReadOnly = false;
+        create = true;
       };
       "/transmission" = {
         isReadOnly = false;
+        create = true;
       };
       "/tv" = {
         isReadOnly = false;
+        create = true;
       };
       "/movies" = {
         isReadOnly = false;
+        create = true;
       };
       "/music" = {
         isReadOnly = false;
+        create = true;
       };
     };
 

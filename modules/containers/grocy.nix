@@ -13,6 +13,7 @@
     bindMounts = {
       "/var/lib/grocy" = {
         isReadOnly = false;
+        create = true;
       };
     };
     config = {hostName, ...}: {

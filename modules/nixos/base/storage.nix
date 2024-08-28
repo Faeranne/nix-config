@@ -4,28 +4,27 @@
       createDir = lib.mkOption {
         type = lib.types.listOf (lib.types.submodule {
           options = {
-            path = {
+            path = lib.mkOption {
               type = lib.types.str;
             };
-            user = {
+            owner = lib.mkOption {
               type = lib.types.str;
+              default = "root:root";
             };
-            group = {
+            permissions = lib.mkOption {
               type = lib.types.str;
-            };
-            perms = {
-              type = lib.types.str;
+              default = "755";
             };
           };
         });
+        default = [];
       };
     };
   };
-  config = {
+  config = let
+    cfg = config.environment.createDir;
+  in {
     environment = {
-      createDir = [
-
-      ];
       persistence."/persist" = {
         directories = [
           "/var/lib/tpm"
@@ -42,10 +41,9 @@
       fuse.userAllowOther = true;
     };
     system.activationScripts = let
-      cfg = config.environment.createDir;
       allDirs = lib.foldl' (acc: value: acc + ''
-        mkdir -p --mode="${value.perms}" "$${value.path}"
-        chown "${value.user}:${value.group}" "${value.path}"
+        mkdir -p --mode="${value.permissions}" "${value.path}"
+        chown "${value.owner}" "${value.path}"
       '') "" cfg;
     in {
       createDirectories = {

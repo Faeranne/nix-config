@@ -17,6 +17,7 @@ in {
     bindMounts = {
       "/var/lib/freshrss" = { #Prefer not including host path here, save it for the host itself
         isReadOnly = false;
+        create = true;
       };
       "/run/secrets/freshrss" = {
         hostPath = "${config.age.secrets.freshrss.path}";
