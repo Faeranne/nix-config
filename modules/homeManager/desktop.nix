@@ -32,7 +32,6 @@
     programs = {
       firefox = {
         enable = true;
-        /*
         profiles = {
           default = {
             extensions = (with pkgs.nur.repos.bandithedoge.firefoxAddons; [
@@ -88,7 +87,6 @@
             };
           };
         };
-        */
       };
       swaylock = {
         enable = true;
