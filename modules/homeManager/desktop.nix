@@ -161,6 +161,7 @@
           swaylock-bin = "${pkgs.swaylock}/bin/swaylock";
         in lib.mkOptionDefault {
           "${modifier}+g" = "exec TIMESTAMP=$(date +\"%Y%m%d%H%M\") grim /tmp/screenshot$TIMESTAMP.png && gimp /tmp/screenshot$TIMESTAMP.png && rm /tmp/screenshot$TIMESTAMP.png";
+          "${modifier}+Mod1+f" = "exec ${pkgs.grim}/bin/grim -g \"$(${pkgs.slurp}/bin/slurp -d)\" - | ${pkgs.qrscan}/bin/qrscan - | ${pkgs.wl-clipboard}/bin/wl-copy";
           "${modifier}+Mod1+l" = "exec ${swaylock-bin} -fF";
           "${modifier}+space" = "exec ${menu}";
         };

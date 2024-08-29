@@ -8,19 +8,19 @@
             personal = {
               color = "orange";
               icon = "fingerprint";
-              id = 0;
+              id = 1;
               name = "Personal";
             };
             google = {
               color = "red";
               icon = "circle";
-              id = 1;
+              id = 2;
               name = "Youtube";
             };
             finance = {
               color = "green";
               icon = "dollar";
-              id = 2;
+              id = 3;
               name = "Finance";
             };
           };
