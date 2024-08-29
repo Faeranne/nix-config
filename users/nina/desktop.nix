@@ -3,13 +3,36 @@
   config = lib.mkIf systemConfig.xdg.portal.enable{
     programs = {
       firefox = {
-        enable = true;
+        profiles.default = {
+          containers = {
+            personal = {
+              color = "orange";
+              icon = "fingerprint";
+              id = 0;
+              name = "Personal";
+            };
+            google = {
+              color = "red";
+              icon = "circle";
+              id = 1;
+              name = "Youtube";
+            };
+            finance = {
+              color = "green";
+              icon = "dollar";
+              id = 2;
+              name = "Finance";
+            };
+          };
+          containersForce = true;
+        };
       };
       thunderbird = {
         enable = true;
         profiles.default = {
           isDefault = true;
-        }; };
+        };
+      };
     };
 
     systemd.user.targets = {
