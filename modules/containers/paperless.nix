@@ -29,7 +29,11 @@ in {
       };
     };
 
-    config = {config, hostName, trustedProxy, ...}: {
+    specialArgs = {
+      port = 8096;
+    };
+
+    config = {config, hostName, port, trustedProxy, ...}: {
       imports = [
         ./base.nix
       ];
@@ -40,8 +44,8 @@ in {
       };
       services = {
         paperless = {
+          inherit port;
           enable = true;
-          port = 8096;
           user = "paperless";
           passwordFile = "/run/secrets/paperless_superuser";
           settings = {
