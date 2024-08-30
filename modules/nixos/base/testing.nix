@@ -8,7 +8,11 @@
       agenixChown.text = lib.mkVMOverride "";
     };
     virtualisation = {
-      graphics = true;
+      graphics = false;
+      resolution = {
+        x = 1440;
+        y = 900;
+      };
       sharedDirectories = {
         "agenix" = {
           target = "/agenix";

@@ -62,20 +62,30 @@
         { command = "vesktop"; }
       ];
     };
-    home.packages = with pkgs; [
-      obsidian
-      discord
-      freecad
-      keepassxc
-      prismlauncher
-      godot_4
-      ruffle
-      aseprite
-      #TODO: Fixes nixos/nixpkgs#310227 while waiting for nixos/nixpkgs#310696 to make it to release
-      (vesktop.override { withSystemVencord = false; })
-      transmission-remote-gtk
-      pavucontrol
-      ryujinx
-    ];
+    home = {
+      persistence."/persist/home/nina" = {
+        directories = [
+          {
+            directory = ".local/share/PrismLauncher";
+            method = "symlink";
+          }
+        ];
+      };
+      packages = with pkgs; [
+        obsidian
+        discord
+        freecad
+        keepassxc
+        prismlauncher
+        godot_4
+        ruffle
+        aseprite
+        #TODO: Fixes nixos/nixpkgs#310227 while waiting for nixos/nixpkgs#310696 to make it to release
+        (vesktop.override { withSystemVencord = false; })
+        transmission-remote-gtk
+        pavucontrol
+        ryujinx
+      ];
+    };
   };
 }

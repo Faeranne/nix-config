@@ -39,6 +39,7 @@
       inputs.nur.overlay
       (final: prev: {
         kicad = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.kicad; 
+        prismlauncher = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.prismlauncher; 
       })
 
     ];

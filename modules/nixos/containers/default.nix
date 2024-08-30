@@ -61,10 +61,10 @@
     networking = {
       firewall = {
         extraStopCommands = ''
-          iptables -D FORWARD -i wggateway -o wggateway -j REJECT --reject-with icmp-adm-prohibited
+          iptables -D FORWARD -i wggateway -o wggateway -j REJECT --reject-with icmp-admin-prohibited
         '';
         extraCommands = ''
-          iptables -I FORWARD -i wggateway -o wggateway -j REJECT --reject-with icmp-adm-prohibited
+          iptables -I FORWARD -i wggateway -o wggateway -j REJECT --reject-with icmp-admin-prohibited
         '';
       };
 

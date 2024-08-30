@@ -1,7 +1,6 @@
 {config, lib, ...}:{
   virtualisation.vmVariant = {
     virtualisation = {
-      graphics = true;
       sharedDirectories = {
         "storage" = {
           target = "/Storage";
@@ -9,8 +8,6 @@
           securityModel = "mapped-xattr";
         };
       };
-      diskImage = null;
     };
   };
-  virtualisation.vmVariantWithBootLoader = config.virtualisation.vmVariant;
 }

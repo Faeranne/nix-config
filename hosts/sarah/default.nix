@@ -6,6 +6,7 @@ in{
     emulation
     gaming
     desktop
+    containers
     services.clamav
     services.printers
     extras.storage

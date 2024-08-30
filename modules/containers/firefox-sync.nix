@@ -9,7 +9,6 @@ in {
     "wg${containerName}" = {
       ips = ["10.100.1.9/32"]; #Prefer 10.100.1.x ips for containers
       peers = [
-        #See mkPeer below for more info
       ];
     };
   };
@@ -35,9 +34,10 @@ in {
       };
     };
 
+
+
     config = {config, pkgs, ...}: {
       imports = [
-        # Covers some basic values, as well as fixing some potentially buggy networking issues
         ./base.nix
       ];
 

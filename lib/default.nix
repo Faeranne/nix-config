@@ -27,7 +27,7 @@ inputs: let
       let
         specialArgs = containerInstance.specialArgs;
         wg = hostWireguards."wg${container}";
-        ports = if (builtins.hasAttr "ports" (builtins.trace specialArgs specialArgs)) then
+        ports = if (builtins.hasAttr "ports" specialArgs) then
           specialArgs.ports
         else
           {${container} = specialArgs.port;};

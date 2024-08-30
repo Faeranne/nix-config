@@ -4,8 +4,7 @@ in {
   imports = [
     (import ./template.nix containerName)
   ];
-  networking = {
-    wireguard.interfaces = {
+  networking = { wireguard.interfaces = {
       "wg${containerName}" = {
         ips = ["10.100.1.6/32"];
       };
