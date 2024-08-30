@@ -108,10 +108,6 @@ in {
           hostPath = "/dev/nvidia-uvm-tools";
           isReadOnly = false;
         };
-        "/dev/nvidia-caps" = {
-          hostPath = "/dev/nvidia-caps";
-          isReadOnly = false;
-        };
       } else {});
       allowedDevices = if (builtins.hasAttr "gpu" containerConfig && containerConfig.gpu) then [
         {
@@ -145,10 +141,6 @@ in {
         {
           modifier = "rw";
           node = "/dev/nvidia-uvm";
-        }
-        {
-          modifier = "rw";
-          node = "/dev/nvidia-caps";
         }
       ] else [];
       specialArgs = {
