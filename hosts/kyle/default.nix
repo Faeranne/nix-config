@@ -47,7 +47,7 @@
       info = "Gaming Computer";
     };
     interfaces.eno1 = {
-      addresses = ["192.168.1.105"];
+      addresses = ["192.168.1.81"];
       network = "home";
       physicalConnections = [
         {node = "switch3"; interface = "eth2";}
