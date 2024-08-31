@@ -10,7 +10,7 @@ in {
     self.containerModules.traefik
   ];
   networking = let
-    traefikIp = lib.removeSuffix (builtins.elemAt config.networking.wireguard.interfaces.wghub.ips 0) "/32";
+    traefikIp = lib.removeSuffix "/32" (builtins.elemAt config.networking.wireguard.interfaces.wgtraefikgreg.ips 0);
   in {
     nat = {
       forwardPorts = [
@@ -55,6 +55,7 @@ in {
       };
       "wgtraefikgreg" = {
         listenPort = 51826;
+        ips = ["10.100.2.1/32"]; #Prefer 10.100.1.x ips for containers
         peers = [
           (mkPeer "jellyfin")
           (mkPeer "rss")
@@ -122,7 +123,7 @@ in {
         };
       };
       specialArgs = {
-        hostName = "jellyfin.faeranne.com";
+        hostName = "tv.faeranne.com";
       };
     };
     rss = {

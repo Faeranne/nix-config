@@ -59,6 +59,7 @@ name: {self, inputs, lib, config, ...}:{
   containers.${name} = {
     restartIfChanged = true;
     autoStart = true;
+    ephemeral = true;
     specialArgs = {
       inherit inputs self;
     };

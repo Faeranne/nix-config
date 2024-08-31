@@ -18,42 +18,52 @@ in {
       "/var/lib/sonarr" = {
         isReadOnly = false;
         create = true;
+        owner = "container:users";
       };
       "/var/lib/radarr" = {
         isReadOnly = false;
         create = true;
+        owner = "container:users";
       };
       "/var/lib/lidarr" = {
         isReadOnly = false;
         create = true;
+        owner = "container:users";
       };
       "/var/lib/private/prowlarr" = {
         isReadOnly = false;
         create = true;
+        owner = "container:users";
       };
       "/var/lib/ombi" = {
         isReadOnly = false;
         create = true;
+        owner = "container:users";
       };
       "/var/lib/bazarr" = {
         isReadOnly = false;
         create = true;
+        owner = "container:users";
       };
       "/transmission" = {
         isReadOnly = false;
         create = true;
+        owner = "container:users";
       };
       "/tv" = {
         isReadOnly = false;
         create = true;
+        owner = "container:users";
       };
       "/movies" = {
         isReadOnly = false;
         create = true;
+        owner = "container:users";
       };
       "/music" = {
         isReadOnly = false;
         create = true;
+        owner = "container:users";
       };
     };
 
@@ -106,7 +116,6 @@ in {
           group = "users";
         };
       };
-
     };
   };
 }

@@ -17,7 +17,10 @@ in{
     self.userModules.nina
   ];
 
-  boot.binfmt.emulatedSystems = ["aarch64-linux"];
+  boot = {
+    binfmt.emulatedSystems = ["aarch64-linux"];
+    zfs.extraPools = [ "Storage" ];
+  };
 
   networking = {
     hostName = "greg";

@@ -19,7 +19,7 @@
         RemainAfterExit = true;
         ExecStart = "${pkgs.writers.writeDash "netns-up" ''
           ${pkgs.iproute}/bin/ip netns add $1
-          ${pkgs.iproute}/bin/ip exec $1 ${pkgs.iproute}/bin/ip link set lo up
+          ${pkgs.iproute}/bin/ip netns exec $1 ${pkgs.iproute}/bin/ip link set lo up
         ''} %I";
         ExecStop = "${pkgs.iproute}/bin/ip netns del %I";
       };

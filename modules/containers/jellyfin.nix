@@ -18,14 +18,17 @@ in {
       "/media" = {
         isReadOnly = false;
         create = true;
+        owner = "container:container";
       };
       "/var/lib/jellyfin" = {
         isReadOnly = false;
         create = true;
+        owner = "container:container";
       };
       "/config" = {
         isReadOnly = false;
         create = true;
+        owner = "container:container";
       };
       "/dev/dri" = {
         hostPath = "/dev/dri";
@@ -134,6 +137,11 @@ in {
         id3v2
         yt-dlp
       ];
+
+      users = {
+        users.jellyfin.uid = 997;
+        groups.jellyfin.gid = 997;
+      };
 
     };
   };

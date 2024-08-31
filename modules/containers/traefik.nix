@@ -18,6 +18,7 @@ in {
       "/etc/traefik" = {
         isReadOnly = false;
         create = true;
+        owner = "container:users";
       };
     };
 
@@ -73,7 +74,7 @@ in {
                 http.tls.certResolver = "leresolver";
               };
             };
-            certificatesresolers.leresolver.acme = {
+            certificatesresolvers.leresolver.acme = {
               email = "system@projectmakeit.com";
               storage = "/etc/traefik/acme.json";
               httpchallenge.entrypoint = "web";

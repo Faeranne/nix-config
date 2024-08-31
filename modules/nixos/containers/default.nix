@@ -27,7 +27,7 @@
       res = if (value.create) then [{
         inherit (value) owner;
         path = value.hostPath;
-        permissions = "777";
+        permissions = "755";
       }] else [];
     in acc ++ res) [];
     createMounts = lib.foldlAttrs (acc: _: value: acc ++ (foldPaths value.bindMounts)) [] cfg;
@@ -89,6 +89,21 @@
       nat = {
         enable = true;
         internalInterfaces = [ "wggateway" ];
+      };
+    };
+    users = {
+      users.container = {
+        isSystemUser = true;
+        group = "container";
+        uid = 997;
+      };
+      groups = {
+        container = {
+          gid = 997;
+        };
+        users = {
+          members = [ "container" ];
+        };
       };
     };
   };
