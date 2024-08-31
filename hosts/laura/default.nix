@@ -54,16 +54,11 @@
   age.rekey.hostPubkey = "age185avxte33jvaexyl5292nczj3drlhc5dnyv8svyyy8u4l0tfgpksz6encl";
 
   home-manager = {
-    backupFileExtension = "bak";
     sharedModules = [
       ({...}:{
         wayland.windowManager.sway = {
           config = {
             output = {
-              "Dell Inc. DELL P2210 0VW5M1C8H57S" = {
-                transform = "0";
-                pos = "0 0";
-              };
             };
           };
         };

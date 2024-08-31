@@ -20,13 +20,7 @@ in rec {
   laura = inputs.nixpkgs.lib.nixosSystem {
     inherit specialArgs;
     modules = [
-      ./laura
-    ];
-  };
-  kyle = inputs.nixpkgs.lib.nixosSystem {
-    inherit specialArgs;
-    modules = [
-      ./kyle
+      #./laura
     ];
   };
 }
