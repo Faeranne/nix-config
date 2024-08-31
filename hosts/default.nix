@@ -17,10 +17,4 @@ in rec {
       ./greg
     ];
   };
-  laura = inputs.nixpkgs.lib.nixosSystem {
-    inherit specialArgs;
-    modules = [
-      #./laura
-    ];
-  };
 }
