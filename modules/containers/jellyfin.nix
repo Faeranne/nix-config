@@ -54,10 +54,6 @@ in {
         hostPath = "/dev/nvidia-uvm-tools";
         isReadOnly = false;
       };
-      "/dev/nvidia-caps" = {
-        hostPath = "/dev/nvidia-caps";
-        isReadOnly = false;
-      };
     };
 
     allowedDevices = [
@@ -92,10 +88,6 @@ in {
       {
         modifier = "rw";
         node = "/dev/nvidia-uvm";
-      }
-      {
-        modifier = "rw";
-        node = "/dev/nvidia-caps";
       }
     ];
     specialArgs = {
