@@ -13,6 +13,7 @@ in{
     ./containers.nix
     ./security.nix
     ./testing.nix
+    ./networking.nix
     self.userModules.nina
   ];
 

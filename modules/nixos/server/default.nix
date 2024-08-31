@@ -1,4 +1,4 @@
-{...}: {
+{config,...}: {
   services.openssh = {
       enable = true;
       settings.PasswordAuthentication = false;
@@ -15,4 +15,9 @@
       ];
   };
   networking.firewall.allowedTCPPorts = [ 22 ];
+  systemd.network = {
+    wait-online = {
+      anyInterface = true;
+    };
+  };
 }
