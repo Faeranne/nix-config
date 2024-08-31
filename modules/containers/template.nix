@@ -17,6 +17,7 @@ name: {self, inputs, lib, config, ...}:{
     "wireguard-wg${name}" = {
       bindsTo = ["netns@${name}.service"];
       after = ["netns@${name}.service" "netns@container.service"];
+      before = [ "firewall.service" ];
     };
   };
   networking = {

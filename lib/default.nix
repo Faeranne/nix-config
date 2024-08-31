@@ -9,7 +9,7 @@ inputs: let
   mkPeer = (local: goal: let
     remote = getWireguardHost goal;
     remoteConfig = self.nixosConfigurations.${remote}.config;
-    remoteIp = removeSuffix (toString (builtins.elemAt remoteConfig.networking.wireguard.interfaces.wghub.ips 0)) "/32";
+    remoteIp = removeSuffix "/32" (toString (builtins.elemAt remoteConfig.networking.wireguard.interfaces.wghub.ips 0));
     goalWireguard = remoteConfig.networking.wireguard.interfaces."wg${goal}";
     publicKeyFile = (removeSuffix ".age" remoteConfig.age.secrets."wg${goal}".rekeyFile + ".pub");
   in {

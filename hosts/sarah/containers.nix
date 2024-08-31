@@ -2,7 +2,7 @@
   mkPeer = myLib.mkPeer "greg";
 in {
   imports = [
-    self.containerModules.firefox-sync
+    self.containerModules.firefox_sync
     self.containerModules.traefik
   ];
   networking = let
@@ -23,22 +23,30 @@ in {
       ];
     };
     wireguard.interfaces = {
-      "wgtraefik-sarah" = {
+      wghub = {
+        ips = [ "10.110.1.3/32" ];
+        listenPort = 51821;
+      };
+      wggateway = {
+        ips = [ "10.120.1.3/32" ];
+      };
+      "wgtraefiksarah" = {
+        ips = ["10.100.2.1/32"]; #Prefer 10.100.1.x ips for containers
         listenPort = 51822;
         peers = [
-          (mkPeer "firefox-sync")
+          (mkPeer "firefoxsync")
         ];
       };
-      "wgfirefox-sync" = {
+      "wgfirefoxsync" = {
         listenPort = 51823;
         peers = [
-          (mkPeer "traefik-sarah")
+          (mkPeer "traefiksarah")
         ];
       };
     };
   };
   containers = {
-    firefox-sync = {
+    firefoxsync = {
       bindMounts = {
         "/var/lib/mysql" = { #Prefer not including host path here, save it for the host itself
           hostPath = "/persist/volumes/foxsync/sql";
@@ -48,7 +56,7 @@ in {
         hostName = "foxsync.faeranne.com";
       };
     };
-    traefik-greg = {
+    traefiksarah = {
       bindMounts = {
         "/etc/traefik" = {
           hostPath = "/persist/volumes/traefik";
@@ -57,7 +65,7 @@ in {
       specialArgs = {
         hostName = "sarah.faeranne.com";
         toForward = [
-          "firefox-sync.firefox-sync"
+          "firefoxsync.firefoxsync"
         ];
         extraRouters = {
           wizarr = {

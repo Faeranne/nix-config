@@ -30,30 +30,30 @@ in {
       "wgrss" = {
         listenPort = 51822;
         peers = [
-          (mkPeer "traefik-greg")
+          (mkPeer "traefikgreg")
         ];
       };
       "wgjellyfin" = {
         listenPort = 51823;
         peers = [
           (mkPeer "servarr")
-          (mkPeer "traefik-greg")
+          (mkPeer "traefikgreg")
         ];
       };
       "wgpaperless" = {
         listenPort = 51824;
         peers = [
-          (mkPeer "traefik-greg")
+          (mkPeer "traefikgreg")
         ];
       };
       "wgservarr" = {
         listenPort = 51825;
         peers = [
           (mkPeer "jellyfin")
-          (mkPeer "traefik-greg")
+          (mkPeer "traefikgreg")
         ];
       };
-      "wgtraefik-greg" = {
+      "wgtraefikgreg" = {
         listenPort = 51826;
         peers = [
           (mkPeer "jellyfin")
@@ -72,7 +72,7 @@ in {
     };
   };
   containers = {
-    traefik-greg = {
+    traefikgreg = {
       bindMounts = {
         "/etc/traefik" = {
           hostPath = "/Storage/volumes/traefik";

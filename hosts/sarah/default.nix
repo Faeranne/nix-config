@@ -12,6 +12,7 @@ in{
     extras.storage
     hardware.cpu.amd
     hardware.gpu.amd
+    ./containers.nix
     self.userModules.nina
   ];
 

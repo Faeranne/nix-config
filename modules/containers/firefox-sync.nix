@@ -1,5 +1,5 @@
 {self, myLib, config, pkgs, ...}:let
-  containerName = "firefox-sync";
+  containerName = "firefoxsync";
 in {
   imports = [
     (import ./template.nix containerName)
@@ -34,19 +34,22 @@ in {
       };
     };
 
+    specialArgs = {
+      port = 8096;
+    };
 
-
-    config = {config, pkgs, ...}: {
+    config = {config, port, ...}: {
       imports = [
         ./base.nix
       ];
 
       networking = {
         firewall = { # Make sure to add any ports needed for wireguard
-          allowedTCPPorts = [ config.services.firefox-syncserver.settings.port ];
+          allowedTCPPorts = [ port ];
         };
       };
       services.firefox-syncserver = {
+        settings.port = port;
         singleNode = {
           enable = true;
           capacity = 4;

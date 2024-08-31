@@ -4,7 +4,7 @@
   paperless = import ./paperless.nix;
   servarr = import ./servarr.nix;
   githubrunner = import ./githubrunner.nix;
-  firefox-sync = import ./firefox-sync.nix;
+  firefox_sync = import ./firefox-sync.nix;
   rss = import ./rss.nix;
   traefik = import ./traefik.nix;
 }

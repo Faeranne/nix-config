@@ -5,6 +5,7 @@ in{
     base 
     emulation
     containers
+    server
     extras.storage
     hardware.cpu.intel
     hardware.gpu.nvidia
