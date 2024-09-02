@@ -149,16 +149,10 @@
         overlays = [ 
           nix-topology.overlays.default
           (final: prev: {
-            stable = import inputs.nixpkgs-stable {
-              system = prev.system;
-              config.allowUnfree = true;
-            };
-          })
-          (final: prev: {
             pythonPackagesOverlays = prev.pythonPackagesOverlays ++ [
               (
                 python-final: python-prev: {
-                  diskinfo = self.nixosModules.python3.diskinfo;
+                  diskinfo = self.legacyPackages.${system}.diskinfo;
                 }
               )
             ];
