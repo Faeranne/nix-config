@@ -174,6 +174,22 @@
           pkgs.agenix-rekey 
         ];
       };
+      installSystem = pkgs.mkShell (let
+        python = pkgs.python312.withPackages (python-pkgs: with python-pkgs; [
+          pythondialog
+          pyparted
+          netifaces
+          requests
+          self.legacyPackages.${system}.diskinfo
+        ]);
+      in {
+        packages = [
+          python
+          pkgs.dialog
+          pkgs.age
+          pkgs.age-plugin-yubikey
+        ];
+      });
     });
 
     topology = forAllSystems (system: let
