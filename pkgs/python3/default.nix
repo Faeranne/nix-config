@@ -1,3 +1,3 @@
 {pkgs}:{
-  diskinfo = pkgs.python3Packages.callPackage ./diskinfo.nix {};
+  diskinfo = pkgs.python312Packages.callPackage ./diskinfo.nix {};
 }
