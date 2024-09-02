@@ -162,18 +162,17 @@
       };
     in {
       default = pkgs.mkShell {
-       shellHook = ''
-         age-plugin-yubikey --identity > /tmp/yubikey.pub
-       '';
-       # there's a split here because the agenix-rekey package has the same name as the input,
-       # so we have to manually call agenix-rekey from the pkgs set to prevent it from breaking.
-       packages = (with pkgs; [ 
-         age-plugin-yubikey
-         age
-         python3
-       ]) ++ [
-         pkgs.agenix-rekey 
-       ];
+        shellHook = ''
+          age-plugin-yubikey --identity > /tmp/yubikey.pub
+        '';
+        # there's a split here because the agenix-rekey package has the same name as the input,
+        # so we have to manually call agenix-rekey from the pkgs set to prevent it from breaking.
+        packages = (with pkgs; [ 
+          age-plugin-yubikey
+          age
+        ]) ++ [
+          pkgs.agenix-rekey 
+        ];
       };
     });
 
