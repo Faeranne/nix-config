@@ -1,4 +1,4 @@
-{self, inputs, lib, config, pkgs, ...}: {
+{self, inputs, config, pkgs, ...}: {
   imports = [
     inputs.impermanence.nixosModules.impermanence
     inputs.home-manager.nixosModules.home-manager
@@ -6,12 +6,19 @@
     inputs.agenix-rekey.nixosModules.default
     inputs.stylix.nixosModules.stylix
     inputs.nix-topology.nixosModules.default
-    ./users.nix
-    ./testing.nix
-    ./storage.nix
     ./networking.nix
+    ./nix-config.nix
+    ./security.nix
+    ./storage.nix
+    ./styling.nix
+    ./testing.nix
+    ./users.nix
   ];
 
+  # This injects additional stuff in the argument set for every module.
+  # This is mostly used for myLib, but since you can't just grab nurpkgs
+  # directly without sometimes causing recursion, we use nur-no-packages
+  # here to clip out the nurpkgs, and make nix nice and happy
   _module.args = {
     nur-no-packages = import inputs.nur {
       nurpkgs = pkgs;
@@ -20,49 +27,59 @@
   };
 
   system = {
+    # Sets a `nixos-version --json` field to the current git repo, which can help with debugging
     configurationRevision = if self ? rev then self.rev else if self ? dirtyRev then self.dirtyRev else "dirty";
-    stateVersion = "23.11"; # Did you read the comment?
+
     # Since nixos.label is only really used when running a boot switch, which doesn't happen
     # normally in a dirty repo, I'm only including it.  Dirty just reminds me that I intentionally
     # escaped my normal methods
     nixos.label = if self ? rev then "git-rev:${builtins.substring 0 8 self.rev}" else "dirty";
-  };
-  # Base elements
 
+    # This is primarily for handling stateful stuff that doesn't move correctly from version
+    # to version. For example, one cannot simply upgrade Postgres, and NextCloud must be upgraded
+    # sequentially, you can't skip major versions during the upgrade.
+    # This value makes sure everything that is stateful in this space doesn't upgrade just because
+    # nixpkgs upgraded.  I originally built these systems in january of 2024, so everything
+    # started with 23.11.  If I feel like it, I might upgrade everything to fit 24.05, but not
+    # right now.  If you are setting this system *FROM SCRATCH*, you can change this right away.
+    # Otherwise, dig through the nixpkgs repo and look for *every* instance of stateVersion.
+    # If nothing conflicts with your current setup (make sure, cause some stuff will do things
+    # like add postgres without you noticing), you can upgrade this.
+    stateVersion = "23.11"; # Did you read the comment?
+  };
+
+  # Just some default values used everywhere.  These are well described in other linux documents.
+  # Mainly make sure your timeZone matches your actual timezone
   time.timeZone = "America/Indiana/Indianapolis";
   i18n.defaultLocale = "en_US.UTF-8";
 
   nixpkgs = {
+
+    # This allows programs packaged with unknown or propriatry libraries.  Things like Discord
+    # Otherwise, nix will refuse to build these programs, and thus this install will refuse
+    # to build
     config.allowUnfree = true;
+
+    # This changes values in `pkgs`. Mostly used to add external packages (via NUR) or roll forward
+    # or backward certain packages.
     overlays = [
       inputs.nur.overlay
       (final: prev: {
+        # I like using the newest features of Kicad, and they tend to trickle down to stable a little
+        # slowly
         kicad = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.kicad; 
+        # As of this commit, PrismLauncher doesn't work right with the stable version.  Some login
+        # issues. Check this later and roll back when it makes sense
         prismlauncher = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.prismlauncher; 
       })
 
     ];
   };
-  nix = {
-    settings = {
-      experimental-features = [ "nix-command" "flakes" "ca-derivations"];
-    };
-    extraOptions = ''
-      !include ${config.age.secrets.flake-accessTokens.path};
-    '';
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 7d";
-    };
-  };
 
   boot = {
-    supportedFilesystems = [
-      "vfat"
-      "zfs"
-    ];
-    initrd.systemd.enableTpm2 = true;
+    # All of this is about making appimage programs launch natively.
+    # I'll admit, I don't remember where i found this.
+    # TODO: Get the details for this again to properly document it
     binfmt.registrations.appimage = {
       wrapInterpreterInShell = false;
       interpreter = "${pkgs.appimage-run}/bin/appimage-run";
@@ -73,121 +90,44 @@
     };
   };
 
-  services = {
-    pcscd.enable = true;
-    tcsd.enable = true;
-    zfs = {
-      autoScrub = {
-        enable = true;
-      };
-    };
-  };
-
   programs = {
+    # I like ZSH, and having it as a system level shell is nice
     zsh.enable = true;
   };
 
+  # Some of the default programs I use that aren't explicitly configured
   environment = {
-    systemPackages = with pkgs; (
+    systemPackages = ((with pkgs; 
       [
         appimagekit
         appimage-run
-        tpm2-tools
-        tpm-tools
-        tpmmanager
         p7zip
-        yubikey-manager
-      ] ++
+      ]) ++
+      # This next block only makes sense on x86 systems
       (if (
         pkgs.system == "x86_64-linux"
       ) then (
+        # There are different packages for headless and graphical
+        # otherwise I would jsut set this in a desktop config.
+        # xdg.portal is needed for wayland desktops, so I just
+        # look for that.
         if config.xdg.portal.enable then [ 
-          wineWowPackages.waylandFull
-          lxqt.lxqt-policykit
+          pkgs.wineWowPackages.waylandFull
+          pkgs.lxqt.lxqt-policykit
         ] else [ 
-          wineWowPackages.stagingFull
+          pkgs.wineWowPackages.stagingFull
         ]
+      # Nix requires else blocks. since I don't want to do anything
+      # on non-x86 systems, I just return an empty result
       ) else [])
     );
   };
 
+  # This causes the system to create a swap file *in-ram* which
+  # means we can compress it on the fly.  This typically can result
+  # in an additional 1.5x to 2x ram availability, depending on what
+  # exactly is being stored.
   zramSwap = {
     enable = true;
   };
-
-  security = {
-    tpm2 = {
-      enable = true;
-      tctiEnvironment.enable = true;
-      pkcs11.enable = true;
-    };
-    polkit = {
-      enable = true;
-    };
-    pam = { 
-      services = {
-        swaylock = {};
-      };
-      sshAgentAuth = {
-        enable = true;
-      };
-    };
-  };
-
-  age = {
-    identityPaths = [ "/persist/agenix.key" "/nix/agenix.key" ];
-    rekey = {
-      storageMode = "local";
-      localStorageDir = self + "/secrets/rekeyed/${config.networking.hostName}";
-      agePlugins = [ pkgs.age-plugin-yubikey ];
-      generatedSecretsDir = self + "/secrets/generated";
-      masterIdentities = [ "/tmp/yubikey.pub" ];
-      extraEncryptionPubkeys = [ 
-        "age1yubikey1qtfy343ld8e5sxlvfufa4hh22pm33f6sjq2usx6mmydrmu7txzu7g5xm9vr"
-        "age1yubikey1qdnfvhjlw8j2dkksj9eyxaqwldtqw4427cqjjqxulr5t7gn4flnt25lhuyw"
-        "age1yubikey1qw43gcah5lr95c4klyavduax0drqd5a95lhs8u2wpzqrtcklw5f0uwruyek"
-        "age1yubikey1qwcdxfaalqhntrsrkt7p2nyngdyjc72jr8tehgdzgwwpsl0veflrxncut3x"
-      ];
-    };
-    secrets = {
-      flake-accessTokens = {
-        rekeyFile = self + "/secrets/accessTokens.age";
-        mode = "770";
-        group = "nixbld";
-      };
-    };
-  };
-
-  stylix = {
-    autoEnable = false;
-    polarity = "dark";
-    image = self + "/resources/background.png";
-    base16Scheme = {
-      base00 = "000000";
-      base01 = "242424";
-      base02 = "008f00";
-      base03 = "929292";
-      base04 = "7f3300";
-      base05 = "b44800";
-      base06 = "ff6700";
-      base07 = "474747";
-      base08 = "ff0000";
-      base09 = "ff4300";
-      base0A = "b1a100";
-      base0B = "5aff00";
-      base0C = "00acb1";
-      base0D = "50d8dc";
-      base0E = "008fff";
-      base0F = "5d1bb0";
-    };
-    targets = {
-      plymouth = {
-        enable = true;
-        logo = self + "/resources/labs-color-nix-snowflake.png";
-      };
-      nixos-icons.enable = true;
-      console.enable = true;
-    };
-  };
-
 }

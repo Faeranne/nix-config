@@ -37,9 +37,26 @@
         ];
       };
     };
+
     programs = {
       fuse.userAllowOther = true;
     };
+
+    services = {
+      zfs = {
+        autoScrub = {
+          enable = true;
+        };
+      };
+    };
+
+    boot = {
+      supportedFilesystems = [
+        "vfat"
+        "zfs"
+      ];
+    };
+
     system.activationScripts = let
       allDirs = lib.foldl' (acc: value: acc + ''
         mkdir -p --mode="${value.permissions}" "${value.path}"
