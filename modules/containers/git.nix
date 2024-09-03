@@ -60,7 +60,7 @@ in {
         owner = "container:container";
       };
       "/run/secrets/gitSshKey" = {
-        hostPath = (lib.escapeShellArg (lib.removeSuffix ".age" (config.age.secrets.gitSshKey.rekeyFile) + ".pub"));
+        hostPath = (lib.removeSuffix ".age" (config.age.secrets.gitSshKey.rekeyFile) + ".pub");
         isReadOnly = true;
       };
     };

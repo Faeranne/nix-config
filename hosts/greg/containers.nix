@@ -61,6 +61,7 @@ in {
           (mkPeer "rss")
           (mkPeer "paperless")
           (mkPeer "servarr")
+          (mkPeer "git")
         ];
       };
       "wggit" = {
