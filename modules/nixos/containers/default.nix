@@ -14,6 +14,10 @@
                   type = lib.types.str;
                   default = "root:root";
                 };
+                permissions = lib.mkOption {
+                  type = lib.types.str;
+                  default = "755";
+                };
               };
             }));
           };
@@ -27,7 +31,7 @@
       res = if (value.create) then [{
         inherit (value) owner;
         path = value.hostPath;
-        permissions = "755";
+        permissions = value.permissions;
       }] else [];
     in acc ++ res) [];
     createMounts = lib.foldlAttrs (acc: _: value: acc ++ (foldPaths value.bindMounts)) [] cfg;
