@@ -53,9 +53,15 @@
         };
       };
     };
-    systemd.services."wireguard-wghub" = {
-      bindsTo = ["netns@container.service"];
-      after = ["netns@container.service"];
+    systemd.services = {
+      "wireguard-wghub" = {
+        bindsTo = ["netns@container.service"];
+        after = ["netns@container.service"];
+      };
+      "wireguard-wggateway" = {
+        bindsTo = ["netns@container.service"];
+        after = ["netns@container.service"];
+      };
     };
 
     networking = {
