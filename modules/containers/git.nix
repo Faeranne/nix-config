@@ -93,7 +93,7 @@ in {
             ROOT_URL="https://${hostName}";
           };
           service = {
-            DISABLE_REGISTRATION = false;
+            DISABLE_REGISTRATION = true;
           };
         };
       };
