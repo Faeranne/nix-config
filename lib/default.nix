@@ -1,11 +1,69 @@
 inputs: let
   inherit (inputs) self;
   inherit (inputs.nixpkgs.lib) assertMsg removePrefix removeSuffix mapAttrs concatMapAttrs genAttrs foldlAttrs;
+  /**
+    Returns the canonical host of a given wireguard endpoint. Assumes all endpoints are unique across all hosts
+
+    # Example
+
+    ```nix
+    getWireguardHost "jellyfin"
+    =>
+    "greg"
+    ```
+
+
+    # Type
+
+    ```
+    getWireguardHost :: String -> String
+    ```
+
+
+    # Arguments
+
+    wireName
+    : The wireguard key as a string
+
+  */
   getWireguardHost = (wireName: let
     host = foldlAttrs (acc: name: value: 
       if (builtins.hasAttr "wg${wireName}" value.config.networking.wireguard.interfaces) then name else acc
     ) "" self.nixosConfigurations;
   in assert assertMsg (host != "") "Could not find wg${wireName} in any host"; host);
+  /**
+    Creates a valid peer submodule config from two wireguard key strings.  Assumes all wireguard enpoints are unique across all hosts
+
+    # Example
+
+    ```nix
+    mkPeer "jellyfin" "traefikgreg"
+    =>
+    {
+      name = "traefikgreg";
+      endpoint = "10.110.1.2:51826";
+      publicKey = "afETzsN69oIqLCQLhfESwgv2PBVIYzqBsQTDHh8j/C0=";
+      allowedIPs = [ "10.100.2.1/32" ];
+    }
+    ```
+
+
+    # Type
+
+    ```
+    mkPeer :: String -> String -> Submodule
+    ```
+
+
+    # Arguments
+
+    local
+    : The key name of the wireguard endpoint this peer is being added to
+
+    goal
+    : The key name of the target wireguard endpoint being connected to
+
+  */
   mkPeer = (local: goal: let
     remote = getWireguardHost goal;
     remoteConfig = self.nixosConfigurations.${remote}.config;
@@ -18,6 +76,36 @@ inputs: let
     publicKey = builtins.readFile publicKeyFile;
     allowedIPs = goalWireguard.ips;
   });
+  /**
+    This gathers every container in the entire config.  This is not a function
+    and does not accept any arguments.  Currently doesn't ignore containers without
+    wireguard nets, so will break if you add a container that doesn't have networking
+
+
+    # Example
+
+    ```nix
+    gatherContainers
+    =>
+    {
+      git = {
+        host = "greg";
+        ip = "10.100.1.10";
+        port = 51827;
+        publicKeyFile = "/nix/store/.../wireguard.pub";
+        services = {
+          # Services are either presented by the container config in ports and hostNames,
+          # or assumed to be just the one service with the same name as the container
+          git = {
+            hostName = "git.faeranne.com";
+            port = 8000;
+          };
+        };
+      };
+      ...
+    }
+    ```
+  */
   gatherContainers = (
     concatMapAttrs (host: hostInstance: let
       hostConfig = hostInstance.config;
