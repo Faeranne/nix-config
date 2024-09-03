@@ -7,4 +7,5 @@
   firefox_sync = import ./firefox-sync.nix;
   rss = import ./rss.nix;
   traefik = import ./traefik.nix;
+  git = import ./git.nix;
 }

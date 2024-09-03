@@ -4,10 +4,10 @@ in {
   imports = [
     self.containerModules.jellyfin
     self.containerModules.servarr
-    #self.containerModules.firefox-sync
     self.containerModules.rss
     self.containerModules.paperless
     self.containerModules.traefik
+    self.containerModules.git
   ];
   networking = let
     traefikIp = lib.removeSuffix "/32" (builtins.elemAt config.networking.wireguard.interfaces.wgtraefikgreg.ips 0);
@@ -63,13 +63,12 @@ in {
           (mkPeer "servarr")
         ];
       };
-      /*
-      "wgfirefox-sync" = {
-        listenPort = 51826;
+      "wggit" = {
+        listenPort = 51827;
         peers = [
+          (mkPeer "traefikgreg")
         ];
       };
-      */
     };
   };
   containers = {
@@ -85,6 +84,7 @@ in {
           "jellyfin.jellyfin"
           "rss.rss"
           "paperless.paperless"
+          "git.git"
           "servarr.sonarr"
           "servarr.radarr"
           "servarr.lidarr"
@@ -136,18 +136,6 @@ in {
         hostName = "rss.faeranne.com";
       };
     };
-    /*
-    firefox-sync = {
-      bindMounts = {
-        "/var/lib/mysql" = { #Prefer not including host path here, save it for the host itself
-          hostPath = "/Storage/volumes/foxsync/sql";
-        };
-      };
-      specialArgs = {
-        hostName = "foxsync.faeranne.com";
-      };
-    };
-    */
     paperless = {
       bindMounts = {
         "/var/lib/paperless" = { #Prefer not including host path here, save it for the host itself
@@ -160,6 +148,16 @@ in {
       specialArgs = {
         hostName = "paperless.faeranne.com";
         trustedProxy = "10.200.1.8";
+      };
+    };
+    git = {
+      bindMounts = {
+        "/var/lib/forgejo" = {
+          hostPath = "/Storage/volumes/git";
+        };
+      };
+      specialArgs = {
+        hostName = "git.faeranne.com";
       };
     };
     servarr = {
