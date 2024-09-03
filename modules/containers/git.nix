@@ -26,26 +26,36 @@ in {
     };
   };
 
-  services.openssh.extraConfig = let
-    shell = pkgs.writers.writeBash "ssh_shell" {} ''
-      shift
-      ${sshWKey} -o StrictHostKeyChecking=no git@${containerIp} "SSH_ORIGINAL_COMMAND=\"$SSH_ORIGINAL_COMMAND\" $@"
-    '';
-    forgejoShim = pkgs.writers.writeBash "forgejo_shim" {} ''
-      ${sshWKey} -o StrictHostKeyChecking=no git@${containerIp} "SSH_ORIGINAL_COMMAND=\"$SSH_ORIGINAL_COMMAND\" $0 $@"
-    '';
-  in ''
+  environment.etc = {
+    "ssh/.ssh_shell-wrapper" = {
+      mode = "0555";
+      text = ''
+        #!${pkgs.bash}/bin/bash
+        shift
+        ${sshWKey} -o StrictHostKeyChecking=no forgejo@${containerIp} "SSH_ORIGINAL_COMMAND=\"$SSH_ORIGINAL_COMMAND\" $@"
+      '';
+    };
+    "ssh/.ssh_authorized-wrapper" = {
+      mode = "0555";
+      text = ''
+        #!${pkgs.bash}/bin/bash
+        ${sshWKey} -o StrictHostKeyChecking=no forgejo@${containerIp} "${pkgs.forgejo}/bin/gitea --config /var/lib/forgejo/custom/conf/app.ini keys -e git $@"
+      '';
+    };
+  };
+
+  services.openssh.extraConfig = ''
     Match User git
       AuthorizedKeysCommandUser git
-      AuthorizedKeysCommand ${sshWKey} -o StrictHostKeyChecking=no git@${containerIp} ${forgejoShim} keys -e git -u %u -t %t -k %k
-      ForceCommand ${shell}
+      AuthorizedKeysCommand /etc/ssh/.ssh_authorized-wrapper -u %u -t %t -k %k
+      ForceCommand /etc/ssh/.ssh_shell-wrapper
   '';
 
   age.secrets.gitSshKey = {
     rekeyFile = self + "/secrets/${config.networking.hostName}/gitSshKey.age";
     owner = "git";
     group = "git";
-    mode = "770";
+    mode = "700";
     generator = {
       script = "sshkey";
     };
@@ -58,10 +68,6 @@ in {
         isReadOnly = false;
         create = true;
         owner = "container:container";
-      };
-      "/run/secrets/gitSshKey" = {
-        hostPath = (lib.removeSuffix ".age" (config.age.secrets.gitSshKey.rekeyFile) + ".pub");
-        isReadOnly = true;
       };
     };
 
@@ -78,22 +84,31 @@ in {
 
       networking = {
         firewall = { # Make sure to add any ports needed for wireguard
-          allowedTCPPorts = [ port ];
+          allowedTCPPorts = [ port 22 2222 ];
         };
       };
-      services.forgejo = {
-        enable = true;
-        settings = {
-          session = {
-            COOKIE_SECURE=true;
-          };
-          server = {
-            DOMAIN="${hostName}";
-            HTTP_PORT=port;
-            ROOT_URL="https://${hostName}";
-          };
-          service = {
-            DISABLE_REGISTRATION = true;
+      services = {
+        openssh = {
+          enable = true;
+          startWhenNeeded = false;
+        };
+        forgejo = {
+          enable = true;
+          settings = {
+            session = {
+              COOKIE_SECURE=true;
+            };
+            server = {
+              START_SSH_SERVER=false;
+              SSH_LISTEN_PORT=2222;
+              SSH_CREATE_AUTHORIZED_KEYS_FILE=false;
+              DOMAIN="${hostName}";
+              HTTP_PORT=port;
+              ROOT_URL="https://${hostName}";
+            };
+            service = {
+              DISABLE_REGISTRATION = true;
+            };
           };
         };
       };
@@ -101,7 +116,9 @@ in {
         users = {
           forgejo = {
             uid = hostConfig.users.users.container.uid;
-            openssh.authorizedKeys.keys = [
+            openssh.authorizedKeys.keyFiles  = [
+              # add the generated sshkey for git to the keyfile list.  hopefully this works as intended
+              (lib.removeSuffix ".age" (config.age.secrets.gitSshKey.rekeyFile) + ".pub")
             ];
           };
           git = {
@@ -111,7 +128,7 @@ in {
             createHome = true;
             openssh.authorizedKeys.keyFiles  = [
               # add the generated sshkey for git to the keyfile list.  hopefully this works as intended
-              "/run/secrets/gitSshKey"
+              (lib.removeSuffix ".age" (config.age.secrets.gitSshKey.rekeyFile) + ".pub")
             ];
           };
         };
