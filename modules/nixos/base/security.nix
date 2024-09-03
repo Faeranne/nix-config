@@ -9,6 +9,19 @@
   # This sets up agenix, which encrypts secrets as needed for configuration.
   # These secrets are encrypted in the repo, and are re-encrypted for each
   # host that needs them.  Every setting here is about making that work
+  # Two additional keys are commonly refered to here: secrets and generators
+  #
+  # secrets defines an actual secret, and needs at bare minimum a `rekeyPath`
+  # to tell agenix-rekey where the master secret is stored.  Every secret also
+  # ends up with a `path` key, which defines where that secret will exist
+  # on the host after decryption. agenix itself uses a `file` key, but agenix-rekey
+  # handles populating that automatically, so we don't care about it
+  #
+  # generators defines a script that can make new secrets without manually entering
+  # them.  For example, there is a generator that makes wireguard key pairs.
+  # this is useful, for example, when generating wireguard endpoints on containers.
+  # Examples can be found in modules/nixos/base/networking.nix and 
+  # modules/nixos/base/user.nix
   age = {
     # each host needs a unique key to decrypt secrets with.  this sets where to find that key,
     # since the key itself can't be stored in the repo.
