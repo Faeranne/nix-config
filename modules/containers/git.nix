@@ -20,6 +20,7 @@ in {
       group = "git";
       uid = 2000;
       isNormalUser = true;
+      shell = "/etc/ssh/.ssh_shell-wrapper";
     };
     groups.git = {
       gid = 2000;
@@ -48,7 +49,6 @@ in {
     Match User git
       AuthorizedKeysCommandUser git
       AuthorizedKeysCommand /etc/ssh/.ssh_authorized-wrapper -u %u -t %t -k %k
-      ForceCommand /etc/ssh/.ssh_shell-wrapper
   '';
 
   age.secrets.gitSshKey = {
@@ -95,8 +95,9 @@ in {
         forgejo = {
           enable = true;
           settings = {
-            session = {
-              COOKIE_SECURE=true;
+            repository = {
+              ENABLE_PUSH_CREATE_USER = true;
+              ENABLE_PUSH_CREATE_ORG = true;
             };
             server = {
               START_SSH_SERVER=false;
@@ -108,6 +109,9 @@ in {
             };
             service = {
               DISABLE_REGISTRATION = true;
+            };
+            session = {
+              COOKIE_SECURE=true;
             };
           };
         };
