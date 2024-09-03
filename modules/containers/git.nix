@@ -19,7 +19,7 @@ in {
     users.git = {
       group = "git";
       uid = 2000;
-      isSystemUser = true;
+      isNormalUser = true;
     };
     groups.git = {
       gid = 2000;
