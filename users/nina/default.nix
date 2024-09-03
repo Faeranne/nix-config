@@ -15,6 +15,7 @@
       description = "Nexus";
       hashedPasswordFile = config.age.secrets."user-nina".path;
       shell = pkgs.zsh;
+      createHome = true;
       openssh.authorizedKeys.keys = [
         "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIMg89gg80Z24JNaj1qeuEk4zxfA2AabKcuo6JHjSHu3xAAAAC3NzaDpwcml2YXRl nina@desktop"
         "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIG5g/WtYRcIvzMDK2WA/s0slpRANkq7PonQvO1cJFPEdAAAACnNzaDpnaXRodWI="
