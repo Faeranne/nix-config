@@ -92,6 +92,9 @@ in {
             HTTP_PORT=port;
             ROOT_URL="https://${hostName}";
           };
+          service = {
+            DISABLE_REGISTRATION = false;
+          };
         };
       };
       users = {
