@@ -3,6 +3,7 @@
     "/" = {
       device = "none";
       fsType = "tmpfs";
+      options = [ "defaults" "mode=755" ];
     };
     "/persist" = {
       device = "zroot/persist";
