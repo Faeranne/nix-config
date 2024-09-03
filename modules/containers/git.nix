@@ -103,6 +103,7 @@ in {
               START_SSH_SERVER=false;
               SSH_LISTEN_PORT=2222;
               SSH_CREATE_AUTHORIZED_KEYS_FILE=false;
+              SSH_USER = "git";
               DOMAIN="${hostName}";
               HTTP_PORT=port;
               ROOT_URL="https://${hostName}";
