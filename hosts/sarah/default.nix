@@ -1,6 +1,4 @@
-{self, config, myLib, ...}: let
-  mkPeer = myLib.mkPeer "sarah";
-in{
+{self, config, ...}: {
   imports = with self.nixosModules; [
     base 
     emulation
@@ -9,9 +7,11 @@ in{
     services.clamav
     services.printers
     extras.storage
+    extras.networking
     hardware.cpu.amd
     hardware.gpu.amd
     self.userModules.nina
+    ./clues.nix
   ];
 
   age.secrets = {
@@ -31,8 +31,7 @@ in{
     hardware = {
       info = "Desktop Computer";
     }; primaryNetwork = "home";
-    primaryInterface = "enp10s0";
-    interfaces.enp10s0 = {
+    interfaces.primary = {
       addresses = ["192.168.1.80"];
       network = "home";
       physicalConnections = [
@@ -53,7 +52,7 @@ in{
 
   networking = {
     nat = {
-      externalInterface = "enp10s0";
+      externalInterface = "primary";
     };
     hostName = "sarah";
     hostId = "586769c4";
@@ -72,18 +71,8 @@ in{
     };
   };
 
-
-  fileSystems = {
-    "/boot" = {
-      device = "/dev/disk/by-uuid/A15D-1FC6";
-      fsType = "vfat";
-      options = [ "fmask=0022" "dmask=0022" ];
-    };
-  };
-
   nixpkgs.hostPlatform = "x86_64-linux";
 
-  age.rekey.hostPubkey = "age185avxte33jvaexyl5292nczj3drlhc5dnyv8svyyy8u4l0tfgpksz6encl";
 
   home-manager = {
     backupFileExtension = "bak";
