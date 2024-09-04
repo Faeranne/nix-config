@@ -23,6 +23,9 @@ in {
           primaryInterface = lib.mkOption {
             type = lib.types.str;
           };
+          publicFQDN = lib.mkOption {
+            type = lib.types.nullOr lib.types.str;
+          };
         };
       }));
     };

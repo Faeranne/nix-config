@@ -110,7 +110,7 @@ inputs: let
     concatMapAttrs (host: hostInstance: let
       hostConfig = hostInstance.config;
       hostWireguards = hostConfig.networking.wireguard.interfaces;
-      agePath = hostConfig.age.secretsDir + "/";
+      pathSecret = getSecretFromPath hostConfig;
     in mapAttrs (container: containerInstance:
       let
         specialArgs = containerInstance.specialArgs;
@@ -124,7 +124,7 @@ inputs: let
         else
           {${container} = specialArgs.hostName;};
         serviceNames = builtins.attrNames hostNames;
-        secretName = removePrefix agePath wg.privateKeyFile;
+        secretName = pathSecret wg.privateKeyFile;
         rekey = hostConfig.age.secrets.${secretName}.rekeyFile;
       in {
         inherit host;
@@ -138,6 +138,17 @@ inputs: let
       }) hostConfig.containers
     ) self.nixosConfigurations
   );
+  getAutomeshInterfaces = (
+    concatMapAttrs (host: hostInstance: let
+    interfaceName = hostInstance.services.wgautomesh.settings.interface;
+    in if interfaceName != null then {
+      host = hostInstance.networking.wireguard.interfaces.${interfaceName};
+    } else {}) self.nixosConfigurations
+  );
+  getSecretFromPath = (config: path: let
+    agePath = config.age.secretsDir + "/";
+    secretName = removePrefix agePath path;
+  in secretName);
 in {
-  inherit mkPeer getWireguardHost gatherContainers;
+  inherit mkPeer getWireguardHost gatherContainers getAutomeshInterfaces getSecretFromPath;
 }
