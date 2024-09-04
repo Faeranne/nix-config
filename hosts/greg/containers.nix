@@ -156,6 +156,9 @@ in {
         "/var/lib/forgejo" = {
           hostPath = "/Storage/volumes/git";
         };
+        "/etc/ssh/keys/" = {
+          hostPath = "/Storage/volumes/git_hostkeys";
+        };
       };
       specialArgs = {
         hostName = "git.faeranne.com";
