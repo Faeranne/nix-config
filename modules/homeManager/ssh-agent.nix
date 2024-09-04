@@ -1,17 +1,9 @@
 {pkgs, ...}:
 {
   services.ssh-agent.enable = true;
-  home = {
-    persistence."/persist/home/nina" = {
-      directories = [
-      ];
-      files = [
-        ".ssh/known_hosts"
-      ];
-    };
-  };
   programs.ssh = {
     forwardAgent = true;
+    userKnownHostsFile = "/persist/home/nina/.ssh/known_hosts";
   };
   systemd.user.services.ssh-agent = {
     Service = {
