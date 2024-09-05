@@ -40,7 +40,7 @@ in {
 
     config = let
       hostConfig = config;
-    in {port, ...}: {
+    in {port, pkgs, ...}: {
       imports = [
         ./base.nix
       ];
@@ -52,6 +52,7 @@ in {
       services.netbox = {
         inherit port;
         enable = true;
+        package = pkgs.netbox;
         secretKeyFile = "/run/secrets/netbox";
         listenAddress = lib.removeSuffix "/32" (lib.elemAt hostConfig.networking.wireguard.interfaces."wg${containerName}".ips 0);
       };
