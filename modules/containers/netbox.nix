@@ -67,9 +67,9 @@ in {
   # it's ok to define something multiple times.
   users = {
     users.postgres = {
-      uid = config.ids.uid.postgres;
+      uid = config.ids.uids.postgres;
       group = "postgres";
     };
-    groups.postgres.uid = config.ids.gid.postgres;
+    groups.postgres.uid = config.ids.gids.postgres;
   };
 }
