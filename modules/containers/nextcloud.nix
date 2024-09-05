@@ -53,11 +53,11 @@ in {
         nextcloud = {
           inherit hostName;
           enable = true;
-          packages = pkgs.nextcloud29;
+          package = pkgs.nextcloud29;
           https = true;
           configureRedis = true;
           config = {
-            adminUser = "faeranne";
+            adminuser = "faeranne";
             adminpassFile = "/run/secrets/nextcloud_admin_pass";
           };
           settings = {

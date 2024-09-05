@@ -81,7 +81,7 @@ in {
         ];
       };
       "wgnextcloud" = {
-        listenPort = 51828;
+        listenPort = 51829;
         peers = [
           (mkPeer "traefikgreg")
         ];
@@ -109,6 +109,7 @@ in {
           "servarr.bazarr"
           "servarr.ombi"
           "netbox.netbox"
+          "nextcloud.nextcloud"
         ];
         extraRouters = {
           wizarr = {
@@ -188,7 +189,8 @@ in {
         };
       };
       specialArgs = {
-        hostName = "nextcloud.faeranne.com";
+        hostName = "cloud.faeranne.com";
+        trustedProxy = "10.200.1.8";
       };
     };
     netbox = {
