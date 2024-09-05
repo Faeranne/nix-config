@@ -111,6 +111,9 @@ in {
         forgejo = {
           enable = true;
           settings = {
+            federation = {
+              ENABLE = true;
+            };
             repository = {
               ENABLE_PUSH_CREATE_USER = true;
               ENABLE_PUSH_CREATE_ORG = true;
