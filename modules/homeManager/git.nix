@@ -17,7 +17,10 @@
         help.autocorrect = "prompt";
         init.defaultBranch = "main";
         merge.conflictstyle = "zdiff3";
-        push.default = "current";
+        push = {
+          default = "current";
+          autoSetupRemote = true;
+        };
         pull.rebase = true;
         rebase.autostash = true;
         rerere.enabled = true;
