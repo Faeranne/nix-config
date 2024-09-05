@@ -64,6 +64,7 @@ in {
           (mkPeer "servarr")
           (mkPeer "git")
           (mkPeer "netbox")
+          (mkPeer "nextcloud")
         ];
       };
       "wggit" = {
@@ -73,6 +74,12 @@ in {
         ];
       };
       "wgnetbox" = {
+        listenPort = 51828;
+        peers = [
+          (mkPeer "traefikgreg")
+        ];
+      };
+      "wgnextcloud" = {
         listenPort = 51828;
         peers = [
           (mkPeer "traefikgreg")
@@ -171,6 +178,16 @@ in {
       };
       specialArgs = {
         hostName = "git.faeranne.com";
+      };
+    };
+    nextcloud = {
+      bindMounts = {
+        "/var/lib/nextcloud" = {
+          hostPath = "/Storage/volumes/nextcloud";
+        };
+      };
+      specialArgs = {
+        hostName = "nextcloud.faeranne.com";
       };
     };
     netbox = {

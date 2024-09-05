@@ -9,4 +9,5 @@
   traefik = import ./traefik.nix;
   git = import ./git.nix;
   netbox = import ./netbox.nix;
+  nextcloud = import ./nextcloud.nix;
 }
