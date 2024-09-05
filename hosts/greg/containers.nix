@@ -8,6 +8,7 @@ in {
     self.containerModules.paperless
     self.containerModules.traefik
     self.containerModules.git
+    self.containerModules.netbox
   ];
   networking = let
     traefikIp = lib.removeSuffix "/32" (builtins.elemAt config.networking.wireguard.interfaces.wgtraefikgreg.ips 0);
@@ -62,10 +63,17 @@ in {
           (mkPeer "paperless")
           (mkPeer "servarr")
           (mkPeer "git")
+          (mkPeer "netbox")
         ];
       };
       "wggit" = {
         listenPort = 51827;
+        peers = [
+          (mkPeer "traefikgreg")
+        ];
+      };
+      "wgnetbox" = {
+        listenPort = 51828;
         peers = [
           (mkPeer "traefikgreg")
         ];
@@ -162,6 +170,19 @@ in {
       };
       specialArgs = {
         hostName = "git.faeranne.com";
+      };
+    };
+    netbox = {
+      bindMounts = {
+        "/var/lib/netbox" = {
+          hostPath = "/Storage/volumes/netbox/data";
+        };
+        "/var/lib/postgres/" = {
+          hostPath = "/Storage/volumes/netbox/db";
+        };
+      };
+      specialArgs = {
+        hostName = "netbox.faeranne.com";
       };
     };
     servarr = {

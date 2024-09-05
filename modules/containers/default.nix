@@ -8,4 +8,5 @@
   rss = import ./rss.nix;
   traefik = import ./traefik.nix;
   git = import ./git.nix;
+  netbox = import ./netbox.nix;
 }
