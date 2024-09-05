@@ -15,7 +15,7 @@
     };
     "actual" = {
       autoStart = true;
-      image = "actualbudget/actual-server:24.8.0";
+      image = "actualbudget/actual-server:24.9.0";
       ports = [
         "5006:5006"
       ];
