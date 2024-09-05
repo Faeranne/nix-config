@@ -15,7 +15,7 @@ in {
 
   age.secrets.netbox = {
     rekeyFile = self + "/secrets/containers/${containerName}/secret_key.age";
-    generator = {...}:''
+    generator.script = {pkgs, file, ...}:''
       ${pkgs.pwgen}/bin/pwgen 50 1 -ys1nc
     '';
     mode = "550";
