@@ -18,6 +18,7 @@
         init.defaultBranch = "main";
         merge.conflictstyle = "zdiff3";
         push.default = "current";
+        pull.rebase = true;
         rebase.autostash = true;
         rerere.enabled = true;
         url."git@github.com:".pushInsteadOf = "https://github.com/";
