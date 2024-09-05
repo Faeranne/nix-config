@@ -100,6 +100,7 @@ in {
           "servarr.prowlarr"
           "servarr.bazarr"
           "servarr.ombi"
+          "netbox.netbox"
         ];
         extraRouters = {
           wizarr = {
@@ -177,7 +178,7 @@ in {
         "/var/lib/netbox" = {
           hostPath = "/Storage/volumes/netbox/data";
         };
-        "/var/lib/postgres/" = {
+        "/var/lib/postgres" = {
           hostPath = "/Storage/volumes/netbox/db";
         };
       };

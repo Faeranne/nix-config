@@ -49,14 +49,14 @@ in {
           allowedTCPPorts = [ port ];
         };
       };
-      services = {
+      services.netbox = {
         inherit port;
         enable = true;
         secretKeyFile = "/run/secrets/netbox";
         listenAddress = lib.removeSuffix "/32" (lib.elemAt hostConfig.networking.wireguard.interfaces."wg${containerName}".ips 0);
       };
-      users.users.netbox.uid = hostConfig.users.users.containers.uid;
-      users.groups.netbox.gid = hostConfig.users.groups.containers.gid;
+      users.users.netbox.uid = hostConfig.users.users.container.uid;
+      users.groups.netbox.gid = hostConfig.users.groups.container.gid;
     };
   };
 
