@@ -70,6 +70,6 @@ in {
       uid = config.ids.uids.postgres;
       group = "postgres";
     };
-    groups.postgres.uid = config.ids.gids.postgres;
+    groups.postgres.gid = config.ids.gids.postgres;
   };
 }
