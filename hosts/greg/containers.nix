@@ -9,6 +9,7 @@ in {
     self.containerModules.traefik
     self.containerModules.git
     self.containerModules.netbox
+    self.containerModules.nextcloud
   ];
   networking = let
     traefikIp = lib.removeSuffix "/32" (builtins.elemAt config.networking.wireguard.interfaces.wgtraefikgreg.ips 0);
