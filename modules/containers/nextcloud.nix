@@ -40,7 +40,7 @@ in {
 
     config = let
       hostConfig = config;
-    in {hostName, port, pkgs, trustedProxy, ...}: {
+    in {config, hostName, port, pkgs, trustedProxy, ...}: {
       imports = [
         ./base.nix
       ];
@@ -56,6 +56,10 @@ in {
           package = pkgs.nextcloud29;
           https = true;
           configureRedis = true;
+          extraApps = {
+            inherit (config.services.nextcloud.package.packages.apps) bookmarks calendar contacts spreed tasks twofactor_nextcloud_notification twofactor_webauthn;
+          };
+          extraAppsEnable = true;
           config = {
             adminuser = "faeranne";
             adminpassFile = "/run/secrets/nextcloud_admin_pass";
