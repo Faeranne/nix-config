@@ -65,7 +65,6 @@
               private-relay
               return-youtube-dislikes
               shinigami-eyes
-              temporary-containers
               tetrio-plus
             ]);
 
