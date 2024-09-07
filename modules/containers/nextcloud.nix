@@ -63,7 +63,7 @@ in {
               sha256 = "sha256-zsfSFv6CBkblT17CIf8j+wjtVfvxDazXlQZBGyDO5xA=";
               license = "gpl3";
             };
-            paperless = pkgs.fetchNextcloudApp {
+            integration_paperless = pkgs.fetchNextcloudApp {
               url = "https://github.com/nextcloud-releases/integration_paperless/releases/download/v1.0.3/integration_paperless-v1.0.3.tar.gz";
               sha256 = "sha256-3d3EgRCG4H5EcnQ3kmbVSEIsBNgrnuQA9pzdbiNtLyM=";
               license = "agpl3Only";
@@ -88,7 +88,7 @@ in {
               sha256 = "sha256-YpJWOOP/45Lnw6XlQ6PLitG2NzSyYXCD5D9lZyn+mcQ=";
               license = "agpl3Only";
             };
-            duplicate_finder = pkgs.fetchNextcloudApp {
+            duplicatefinder = pkgs.fetchNextcloudApp {
               url = "https://github.com/eldertek/duplicatefinder/releases/download/v1.2.5/duplicatefinder-v1.2.5.tar.gz";
               sha256 = "sha256-dnD+Qhxlz7RCOo3A1w6h+U0PVI1h4y+HRE/XwNsTxuk=";
               license = "agpl3Only";
