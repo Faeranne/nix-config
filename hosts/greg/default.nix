@@ -22,26 +22,6 @@ in{
     zfs.extraPools = [ "Storage" ];
   };
 
-  networking = {
-    hostName = "greg";
-    hostId = "ccd933cc";
-    firewall = {
-      allowedTCPPorts = [ 25565 9091 80 443 52821 ];
-    };
-    nat = {
-      externalInterface = "eno1";
-    };
-    wireguard.interfaces = {
-      wghub = {
-        ips = [ "10.110.1.2/32" ];
-        listenPort = 51821;
-      };
-      wggateway = {
-        ips = [ "10.120.1.2/32" ];
-      };
-    };
-  };
-
   fileSystems = {
     "/boot" = {
       device = "/dev/disk/by-uuid/CC42-7BE8";
@@ -57,6 +37,7 @@ in{
     };
     primaryNetwork = "home";
     primaryInterface = "eno1";
+    publicFQDN = "home.faeranne.com";
     interfaces.eno1 = {
       addresses = ["192.168.1.10"];
       network = "home";

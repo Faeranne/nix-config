@@ -1,4 +1,4 @@
-{config, self, lib, ...}: {
+{config, self, lib, pkgs, ...}: {
   options = {
     containers = lib.mkOption {
       type = lib.types.attrsOf (lib.types.submodule ({...}:{
@@ -56,6 +56,15 @@
           tags = [ "wireguard" ];
         };
       };
+      "automesh-gossip" = {
+        rekeyFile = self + "/secrets/automesh-gossip.age";
+        mode = "770";
+        generator = {
+          script = {...}:''
+            ${pkgs.openssl}/bin/openssl rand -base64 32
+          '';
+        };
+      };
     };
     systemd.services = {
       "wireguard-wghub" = {
@@ -100,6 +109,31 @@
         enable = true;
         internalInterfaces = [ "wggateway" ];
       };
+    };
+
+    services.wgautomesh = let
+      peers = lib.foldlattrs (acc: name: value: let
+        hostConfig = value.config;
+        hub = config.networking.wireguard.interfaces.wghub;
+        ip = (lib.removeSuffix "/32" (builtins.elemAt hub.ips 0));
+        fqdn = config.topology.nodes.self.publicFQDN;
+        agePath = hostConfig.age.secretsDir + "/";
+        secretName = lib.removePrefix agePath hub.privateKeyFile;
+        rekey = hostConfig.age.secrets.${secretName}.rekeyFile;
+        publicKeyFile = (lib.removeSuffix ".age" rekey + ".pub");
+        enabled = builtins.hasAttr "wghub" config.networking.wireguard.interfaces;
+      in if enabled then acc + [{
+        address = ip;
+        endpoint = "${fqdn}:${hub.listenPort}";
+        pubkey = builtins.readFile publicKeyFile;
+      }] else acc) [] self.nixosConfigurations;
+    in {
+      enable = true;
+      settings = {
+        inherit peers;
+        interface = "wghub";
+      };
+      gossipSecretFile = config.age.secrets.automesh-gossip.path;
     };
     users = {
       users.container = {

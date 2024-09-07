@@ -29,6 +29,13 @@ in {
       ];
     };
     wireguard.interfaces = {
+      wghub = {
+        ips = [ "10.110.1.2/32" ];
+        listenPort = 51821;
+      };
+      wggateway = {
+        ips = [ "10.120.1.2/32" ];
+      };
       "wgrss" = {
         listenPort = 51822;
         peers = [
