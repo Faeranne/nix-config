@@ -23,6 +23,12 @@
               id = 3;
               name = "Finance";
             };
+            homelab = {
+              color = "red";
+              icon = "fingerprint";
+              id = 4;
+              name = "Homelab";
+            };
           };
           containersForce = true;
         };
