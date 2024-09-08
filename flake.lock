@@ -689,16 +689,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1720042825,
-        "narHash": "sha256-A0vrUB6x82/jvf17qPCpxaM+ulJnD8YZwH9Ci0BsAzE=",
-        "owner": "nix-community",
+        "lastModified": 1725705204,
+        "narHash": "sha256-FUqIhiDCxpFdq8XVXANRgfM0eNABrf2E9/OdoufyHlY=",
+        "owner": "faeranne",
         "repo": "home-manager",
-        "rev": "e1391fb22e18a36f57e6999c7a9f966dc80ac073",
+        "rev": "f8b0c9caf0c041bfa10811c07b01245ec79112c4",
         "type": "github"
       },
       "original": {
-        "owner": "nix-community",
-        "ref": "release-24.05",
+        "owner": "faeranne",
+        "ref": "fix-5810",
         "repo": "home-manager",
         "type": "github"
       }
