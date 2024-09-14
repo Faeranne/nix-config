@@ -1,5 +1,6 @@
 {config, ...}:{
   virtualisation.oci-containers.containers = {
+    /*
     "fasten" = {
       autoStart = true;
       image = "ghcr.io/fastenhealth/fasten-onprem:sandbox";
@@ -13,6 +14,7 @@
         "--ip=10.88.1.6"
       ];
     };
+    */
     "actual" = {
       autoStart = true;
       image = "actualbudget/actual-server:24.9.0";

@@ -11,7 +11,7 @@
       mode = "770";
     };
     "mullvad_address" = {
-      rekeyFile = self + "/secrets/containers/wireguard.age";
+      rekeyFile = self + "/hosts/greg/secrets/mullvad_address.age";
       group = "systemd-network";
       mode = "770";
     };
@@ -39,7 +39,7 @@
       };
     };
     mullvad = {
-      rekeyFile = self + "/secrets/containers/mullvad.age";
+      rekeyFile = self + "/hosts/greg/secrets/mullvad.age";
       group = "systemd-network";
       mode = "770";
       generator = {
