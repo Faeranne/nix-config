@@ -89,11 +89,17 @@ in{
     backupFileExtension = "bak";
     sharedModules = [
       ({...}:{
-        home.file.".local/state/wireplumber/default-routes".text = ''
-          [default-routes]
-          alsa_card.usb-SteelSeries_Arctis_Nova_Pro_Wireless-00:output:analog-output={"mute":false, "channelMap":["FL", "FR"], "channelVolumes":[1.000000, 1.000000], "latencyOffsetNsec":0}
-          alsa_card.usb-SteelSeries_Arctis_Nova_Pro_Wireless-00:profile:output:analog-stereo+input:mono-fallback=["analog-output"]
-        '';
+        home.file = {
+          ".local/state/wireplumber/default-routes".text = ''
+            [default-routes]
+            alsa_card.usb-SteelSeries_Arctis_Nova_Pro_Wireless-00:output:analog-output={"mute":false, "channelMap":["FL", "FR"], "channelVolumes":[1.000000, 1.000000], "latencyOffsetNsec":0}
+            alsa_card.usb-SteelSeries_Arctis_Nova_Pro_Wireless-00:profile:output:analog-stereo+input:mono-fallback=["analog-output"]
+          '';
+          ".local/state/wireplumber/default-nodes".text = ''
+            [default-nodes]
+            default.configured.audio.sink=alsa_output.usb-SteelSeries_Arctis_Nova_Pro_Wireless-00.analog-stereo
+          '';
+        };
         wayland.windowManager.sway = {
           config = {
             workspaceOutputAssign = [

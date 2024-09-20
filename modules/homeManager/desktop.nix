@@ -3,6 +3,21 @@
     swaylock-bin = "${pkgs.swaylock}/bin/swaylock";
   in {
     home = {
+      file = {
+        "~/.mozilla/native-messaging-hosts/de.kkapsner.keepassxc_mail.json" = {
+          text = ''
+            {
+              "allowed_extensions": [
+                  "keepassxc-mail@kkapsner.de"
+              ],
+              "description": "KeePassXC integration with native messaging support",
+              "name": "de.kkapsner.keepassxc_mail",
+              "path": "${pkgs.keepassxc}/bin/keepassxc-proxy",
+              "type": "stdio"
+            }
+          '';
+        };
+      };
       persistence."/persist/home/nina" = {
         directories = [
           ".mozilla"
@@ -127,6 +142,7 @@
         lutris
         samba
         swayimg
+        keepassxc
       ];
     };
     wayland.windowManager.sway = {
