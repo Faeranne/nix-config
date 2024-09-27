@@ -4,7 +4,7 @@
   in {
     home = {
       file = {
-        "~/.mozilla/native-messaging-hosts/de.kkapsner.keepassxc_mail.json" = {
+        ".mozilla/native-messaging-hosts/de.kkapsner.keepassxc_mail.json" = {
           text = ''
             {
               "allowed_extensions": [
@@ -31,14 +31,38 @@
           ".config/jami"
           ".config/godot"
           ".config/keepassxc"
-          "Desktop"
-          "Documents"
-          "Downloads"
-          "Games"
-          "Music"
-          "My Games"
-          "Pictures"
-          "Videos"
+          {
+            directory = "Desktop";
+            method = "symlink";
+          }
+          {
+            directory = "Documents";
+            method = "symlink";
+          }
+          {
+            directory = "Downloads";
+            method = "symlink";
+          }
+          {
+            directory = "Games";
+            method = "symlink";
+          }
+          {
+            directory = "Music";
+            method = "symlink";
+          }
+          {
+            directory = "My Games";
+            method = "symlink";
+          }
+          {
+            directory = "Pictures";
+            method = "symlink";
+          }
+          {
+            directory = "Videos";
+            method = "symlink";
+          }
         ];
         files = [
         ];
@@ -176,7 +200,7 @@
           swaylock-bin = "${pkgs.swaylock}/bin/swaylock";
         in lib.mkOptionDefault {
           "${modifier}+g" = "exec TIMESTAMP=$(date +\"%Y%m%d%H%M\") grim /tmp/screenshot$TIMESTAMP.png && gimp /tmp/screenshot$TIMESTAMP.png && rm /tmp/screenshot$TIMESTAMP.png";
-          "${modifier}+Mod1+f" = "exec ${pkgs.grim}/bin/grim -g \"$(${pkgs.slurp}/bin/slurp -d)\" - | ${pkgs.qrscan}/bin/qrscan - | ${pkgs.wl-clipboard}/bin/wl-copy";
+          "${modifier}+Mod1+f" = "exec ${pkgs.grim}/bin/grim -g \"$(${pkgs.slurp}/bin/slurp)\" - | ${pkgs.qrscan}/bin/qrscan - | sed -nr 's/.*secret=([[a-zA-Z0-9]*)&.*/\\1/p' | ${pkgs.wl-clipboard}/bin/wl-copy";
           "${modifier}+Mod1+l" = "exec ${swaylock-bin} -fF";
           "${modifier}+space" = "exec ${menu}";
         };

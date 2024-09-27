@@ -37,5 +37,7 @@
     };
   };
 
+  services.mullvad-vpn.enable = true;
+
   age.secrets."user-nina".rekeyFile = ./password.age;
 }
