@@ -76,11 +76,11 @@
         "--network=container:gluetun"
       ];
     };
-    "dominom-minecraft" = {
+    "create-lab-minecraft" = {
       autoStart = true;
       image = "itzg/minecraft-server";
       volumes = [
-        "/Storage/volumes/minecraft/dominom:/data"
+        "/Storage/volumes/minecraft/create-lab:/data"
       ];
       ports = [
         "25565:25565"
@@ -92,16 +92,17 @@
         ENABLE_ROLLING_LOGS="true";
         USE_AIKAR_FLAGS="true";
         TYPE="FORGE";
-        VERSION="1.18.2";
-        FORGE_VERSION="40.2.21";
-        MAX_PLAYERS="2";
+        VERSION="1.20.1";
+        FORGE_VERSION="47.1.106";
+        MAX_PLAYERS="10";
         SNOOPER_ENABLE = "false";
         ALLOW_FLIGHT="true";
         GUI="false";
-        MOTD="Create: Computers";
+        MOTD="Create: Lab";
         ENABLE_WHITELIST="true";
         ENFORCE_WHITELIST="true";
         OPS="faeranne";
+        PACKWIZ_URL="https://git.faeranne.com/faeranne/create-labs/raw/branch/main/src/pack.toml";
         SPAWN_PROTECTION="0";
       };
       extraOptions = [
