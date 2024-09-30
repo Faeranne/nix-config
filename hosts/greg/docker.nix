@@ -38,8 +38,7 @@
         "9091:9091"
       ];
       environment = {
-        PUID="999";
-        GUID="100";
+        PUID="999"; GUID="100";
         VPN_SERVICE_PROVIDER="mullvad";
         VPN_TYPE="wireguard";
         SERVER_COUNTRIES="Sweden";
@@ -78,12 +77,14 @@
     };
     "create-lab-minecraft" = {
       autoStart = true;
-      image = "itzg/minecraft-server";
+      image = "itzg/minecraft-server:java17";
       volumes = [
         "/Storage/volumes/minecraft/create-lab:/data"
       ];
       ports = [
         "25565:25565"
+        "3876:3876"
+        "24454:24454"
       ];
       environment = {
         UID="1000";
@@ -91,9 +92,9 @@
         MEMORY="4G";
         ENABLE_ROLLING_LOGS="true";
         USE_AIKAR_FLAGS="true";
-        TYPE="FORGE";
+        TYPE="NEOFORGE";
         VERSION="1.20.1";
-        FORGE_VERSION="47.1.106";
+        NEOFORGE_VERSION="47.1.106";
         MAX_PLAYERS="10";
         SNOOPER_ENABLE = "false";
         ALLOW_FLIGHT="true";
