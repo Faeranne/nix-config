@@ -26,7 +26,7 @@ in{
     hostName = "greg";
     hostId = "ccd933cc";
     firewall = {
-      allowedTCPPorts = [ 25565 3876 24454 9091 80 443 52821 ];
+      allowedTCPPorts = [ 25565 25566 3876 24454 9091 80 443 52821 ];
     };
     nat = {
       externalInterface = "eno1";

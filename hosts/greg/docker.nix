@@ -75,11 +75,43 @@
         "--network=container:gluetun"
       ];
     };
+    "gobbo-craft" = {
+      autoStart = true;
+      image = "itzg/minecraft-server:java17";
+      volumes = [
+        "/persist/minecraft/gobbo:/data"
+      ];
+      ports = [
+        "25565:25566"
+      ];
+      environment = {
+        UID="1000";
+        EULA="true";
+        MEMORY="4G";
+        ENABLE_ROLLING_LOGS="true";
+        USE_AIKAR_FLAGS="true";
+        TYPE="FORGE";
+        VERSION="1.18.2";
+        FORGE_VERSION="40.2.21";
+        MAX_PLAYERS="4";
+        SNOOPER_ENABLE = "false";
+        ALLOW_FLIGHT="true";
+        GUI="false";
+        MOTD="Sleepover!";
+        ENABLE_WHITELIST="true";
+        ENFORCE_WHITELIST="true";
+        OPS="faeranne";
+        SPAWN_PROTECTION="0";
+      };
+      extraOptions = [
+        "--ip=10.88.1.6"
+      ];
+    };
     "create-lab-minecraft" = {
       autoStart = true;
       image = "itzg/minecraft-server:java17";
       volumes = [
-        "/Storage/volumes/minecraft/create-lab:/data"
+        "/persist/minecraft/create-lab:/data"
       ];
       ports = [
         "25565:25565"
@@ -89,7 +121,7 @@
       environment = {
         UID="1000";
         EULA="true";
-        MEMORY="4G";
+        MEMORY="8G";
         ENABLE_ROLLING_LOGS="true";
         USE_AIKAR_FLAGS="true";
         TYPE="NEOFORGE";
@@ -99,6 +131,8 @@
         SNOOPER_ENABLE = "false";
         ALLOW_FLIGHT="true";
         GUI="false";
+        LEVEL_TYPE="large_biomes";
+        ENABLE_COMMAND_BLOCK="true";
         MOTD="Create: Lab";
         ENABLE_WHITELIST="true";
         ENFORCE_WHITELIST="true";
