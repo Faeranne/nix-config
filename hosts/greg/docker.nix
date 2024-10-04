@@ -82,7 +82,7 @@
         "/persist/minecraft/gobbo:/data"
       ];
       ports = [
-        "25565:25566"
+        "25566:25565"
       ];
       environment = {
         UID="1000";
