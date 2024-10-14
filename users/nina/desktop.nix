@@ -39,6 +39,16 @@
           isDefault = true;
         };
       };
+      vscode = {
+        enable = true;
+        extensions = with pkgs.vscode-extensions; [
+          jackmacwindows.craftos-pc
+          jackmacwindows.vscode-computercraft
+          asvetliakov.vscode-neovim
+          sumneko.lua
+        ];
+        package = pkgs.vscodium;
+      };
     };
 
     systemd.user.targets = {
