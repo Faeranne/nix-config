@@ -3,7 +3,6 @@
   # Needed to use yubikey stuff correctly
   services = {
     pcscd.enable = true;
-    tcsd.enable = true;
   };
 
   # This sets up agenix, which encrypts secrets as needed for configuration.
