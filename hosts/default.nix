@@ -11,6 +11,12 @@ in rec {
       ./sarah
     ];
   };
+  hazel = inputs.nixpkgs.lib.nixosSystem {
+    inherit specialArgs;
+    modules = [
+      ./hazel
+    ];
+  };
   greg = inputs.nixpkgs.lib.nixosSystem {
     inherit specialArgs;
     modules = [
