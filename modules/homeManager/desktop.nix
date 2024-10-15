@@ -268,5 +268,19 @@
         longitude = -86.2;
       };
     };
+    stylix = {
+      targets = {
+        swaylock.enable = true;
+        sway.enable = true;
+        vesktop.enable = false;
+        foot.enable = true;
+        gtk.enable = true;
+        waybar.enable = true;
+        firefox = {
+          enable = true;
+          profileNames = [ "default" ];
+        };
+      };
+    };
   };
 }
