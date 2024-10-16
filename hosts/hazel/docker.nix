@@ -4,7 +4,7 @@
       autoStart = true;
       image = "itzg/minecraft-server:java17";
       volumes = [
-        "/persist/minecraft/cozy:/data"
+        "/persist/minecraft/cozy1:/data"
       ];
       environment = {
         UID="1000";
