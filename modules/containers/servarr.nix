@@ -1,4 +1,4 @@
-{...}:let
+{config, ...}:let
   containerName = "servarr";
 in {
   imports = [
@@ -10,8 +10,6 @@ in {
       };
     };
   };
-
-
 
   containers.${containerName} = {
     bindMounts = {
@@ -79,6 +77,7 @@ in {
     };
     config = {ports, lib, ...}: let
       portList = lib.mapAttrsToList (service: port: port) ports;
+      hostConfig = config;
     in {
       imports = [
         ./base.nix
@@ -95,25 +94,42 @@ in {
         sonarr = {
           enable = true;
           dataDir = "/var/lib/sonarr";
+          user = "container";
           group = "users";
         };
         radarr = {
           enable = true;
           dataDir = "/var/lib/radarr";
+          user = "container";
           group = "users";
         };
         lidarr = {
           enable = true;
           dataDir = "/var/lib/lidarr";
+          user = "container";
           group = "users";
         };
         bazarr = {
           enable = true;
+          user = "container";
           group = "users";
         };
         ombi = {
           enable = true;
+          user = "container";
           group = "users";
+        };
+      };
+      users = {
+        users.container = {
+          isSystemUser = true;
+          group = "container";
+          uid = hostConfig.users.users.container.uid;
+        };
+        groups = {
+          container = {
+            gid = hostConfig.users.groups.container.gid;
+          };
         };
       };
     };
