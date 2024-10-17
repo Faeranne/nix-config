@@ -1,6 +1,7 @@
 {config, myLib, ...}:let
   # Traefik is dependent on the host, so we're gonna make each traefik unique
   containerName = "traefik${config.networking.hostName}";
+  hostConfig = config;
 in {
   imports = [
     (import ./template.nix containerName)
@@ -18,7 +19,7 @@ in {
       "/etc/traefik" = {
         isReadOnly = false;
         create = true;
-        owner = "container:users";
+        owner = "container:container";
       };
     };
 
@@ -53,6 +54,18 @@ in {
       networking = {
         firewall = { # Make sure to add any ports needed for wireguard
           allowedTCPPorts = [ port ];
+        };
+      };
+      systemd = {
+        services = {
+          traefik = {
+            enable = true;
+            serviceConfig = {
+              # Normal 64 limit causes a 203 error in systemd.
+              # Possibly a conflict between traefik and containerization
+              LimitNPROC = lib.mkForce 128;
+            };
+          };
         };
       };
       services = {
@@ -100,6 +113,8 @@ in {
           };
         };
       };
+      users.users.traefik.uid = hostConfig.users.users.container.uid;
+      users.groups.traefik.gid = hostConfig.users.groups.container.gid;
     };
   };
 }
