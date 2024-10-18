@@ -10,6 +10,7 @@ in {
     self.containerModules.git
     self.containerModules.netbox
     self.containerModules.nextcloud
+    self.containerModules.nix-cache
   ];
   networking = let
     traefikIp = lib.removeSuffix "/32" (builtins.elemAt config.networking.wireguard.interfaces.wgtraefikgreg.ips 0);
@@ -66,6 +67,7 @@ in {
           (mkPeer "git")
           (mkPeer "netbox")
           (mkPeer "nextcloud")
+          (mkPeer "nixcache")
         ];
       };
       "wggit" = {
@@ -82,6 +84,12 @@ in {
       };
       "wgnextcloud" = {
         listenPort = 51829;
+        peers = [
+          (mkPeer "traefikgreg")
+        ];
+      };
+      "wgnixcache" = {
+        listenPort = 51830;
         peers = [
           (mkPeer "traefikgreg")
         ];
@@ -110,6 +118,7 @@ in {
           "servarr.ombi"
           "netbox.netbox"
           "nextcloud.nextcloud"
+          "nixcache.nixcache"
         ];
         extraRouters = {
           wizarr = {
@@ -204,6 +213,16 @@ in {
       };
       specialArgs = {
         hostName = "netbox.faeranne.com";
+      };
+    };
+    nixcache = {
+      bindMounts = {
+        "/var/lib/nixcache" = {
+          hostPath = "/Storage/volumes/nixcache";
+        };
+      };
+      specialArgs = {
+        hostName = "ncache.faeranne.com";
       };
     };
     servarr = {
