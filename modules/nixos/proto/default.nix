@@ -12,7 +12,7 @@
 
   nixpkgs.hostPlatform = lib.mkDefault sourceConfig.nixpkgs.hostPlatform;
   networking = {
-    hostName = sourceConfig.networking.hostName;
+    hostName = "proto-" + sourceConfig.networking.hostName;
     hostId = sourceConfig.networking.hostId;
   };
 
