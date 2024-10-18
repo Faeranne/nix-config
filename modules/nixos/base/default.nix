@@ -83,7 +83,7 @@
           '';
         };
         # Wanna get the latest forgejo builds I can.
-        #forgejo = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.forgejo;
+        forgejo = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.forgejo;
       })
     ];
   };
