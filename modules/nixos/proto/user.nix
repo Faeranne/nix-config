@@ -5,7 +5,6 @@
   home-manager.users.nina = {...}:{
     imports = [
       (self + "/users/nina/vim.nix")
-      (self + "/users/nina/style.nix")
       (self + "/users/nina/zsh.nix")
       ({...}:{
         home = {
