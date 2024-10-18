@@ -1,5 +1,5 @@
 {self, config, pkgs, ...}:let
-  localCfg = builtins.fromJSON ./config.json;
+  localCfg = builtins.fromJSON (builtins.readFile ./config.json);
 in {
   imports = with self.nixosModules; [
     base 

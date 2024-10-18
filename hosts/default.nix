@@ -23,4 +23,10 @@ in rec {
       ./greg
     ];
   };
+  test = inputs.nixpkgs.lib.nixosSystem {
+    inherit specialArgs;
+    modules = [
+      ./test
+    ];
+  };
 }
