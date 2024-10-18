@@ -17,7 +17,7 @@ in {
 
   fileSystems = {
     "/boot" = {
-      device = "/dev/disk/by-uuid/${localCfg.bootId}";
+      device = "/dev/disk/by-uuid/${localCfg.bootID}";
       fsType = "vfat";
       options = [ "fmask=0022" "dmask=0022" ];
     };
