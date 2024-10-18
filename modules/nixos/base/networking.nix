@@ -92,17 +92,5 @@
         echo "$priv"
       '';
     };
-    secrets = {
-      # this creates the base yggdrasil key for a given system.
-      # unused due to yggdrasil.enable being false, but it's created
-      # for potential future use.
-      yggdrasil = {
-        rekeyFile = self + "/hosts/${config.networking.hostName}/secrets/yggdrasil.age";
-        generator = {
-          script = "yggdrasilKeyConf";
-          tags = ["yggdrasil"];
-        };
-      };
-    };
   };
 }
