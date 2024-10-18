@@ -8,5 +8,6 @@
   server = import ./server;
   extras = import ./extras;
   services = import ./services;
+  proto = import ./proto;
   hardware = import ../hardware;
 }

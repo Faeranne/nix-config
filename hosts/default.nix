@@ -25,7 +25,7 @@ inputs: let
     modules = [
       inputs.self.nixosModules.base
       inputs.self.nixosModules.proto
-      inputs.self.nixosModules.exras.storage
+      inputs.self.nixosModules.extras.storage
     ]; 
   })) hostConfigs;
 in
