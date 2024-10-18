@@ -1,3 +1,4 @@
+#!/usr/bin/env python312
 import requests
 import tempfile
 import sys
@@ -23,4 +24,8 @@ def decrypt(content):
 if __name__ == "__main__":
     r = fetch(sys.argv[1])
     cont = json.loads(decrypt(r.text).stdout.rstrip(b'\n'))
+    bootID = cont['bootID']
+    boot1 = bootID[:4]
+    boot2 = bootID[4:]
+    cont['bootID'] = boot1+"-"+boot2
     print(json.dumps(cont, indent=2))

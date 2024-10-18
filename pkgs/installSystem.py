@@ -1,3 +1,4 @@
+#!/usr/bin/env python312
 import locale
 import parted
 import uuid
@@ -58,9 +59,7 @@ def createBoot(disk, device, bootID):
         constraint=device.optimalAlignedConstraint
     )
     disk.commit()
-    bootPath = partition.path
-    run(["mkdosfs", "-i", bootID, bootPath])
-    return geometry.end
+    return (partition.path, geometry.end)
 
 
 def createPool(disk, device, start):
@@ -81,16 +80,12 @@ def createPool(disk, device, start):
         constraint=device.optimalAlignedConstraint
     )
     disk.commit()
-    zpoolPath = partition.path
-    run(["zpool", "create", "-f", "test", zpoolPath])
-    run(["zfs", "create", "test/nix"])
-    run(["zfs", "create", "test/persist"])
-    pass
+    return partition.path
 
 
 def createKey():
-    run(["age-keygen", "-o", "/test/persist/agenix.key"])
-    pubkey = run(["age-keygen", "-y", "/test/persist/agenix.key"], capture_output=True).stdout.rstrip(b'\n').decode("utf-8")
+    run(["age-keygen", "-o", "/zroot/persist/agenix.key"])
+    pubkey = run(["age-keygen", "-y", "/zroot/persist/agenix.key"], capture_output=True).stdout.rstrip(b'\n').decode("utf-8")
     return pubkey
     pass
 
@@ -103,8 +98,15 @@ def formatDisk(diskID):
         device = parted.getDevice(path)
         disk = parted.freshDisk(device, "gpt")
         bootID = os.urandom(4).hex()
-        bootEnd = createBoot(disk, device, bootID)
-        createPool(disk, device, bootEnd)
+        (bootPath, bootEnd) = createBoot(disk, device, bootID)
+        poolPath = createPool(disk, device, bootEnd)
+        print(run(["partprobe",path]))
+        print(run(["ls",path+"*"]))
+        print(run(["ls","/dev/disk/by-uuid"]))
+        print(run(["mkdosfs", "-i", bootID, bootPath]))
+        print(run(["zpool", "create", "-f", "zroot", poolPath]))
+        print(run(["zfs", "create", "zroot/nix"]))
+        print(run(["zfs", "create", "zroot/persist"]))
         return bootID
 
 
@@ -135,10 +137,12 @@ if (__name__ == "__main__"):
                 bootID = formatDisk(tag)
                 pubkey = createKey()
                 res = json.dumps({"bootID": bootID, "pubkey": pubkey, "mac": mac}, indent=4)
+                print(res)
                 content = encrypt(res)
+                print(content)
                 r = submit(content.stdout.strip(b'\n'))
                 if r.status_code == 200:
                     print(r.text.rstrip('\n'))
                 else:
                     print(f'Error submitting encoded data. Error code: {r.status_code} with content: {r.text}')
-        run(["zpool", "export", "test"])
+        run(["zpool", "export", "zroot"])

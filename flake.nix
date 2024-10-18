@@ -149,6 +149,8 @@
         overlays = [ 
           nix-topology.overlays.default
           (final: prev: {
+            installSystem = self.legacyPackages.${system}.installSystem;
+            gatherClues = self.legacyPackages.${system}.gatherClues;
             pythonPackagesOverlays = prev.pythonPackagesOverlays ++ [
               (
                 python-final: python-prev: {
@@ -170,6 +172,8 @@
         packages = (with pkgs; [ 
           age-plugin-yubikey
           age
+          installSystem
+          gatherClues
         ]) ++ [
           pkgs.agenix-rekey 
         ];

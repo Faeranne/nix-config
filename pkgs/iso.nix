@@ -1,12 +1,5 @@
-{inputs, pkgs, lib}: let
-  createZpool = lib.writers.writeBashBin {} ''
-    root=$1
-    sudo zpool create zroot $1
-    sudo zfs create zroot/persist
-    sudo zfs create zroot/nix
-  '';
-
-in inputs.nixos-generators.nixosGenerate {
+{self, inputs, pkgs, lib}: 
+inputs.nixos-generators.nixosGenerate {
   system = pkgs.system;
   modules = [
     (inputs.nixpkgs + "/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix")
@@ -28,7 +21,7 @@ in inputs.nixos-generators.nixosGenerate {
           "ageKey".text = "age1yubikey1qtfy343ld8e5sxlvfufa4hh22pm33f6sjq2usx6mmydrmu7txzu7g5xm9vr";
         };
         systemPackages = [
-          createZpool
+          self.packages.${pkgs.system}.installSystem
         ] ++ (with pkgs; [
           git
           age
