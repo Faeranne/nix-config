@@ -107,6 +107,16 @@ def formatDisk(diskID):
         print(run(["zpool", "create", "-f", "zroot", poolPath]))
         print(run(["zfs", "create", "zroot/nix"]))
         print(run(["zfs", "create", "zroot/persist"]))
+        print(run(["zfs", "create", 
+                   "-V", "8G", 
+                   "-b", "4096", 
+                   "-o", "compression=zle", 
+                   "-o", "primarycache=metadata",
+                   "-o", "secondarycache=none",
+                   "-o", "logbias=throughput",
+                   "-o", "sync=always",
+                   "-o", "com.sun:auto-snapshot=false",
+                   "zroot/swap"]))
         return bootID
 
 
