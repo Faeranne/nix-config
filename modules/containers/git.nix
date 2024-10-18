@@ -1,4 +1,4 @@
-{self, config, lib, pkgs, ...}:let
+{self, config, inputs, lib, pkgs, ...}:let
   containerName = "git";
   containerIp = lib.removeSuffix "/32" (builtins.elemAt config.networking.wireguard.interfaces."wg${containerName}".ips 0);
   sshWKey = "${pkgs.openssh}/bin/ssh -i ${config.age.secrets.gitSshKey.path}";
@@ -82,7 +82,7 @@ in {
 
     config = let
       hostConfig = config;
-    in {hostName, port, ...}: {
+    in {hostName, port, pkgs, ...}: {
       imports = [
         ./base.nix
       ];
@@ -110,6 +110,7 @@ in {
         };
         forgejo = {
           enable = true;
+          program = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.forgejo;
           settings = {
             federation = {
               ENABLE = true;
