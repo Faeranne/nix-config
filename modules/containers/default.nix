@@ -10,4 +10,5 @@
   git = import ./git.nix;
   netbox = import ./netbox.nix;
   nextcloud = import ./nextcloud.nix;
+  nix-cache = import ./nix-cache.nix;
 }

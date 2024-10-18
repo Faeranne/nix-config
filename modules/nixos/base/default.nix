@@ -67,7 +67,7 @@
       (final: prev: {
         # I like using the newest features of Kicad, and they tend to trickle down to stable a little
         # slowly
-        kicad = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.kicad; 
+        #kicad = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.kicad; 
         # As of this commit, PrismLauncher doesn't work right with the stable version.  Some login
         # issues. Check this later and roll back when it makes sense
         prismlauncher = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.prismlauncher; 
@@ -83,7 +83,7 @@
           '';
         };
         # Wanna get the latest forgejo builds I can.
-        forgejo = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.forgejo;
+        #forgejo = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.forgejo;
       })
     ];
   };
