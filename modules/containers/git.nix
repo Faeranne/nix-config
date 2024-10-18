@@ -110,7 +110,7 @@ in {
         };
         forgejo = {
           enable = true;
-          program = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.forgejo;
+          package = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.forgejo;
           settings = {
             federation = {
               ENABLE = true;
