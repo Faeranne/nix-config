@@ -1,32 +1,32 @@
 inputs: let
+  lib = inputs.nixpkgs.lib;
   specialArgs = {
       inherit (inputs.self) nixosModules;
       inherit (inputs) self;
       inherit inputs;
   };
-in rec {
-  sarah = inputs.nixpkgs.lib.nixosSystem {
+  hosts = let
+    folders = builtins.readDir ./.;
+  in
+    builtins.attrNames (lib.filterAttrs (name: type: type == "directory") folders);
+  hostConfigs = lib.genAttrs hosts (host: lib.nixosSystem {
     inherit specialArgs;
     modules = [
-      ./sarah
+      ./${host}
     ];
-  };
-  hazel = inputs.nixpkgs.lib.nixosSystem {
-    inherit specialArgs;
+  });
+  protoConfigs = lib.mapAttrs' (name: value: lib.nameValuePair ("proto_"+name) (lib.nixosSystem {
+    specialArgs = {
+      inherit (inputs.self) nixosModules;
+      inherit (inputs) self;
+      inherit inputs;
+      sourceConfig = value.config;
+    };
     modules = [
-      ./hazel
-    ];
-  };
-  greg = inputs.nixpkgs.lib.nixosSystem {
-    inherit specialArgs;
-    modules = [
-      ./greg
-    ];
-  };
-  test = inputs.nixpkgs.lib.nixosSystem {
-    inherit specialArgs;
-    modules = [
-      ./test
-    ];
-  };
-}
+      inputs.self.nixosModules.base
+      inputs.self.nixosModules.proto
+      inputs.self.nixosModules.exras.storage
+    ]; 
+  })) hostConfigs;
+in
+  hostConfigs // protoConfigs
