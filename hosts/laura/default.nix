@@ -1,8 +1,9 @@
-{self, config, pkgs, ...}:{
+{self, config, pkgs, ...}:let
+  localCfg = builtins.fromJSON (builtins.readFile ./config.json);
+in {
   imports = with self.nixosModules; [
     base 
     desktop
-    services.clamav
     extras.storage
     hardware.cpu.intel
     self.userModules.nina
@@ -27,7 +28,7 @@
 
   networking = {
     hostName = "laura";
-    hostId = "abcd1234";
+    hostId = "3896b7b3";
     firewall = {
       allowedTCPPorts = [ ];
       allowedUDPPorts = [ ];
@@ -36,7 +37,7 @@
 
   fileSystems = {
     "/boot" = {
-      device = "/dev/disk/by-uuid/";
+      device = "/dev/disk/by-uuid/${localCfg.bootID}";
       fsType = "vfat";
       options = [ "fmask=0022" "dmask=0022" ];
     };
@@ -51,7 +52,7 @@
 
   nixpkgs.hostPlatform = "x86_64-linux";
 
-  age.rekey.hostPubkey = "age185avxte33jvaexyl5292nczj3drlhc5dnyv8svyyy8u4l0tfgpksz6encl";
+  age.rekey.hostPubkey = "${localCfg.pubkey}";
 
   home-manager = {
     sharedModules = [
