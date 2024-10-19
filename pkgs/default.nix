@@ -9,5 +9,6 @@
     installSystem = callPackage ./installSystem.nix {};
     gatherClues = callPackage ./gatherClues.nix {};
     iso = callPackage ./iso.nix {};
+    finishInstall = callPackage ./finishInstall.nix {};
   };
 in packages // systemDeploy

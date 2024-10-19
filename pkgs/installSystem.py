@@ -1,6 +1,5 @@
 #!/usr/bin/env python312
 import locale
-import parted
 import uuid
 import os
 import json
@@ -40,49 +39,6 @@ def selectDisk():
         return False
 
 
-def createBoot(disk, device, bootID):
-    geometry = parted.Geometry(
-        device=device,
-        start=1,
-        length=int((1 * 1000 * 1000 * 1000) / device.sectorSize)
-    )
-    filesystem = parted.FileSystem(type="fat32", geometry=geometry)
-    partition = parted.Partition(
-        disk=disk,
-        type=parted.PARTITION_NORMAL,
-        fs=filesystem,
-        geometry=geometry
-    )
-    partition.set_type_uuid(uuid.UUID("C12A7328-F81F-11D2-BA4B-00A0C93EC93B").bytes)
-    disk.addPartition(
-        partition=partition,
-        constraint=device.optimalAlignedConstraint
-    )
-    disk.commit()
-    return (partition.path, geometry.end)
-
-
-def createPool(disk, device, start):
-    geometry = parted.Geometry(
-        device=device,
-        start=start + 1,
-        end=device.length - 1
-    )
-    filesystem = parted.FileSystem(type="ext3", geometry=geometry)
-    partition = parted.Partition(
-        disk=disk,
-        type=parted.PARTITION_NORMAL,
-        fs=filesystem,
-        geometry=geometry
-    )
-    disk.addPartition(
-        partition=partition,
-        constraint=device.optimalAlignedConstraint
-    )
-    disk.commit()
-    return partition.path
-
-
 def createKey():
     run(["age-keygen", "-o", "/zroot/persist/agenix.key"])
     pubkey = run(["age-keygen", "-y", "/zroot/persist/agenix.key"], capture_output=True).stdout.rstrip(b'\n').decode("utf-8")
@@ -96,17 +52,31 @@ def formatDisk(diskID):
         dialog.infobox(f'Wiping {disk.get_name()} now')
         path = disk.get_path()
         device = parted.getDevice(path)
-        disk = parted.freshDisk(device, "gpt")
-        bootID = os.urandom(4).hex()
-        (bootPath, bootEnd) = createBoot(disk, device, bootID)
-        poolPath = createPool(disk, device, bootEnd)
+        print(run(["parted",path,"--",
+                   "mkpart",
+                   "ESP",
+                   "fat32",
+                   "0%","2GB"
+                   ])
+        print(run(["parted",path,"--",
+                   "set",
+                   "1",
+                   "esp",
+                   "on"
+                   ])
+        print(run(["parted",path,"--",
+                   "mkpart",
+                   "zfs",
+                   "ext3",
+                   "2GB","100%"
+                   ])
         print(run(["partprobe",path]))
-        print(run(["ls",path+"*"]))
-        print(run(["ls","/dev/disk/by-uuid"]))
-        print(run(["mkdosfs", "-i", bootID, bootPath]))
-        print(run(["zpool", "create", "-f", "zroot", poolPath]))
+        print(run(["mkdosfs", "-i", bootID, path+"1"]))
+        print(run(["zpool", "create", "-f", "zroot", path+"2"]))
         print(run(["zfs", "create", "zroot/nix"]))
         print(run(["zfs", "create", "zroot/persist"]))
+        print(run(["zfs", "create", "zroot/root"]))
+        print(run(["zfs", "snapshot", "zroot/root@blank"]))
         print(run(["zfs", "create", 
                    "-V", "8G", 
                    "-b", "4096", 
@@ -117,6 +87,7 @@ def formatDisk(diskID):
                    "-o", "sync=always",
                    "-o", "com.sun:auto-snapshot=false",
                    "zroot/swap"]))
+        print(run(["mkswap", "/dev/zvol/zroot/swap"]))
         return bootID
 
 
@@ -146,13 +117,18 @@ if (__name__ == "__main__"):
             if tag:
                 bootID = formatDisk(tag)
                 pubkey = createKey()
-                res = json.dumps({"bootID": bootID, "pubkey": pubkey, "mac": mac}, indent=4)
+                res = json.dumps({"bootID": bootID.upper(), "pubkey": pubkey, "mac": mac}, indent=4)
                 print(res)
                 content = encrypt(res)
                 print(content)
                 r = submit(content.stdout.strip(b'\n'))
                 if r.status_code == 200:
-                    print(r.text.rstrip('\n'))
+                    code = r.text.rstrip('\n')
+                    with open('./code','w') as f:
+                        f.write(code)
+                    with open('./content.json', 'w') as f:
+                        f.write(res)
+                    print(code)
                 else:
                     print(f'Error submitting encoded data. Error code: {r.status_code} with content: {r.text}')
         run(["zpool", "export", "zroot"])

@@ -31,6 +31,7 @@ inputs.nixos-generators.nixosGenerate {
         };
         systemPackages = [
           self.packages.${pkgs.system}.installSystem
+          self.packages.${pkgs.system}.finishInstall
         ] ++ (with pkgs; [
           git
           age
