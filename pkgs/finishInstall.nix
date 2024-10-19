@@ -2,10 +2,11 @@
   zfs,
   jq,
   writeScriptBin
-}: writeScriptBin ''
+}: writeScriptBin "finishInstall" ''
   set -e
   SYSTEM=$1
   URL=https://git.faeranne.com/faeranne/nix-config
+  DISK=$(cat ./content.json | ${jq}/bin/jq -r .bootID)
   nix flake show $URL --json  | ${jq}/bin/jq .nixosConfigurations.proto_$SYSTEM | grep type
   ${zfs}/bin/zpool import zroot
   mount -t zfs -o zfsutil zroot/root /mnt

@@ -7,7 +7,7 @@ import requests
 
 from diskinfo import DiskInfo, Disk
 from dialog import Dialog
-from subprocess import run
+from subprocess import run 
 from netifaces import ifaddresses, interfaces, AF_LINK
 
 locale.setlocale(locale.LC_ALL, '')
@@ -51,25 +51,12 @@ def formatDisk(diskID):
     if dialog.yesno(f"About to permanently wipe {disk.get_model()}! ARE YOU SURE?", yes_label=f'I am sure I want to completely wipe {disk.get_name()} RIGHT NOW!', default_button="no") == dialog.OK:
         dialog.infobox(f'Wiping {disk.get_name()} now')
         path = disk.get_path()
-        device = parted.getDevice(path)
-        print(run(["parted",path,"--",
-                   "mkpart",
-                   "ESP",
-                   "fat32",
-                   "0%","2GB"
-                   ])
-        print(run(["parted",path,"--",
-                   "set",
-                   "1",
-                   "esp",
-                   "on"
-                   ])
-        print(run(["parted",path,"--",
-                   "mkpart",
-                   "zfs",
-                   "ext3",
-                   "2GB","100%"
-                   ])
+        bootID = os.urandom(4).hex()
+        print(path)
+        print(run(f'parted -s {path} -- mklabel gpt', shell=True, capture_output=True))
+        print(run(f'parted -s {path} -- mkpart ESP fat32 0% 2GB', shell=True, capture_output=True))
+        print(run(f'parted -s {path} -- mkpart zfs ext3 2GB 100%', shell=True, capture_output=True))
+        print(run(f'parted -s {path} -- set 1 esp on', shell=True, capture_output=True))
         print(run(["partprobe",path]))
         print(run(["mkdosfs", "-i", bootID, path+"1"]))
         print(run(["zpool", "create", "-f", "zroot", path+"2"]))
@@ -102,8 +89,17 @@ def encrypt(content):
 
 
 def submit(content):
-    r = requests.post("https://dpaste.org/api/", data={"format": "url", "content": content, "expires": "onetime"})
-    return r
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect(("termbin.com", 9999))
+    s.sendall(content.encode())
+    s.shutdown(socket.SHUT_WR)
+    res = ""
+    while True:
+        data = s.recv(4096)
+        if not data:
+            break
+        res = res + data.decode('utf-8')
+    return res.strip('\n\x00')
 
 
 if (__name__ == "__main__"):
@@ -118,17 +114,14 @@ if (__name__ == "__main__"):
                 bootID = formatDisk(tag)
                 pubkey = createKey()
                 res = json.dumps({"bootID": bootID.upper(), "pubkey": pubkey, "mac": mac}, indent=4)
-                print(res)
+                #print(res)
                 content = encrypt(res)
                 print(content)
                 r = submit(content.stdout.strip(b'\n'))
-                if r.status_code == 200:
-                    code = r.text.rstrip('\n')
-                    with open('./code','w') as f:
-                        f.write(code)
-                    with open('./content.json', 'w') as f:
-                        f.write(res)
-                    print(code)
-                else:
-                    print(f'Error submitting encoded data. Error code: {r.status_code} with content: {r.text}')
+                code = r.strip('https://termbin.com/')
+                with open('./code','w') as f:
+                    f.write(code)
+                with open('./content.json', 'w') as f:
+                    f.write(res)
+                print(code)
         run(["zpool", "export", "zroot"])
