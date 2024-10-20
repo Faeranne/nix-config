@@ -1,4 +1,4 @@
-{self, config, myLib, ...}: let
+{self, config, myLib, pkgs, ...}: let
   mkPeer = myLib.mkPeer "sarah";
 in{
   imports = with self.nixosModules; [
@@ -14,6 +14,7 @@ in{
     self.userModules.nina
   ];
 
+  hardware.sane.enable = true;
   age.secrets = {
     "wgsarah" = {
       rekeyFile = self + "/secrets/sarah/wireguard.age";
@@ -41,10 +42,13 @@ in{
     };
   };
 
-  services.udev.extraRules = ''
-    SUBSYSTEM=="usb", ATTRS{idVendor}=="1038", ATTRS{idProduct}=="12e0", MODE="0666"
-    SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1038", ATTRS{idProduct}=="12e0", MODE="0666"
-  '';
+  services = {
+    saned.enable = true;
+    udev.extraRules = ''
+      SUBSYSTEM=="usb", ATTRS{idVendor}=="1038", ATTRS{idProduct}=="12e0", MODE="0666"
+      SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1038", ATTRS{idProduct}=="12e0", MODE="0666"
+    '';
+  };
 
   virtualisation.waydroid.enable = true;
   programs.corectrl.enable = true;
@@ -71,6 +75,10 @@ in{
       };
     };
   };
+
+  environment.systemPackages = [
+    pkgs.xsane
+  ];
 
 
   fileSystems = {

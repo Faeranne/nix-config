@@ -4,6 +4,7 @@ import uuid
 import os
 import json
 import requests
+import socket
 
 from diskinfo import DiskInfo, Disk
 from dialog import Dialog
@@ -91,7 +92,7 @@ def encrypt(content):
 def submit(content):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect(("termbin.com", 9999))
-    s.sendall(content.encode())
+    s.sendall(content)
     s.shutdown(socket.SHUT_WR)
     res = ""
     while True:

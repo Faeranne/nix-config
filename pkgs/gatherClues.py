@@ -8,7 +8,7 @@ from subprocess import run
 
 
 def fetch(code):
-    r = requests.get(f'https://dpaste.org/{code}/raw')
+    r = requests.get(f'https://termbin.com/{code}')
     return r
 
 
