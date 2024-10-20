@@ -4,6 +4,7 @@ in {
   imports = with self.nixosModules; [
     base 
     desktop
+    laptop
     extras.storage
     hardware.cpu.intel
     self.userModules.nina
