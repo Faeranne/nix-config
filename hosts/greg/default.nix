@@ -45,7 +45,7 @@ in{
 
   fileSystems = {
     "/boot" = {
-      device = "/dev/disk/by-uuid/CC42-7BE8";
+      device = "/dev/disk/by-uuid/D627-A556";
       fsType = "vfat";
       options = [ "fmask=0022" "dmask=0022" ];
     };
@@ -69,7 +69,7 @@ in{
 
   nixpkgs.hostPlatform = "x86_64-linux";
 
-  age.rekey.hostPubkey = "age1ytw5hv3k50qnh6yn0ana3l932q7azkx0l2fg9zp9h02gknvqx4yq7yvcgl";
+  age.rekey.hostPubkey = "age176vf5an9s7sy83ulchn08qkpm246vxdahhms3pnkjf80er8h8gqsux36hg";
 
   services = {
     zfs.autoScrub.pools = [ "zpool" "Storage" ];
