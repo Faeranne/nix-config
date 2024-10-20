@@ -4,15 +4,21 @@ inputs.nixos-generators.nixosGenerate {
   modules = [
     (inputs.nixpkgs + "/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix")
     ({pkgs, ...}:{
+      isoImage = {
+        includeSystemBuildDependencies = true;
+        storeContents = [
+          self.nixosConfigurations.greg.config.system.build.toplevel
+        ];
+        splashImage = self + "/resources/labs-color-nix-snowflake.png";
+      };
       nix = {
         registry = {
           nixpkgs.flake = inputs.nixpkgs;
         };
         settings = {
           substituters = [
-            "https://ncache.faeranne.com"
+            #"https://ncache.faeranne.com"
             "https://nix-community.cachix.org"
-            "https://cache.nixos.org"
           ];
           trusted-public-keys = [
             "ncache.faeranne.com:W9hbuDECHbOiywk+TiqPMdkRG2mW8EasNbcDP8BFVCw="
