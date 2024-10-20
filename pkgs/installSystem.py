@@ -114,8 +114,9 @@ if (__name__ == "__main__"):
             if tag:
                 bootID = formatDisk(tag)
                 pubkey = createKey()
-                res = json.dumps({"bootID": bootID.upper(), "pubkey": pubkey, "mac": mac}, indent=4)
-                #print(res)
+                boot1 = bootID[:4]
+                boot2 = bootID[4:]
+                res = json.dumps({"bootID": (f'{boot1}-{boot2}').upper(), "pubkey": pubkey, "mac": mac}, indent=4)
                 content = encrypt(res)
                 print(content)
                 r = submit(content.stdout.strip(b'\n'))
