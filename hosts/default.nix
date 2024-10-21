@@ -29,7 +29,7 @@ inputs: let
     ]; 
   })) hostConfigs;
 in
-  hostConfigs // protoConfigs
+  hostConfigs
 /*
 in rec {
   sarah = inputs.nixpkgs.lib.nixosSystem {

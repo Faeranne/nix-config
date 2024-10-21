@@ -5,12 +5,12 @@
   nix = {
     settings = {
       substituters = [
-        "https://ncache.faeranne.com"
         "https://nix-community.cachix.org"
         "https://cache.nixos.org"
+        "https://ncache.faeranne.com"
       ];
       trusted-public-keys = [
-        "ncache.faeranne.com:W9hbuDECHbOiywk+TiqPMdkRG2mW8EasNbcDP8BFVCw="
+        "ncache.faeranne.com:f0zP4VrDZbT9A/Xx3tfLD9M9sI9maSvFJg3zbGh7Ty0=%"
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       ];
       # enables some commonly used experimental features

@@ -37,6 +37,14 @@
     };
   };
 
+  environment.createDir = [
+    {
+      path = "/persist/home/nina";
+      owner = "nina:nina";
+      permissions = "770"; 
+    }
+  ];
+
   services.mullvad-vpn.enable = true;
 
   age.secrets."user-nina".rekeyFile = ./password.age;

@@ -22,6 +22,13 @@
       '';
     };
   };
+  environment.createDir = [
+    {
+      path = "/persist/home";
+      owner = "nobody:users";
+      permissions = "775"; 
+    }
+  ];
 
   home-manager = {
     # If a config file or directory alread exists and *isn't* managed by home-manager

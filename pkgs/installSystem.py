@@ -119,11 +119,10 @@ if (__name__ == "__main__"):
                 res = json.dumps({"bootID": (f'{boot1}-{boot2}').upper(), "pubkey": pubkey, "mac": mac}, indent=4)
                 content = encrypt(res)
                 print(content)
-                r = submit(content.stdout.strip(b'\n'))
-                code = r.strip('https://termbin.com/')
-                with open('./code','w') as f:
+                code = submit(content.stdout.strip(b'\n'))
+                with open('/zroot/persist/code','w') as f:
                     f.write(code)
-                with open('./content.json', 'w') as f:
+                with open('/zroot/persist/content.json', 'w') as f:
                     f.write(res)
                 print(code)
         run(["zpool", "export", "zroot"])

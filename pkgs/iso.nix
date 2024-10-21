@@ -1,5 +1,7 @@
 {self, inputs, pkgs, lib}: 
-inputs.nixos-generators.nixosGenerate {
+inputs.nixos-generators.nixosGenerate (let
+  system = self.nixosConfigurations.proto;
+in {
   system = pkgs.system;
   modules = [
     (inputs.nixpkgs + "/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix")
@@ -7,7 +9,7 @@ inputs.nixos-generators.nixosGenerate {
       isoImage = {
         includeSystemBuildDependencies = true;
         storeContents = [
-          self.nixosConfigurations.greg.config.system.build.toplevel
+          system.config.system.build.toplevel
         ];
         splashImage = self + "/resources/labs-color-nix-snowflake.png";
       };
@@ -17,11 +19,12 @@ inputs.nixos-generators.nixosGenerate {
         };
         settings = {
           substituters = [
-            #"https://ncache.faeranne.com"
             "https://nix-community.cachix.org"
+            "https://cache.nixos.org"
+            "https://ncache.faeranne.com"
           ];
           trusted-public-keys = [
-            "ncache.faeranne.com:W9hbuDECHbOiywk+TiqPMdkRG2mW8EasNbcDP8BFVCw="
+            "ncache.faeranne.com:f0zP4VrDZbT9A/Xx3tfLD9M9sI9maSvFJg3zbGh7Ty0=%"
             "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
           ];
           experimental-features = [ "nix-command" "flakes" "ca-derivations"];
@@ -34,10 +37,10 @@ inputs.nixos-generators.nixosGenerate {
       environment = {
         etc = {
           "ageKey".text = "age1yubikey1qtfy343ld8e5sxlvfufa4hh22pm33f6sjq2usx6mmydrmu7txzu7g5xm9vr";
+          "proto".text = "${system.config.system.build.toplevel}";
         };
         systemPackages = [
           self.packages.${pkgs.system}.installSystem
-          self.packages.${pkgs.system}.finishInstall
           self.packages.${pkgs.system}.wifi
         ] ++ (with pkgs; [
           git
@@ -50,4 +53,4 @@ inputs.nixos-generators.nixosGenerate {
     })
   ];
   format = "install-iso";
-}
+})
