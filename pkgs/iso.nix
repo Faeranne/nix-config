@@ -1,6 +1,6 @@
 {self, inputs, pkgs, lib}: 
 inputs.nixos-generators.nixosGenerate (let
-  system = self.nixosConfigurations.proto;
+  proto = self.nixosConfigurations.proto;
 in {
   system = pkgs.system;
   modules = [
@@ -8,6 +8,9 @@ in {
     ({pkgs, ...}:{
       isoImage = {
         includeSystemBuildDependencies = true;
+        storeContents = [
+          proto.config.system.build.toplevel
+        ];
         splashImage = self + "/resources/labs-color-nix-snowflake.png";
       };
       nix = {
