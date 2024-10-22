@@ -10,6 +10,7 @@
     gatherClues = callPackage ./gatherClues.nix {};
     finishInstall = callPackage ./finishInstall.nix {};
     iso = callPackage ./iso.nix {};
+    efi = callPackage ./efi.nix {};
     wifi = callPackage ./wifi.nix {};
   };
 in packages // systemTest // systemDeploy

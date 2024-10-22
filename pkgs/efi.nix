@@ -29,8 +29,7 @@ in {
       };
       zramSwap = {
         enable = true;
-      };
-      systemd.services.sshd.wantedBy = lib.mkForce ["multi-user.target"];
+      }; systemd.services.sshd.wantedBy = lib.mkForce ["multi-user.target"];
       environment = {
         etc = {
           "ageKey".text = "age1yubikey1qtfy343ld8e5sxlvfufa4hh22pm33f6sjq2usx6mmydrmu7txzu7g5xm9vr";
@@ -48,5 +47,5 @@ in {
       ];
     })
   ];
-  format = "install-iso";
+  format = "raw-efi";
 })
