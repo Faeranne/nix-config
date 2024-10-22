@@ -93,6 +93,10 @@
   hardware = {
     pulseaudio.enable = false;
     opengl.enable = true;
+    logitech.wireless = {
+      enable = true;
+      enableGraphical = true;
+    };
   };
 
   fonts.packages = with pkgs; [
@@ -127,6 +131,7 @@
       swappy
       wl-clipboard
       f3d
+      solaar
     ];
   };
   home-manager = {
