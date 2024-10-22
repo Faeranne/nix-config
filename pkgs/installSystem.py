@@ -102,6 +102,21 @@ def submit(content):
         res = res + data.decode('utf-8')
     return res.strip('\n\x00')
 
+def prepSystem():
+    run(["zfs","umount","zroot"])
+    run(["mount","-t","tmpfs","tmpfs","/mnt"])
+    for p in ["nix","persist","boot"]:
+        os.makedirs(f'/mnt/{p}',exists_ok=True)
+    run(["mount","/dev/disk/by-partlabel/ESP"])
+    for p in ["nix","persist"]:
+        run(["mount","-t","zfs","-o","zfsutil","zroot/{p}","/mnt/{p}"])
+
+def copySystem(system):
+    run(["nix","copy","--to","/mnt",system])
+
+def installSystem(system):
+    run(["nixos-install","--system",system,"--no-channel-copy","--no-root-password"])
+
 
 if (__name__ == "__main__"):
     if dialog.yesno("Begin installing system?") == dialog.OK:
@@ -125,4 +140,8 @@ if (__name__ == "__main__"):
                 with open('/zroot/persist/content.json', 'w') as f:
                     f.write(res)
                 print(code)
-        run(["zpool", "export", "zroot"])
+                prepSystem()
+                with open('/etc/systemPath','r') as f:
+                    system = f.readall().strip('\n')
+                    copySystem(system)
+                    installSystem(system)

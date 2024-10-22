@@ -37,6 +37,7 @@ in {
       environment = {
         etc = {
           "ageKey".text = "age1yubikey1qtfy343ld8e5sxlvfufa4hh22pm33f6sjq2usx6mmydrmu7txzu7g5xm9vr";
+          "systemPath".text = "${proto.config.system.build.toplevel}";
         };
         systemPackages = [
           self.packages.${pkgs.system}.installSystem

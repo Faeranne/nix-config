@@ -1,7 +1,6 @@
 { sourceConfig, config, lib, pkgs, modulesPath, ... }:{
   imports =
     [ (modulesPath + "/installer/scan/not-detected.nix")
-      #./user.nix
     ];
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "usbhid" "sd_mod" ];
@@ -18,7 +17,7 @@
 
   fileSystems = {
     "/boot" = {
-      device = "/dev/disk/by-partlabel/EFI";
+      device = "/dev/disk/by-partlabel/ESP";
       fsType = "vfat";
       options = [ "fmask=0022" "dmask=0022" ];
     };
