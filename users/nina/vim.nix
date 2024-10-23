@@ -1,4 +1,4 @@
-{pkgs, lib, ...}:
+{inputs, systemConfig, pkgs, lib, ...}:
 let
   fromGitHub = rev: user: repo: hash: pkgs.vimUtils.buildVimPlugin {
     pname = "${lib.strings.sanitizeDerivationName repo}";
@@ -12,6 +12,12 @@ let
   };
 in
 {
+  home = {
+    packages = with pkgs; [
+      alejandra
+      nixd
+    ];
+  };
   programs = {
     nixvim = {
       extraPlugins = with pkgs.vimPlugins; [
@@ -47,7 +53,17 @@ in
         lsp = {
           enable = true;
           servers = {
-            nixd.enable = true;
+            nixd = {
+              enable = true;
+              settings = {
+                formatting.command = [
+                  "alejandra"
+                ];
+                options = {
+                  nixos.expr = "(builtins.getFlake \"${inputs.self}.nixosConfigurations.${systemConfig.networking.hostName}.options";
+                };
+              };
+            };
           };
         };
       };

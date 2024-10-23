@@ -1,7 +1,7 @@
 # This file sets some nix configuration values.  these are used to manage
 # the nix daemon and other features on this syste. often these affect
 # nix.config directly
-{self, ...}:{
+{self, inputs, ...}:{
   nix = {
     settings = {
       substituters = [
@@ -26,6 +26,9 @@
       #   used in some nur stuff.
       experimental-features = [ "nix-command" "flakes" "ca-derivations"];
     };
+    nixPath = [
+      "nixpkgs=${inputs.nixpkgs}"
+    ];
     # I was trying to setup github-tokens to allow additional nix flake update calls
     # but it didn't work right due to agenix not being correctly supported here.
     # TODO: readd when scalple is working
