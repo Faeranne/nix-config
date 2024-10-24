@@ -9,7 +9,7 @@ import logging
 
 from diskinfo import DiskInfo, Disk
 from dialog import Dialog
-from subprocess import run 
+from subprocess import Popen,PIPE
 from netifaces import ifaddresses, interfaces, AF_LINK
 locale.setlocale(locale.LC_ALL, '')
 
@@ -201,7 +201,7 @@ def installSystem(system):
     res = logRun(["nixos-install","--system",system,"--no-channel-copy","--no-root-password"],log)
 
 def logRun(args,log, **kargs):
-    process = Popen(args,**kargs,stdout=PIPE, stderr=STDOUT)
+    process = Popen(args,**kargs,stdout=PIPE, stderr=PIPE)
 
     def check_io():
         while True:
@@ -221,7 +221,7 @@ def logRun(args,log, **kargs):
     return process.returncode
 
 def logOutputRun(args,log, **kargs):
-    process = Popen(args,**kargs,stdout=PIPE, stderr=STDOUT)
+    process = Popen(args,**kargs,stdout=PIPE, stderr=PIPE)
     result = ""
     def check_io():
         while True:
