@@ -10,7 +10,6 @@ from diskinfo import DiskInfo, Disk
 from dialog import Dialog
 from subprocess import run 
 from netifaces import ifaddresses, interfaces, AF_LINK
-
 locale.setlocale(locale.LC_ALL, '')
 
 dialog = Dialog(dialog="dialog", autowidgetsize=True)
@@ -106,7 +105,7 @@ def prepSystem():
     run(["zfs","umount","zroot"])
     run(["mount","-t","tmpfs","tmpfs","/mnt"])
     for p in ["nix","persist","boot"]:
-        os.makedirs(f'/mnt/{p}',exists_ok=True)
+        os.makedirs(f'/mnt/{p}',exist_ok=True)
     run(["mount","/dev/disk/by-partlabel/ESP"])
     for p in ["nix","persist"]:
         run(["mount","-t","zfs","-o","zfsutil","zroot/{p}","/mnt/{p}"])
@@ -134,14 +133,22 @@ if (__name__ == "__main__"):
                 res = json.dumps({"bootID": (f'{boot1}-{boot2}').upper(), "pubkey": pubkey, "mac": mac}, indent=4)
                 content = encrypt(res)
                 print(content)
-                code = submit(content.stdout.strip(b'\n'))
-                with open('/zroot/persist/code','w') as f:
-                    f.write(code)
+                try:
+                    print("Attempting to upload to termbin.com")
+                    code = submit(content.stdout.strip(b'\n'))
+                    print(f'Upload successful.  Returned {code}')
+                    with open('/zroot/persist/code','w') as f:
+                        f.write(code)
+                except Exception as e:
+                    print("Couldn't upload.")
+                print("Storing contents at /persist/content.json")
                 with open('/zroot/persist/content.json', 'w') as f:
                     f.write(res)
-                print(code)
+                print("Preparing to install")
                 prepSystem()
                 with open('/etc/systemPath','r') as f:
-                    system = f.readall().strip('\n')
+                    system = f.read().strip('\n')
+                    print(f'Copying {system} to new install')
                     copySystem(system)
+                    print(f'Running nixos-install with {system}')
                     installSystem(system)

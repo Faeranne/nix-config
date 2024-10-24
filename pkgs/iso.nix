@@ -7,7 +7,6 @@ in {
     (inputs.nixpkgs + "/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix")
     ({pkgs, ...}:{
       isoImage = {
-        includeSystemBuildDependencies = true;
         storeContents = [
           proto.config.system.build.toplevel
         ];
