@@ -242,6 +242,7 @@ def logOutputRun(args,log, **kargs):
     return (process.returncode,result)
 
 def main():
+    logging.basicConfig(filename="./install.log",level=logging.INFO)
     log = logging.getLogger("main")
     dialog.infobox("Clearing zroot.")
     logRun(['zpool','export','zroot'],log)
