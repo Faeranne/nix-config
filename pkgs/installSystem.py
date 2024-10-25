@@ -116,25 +116,25 @@ def formatDisk(diskID):
             log.error(f'Failed to snapshot root dataset for future use.')
             dialog.msgbox("Failed to snapshot root dataset for future use.")
             raise Exception("Formatting error")
-        res = logRun(["zfs", "create", 
-                   "-V", "8G", 
-                   "-b", "4096", 
-                   "-o", "compression=zle", 
-                   "-o", "primarycache=metadata",
-                   "-o", "secondarycache=none",
-                   "-o", "logbias=throughput",
-                   "-o", "sync=always",
-                   "-o", "com.sun:auto-snapshot=false",
-                   "zroot/swap"], log)
-        if res:
-            log.error(f'Failed to create swap zvol on zroot.')
-            dialog.msgbox("Failed to create swap zvol on zroot.")
-            raise Exception("Formatting error")
-        res = logRun(["mkswap", "/dev/zvol/zroot/swap"], log)
-        if res:
-            log.error(f'Couldn\'t run mkswap on swap zvol.')
-            dialog.msgbox("Couldn\'t run mkswap on swap zvol.")
-            raise Exception("Formatting error")
+        #res = logRun(["zfs", "create", 
+        #           "-V", "8G", 
+        #           "-b", "4096", 
+        #           "-o", "compression=zle", 
+        #           "-o", "primarycache=metadata",
+        #           "-o", "secondarycache=none",
+        #           "-o", "logbias=throughput",
+        #           "-o", "sync=always",
+        #           "-o", "com.sun:auto-snapshot=false",
+        #           "zroot/swap"], log)
+        #if res:
+        #    log.error(f'Failed to create swap zvol on zroot.')
+        #    dialog.msgbox("Failed to create swap zvol on zroot.")
+        #    raise Exception("Formatting error")
+        #res = logRun(f'mkswap /dev/zvol/zroot/swap', log, shell=True)
+        #if res:
+        #    log.error(f'Couldn\'t run mkswap on swap zvol.')
+        #    dialog.msgbox("Couldn\'t run mkswap on swap zvol.")
+        #    raise Exception("Formatting error")
         return bootID
 
 
@@ -202,7 +202,7 @@ def installSystem(system):
 
 def logRun(args,log, **kargs):
     process = Popen(args,**kargs,stdout=PIPE, stderr=PIPE)
-
+    log.info(f'Executing command {" ".join(args)}')
     def check_io():
         while True:
             res = False
@@ -221,9 +221,11 @@ def logRun(args,log, **kargs):
     return process.returncode
 
 def logOutputRun(args,log, **kargs):
+    #TODO: need to parse input into something popen can use
     process = Popen(args,**kargs,stdout=PIPE, stderr=PIPE)
-    result = ""
+    log.info(f'Executing command {" ".join(args)}')
     def check_io():
+        result = ""
         while True:
             res = False
             output = process.stdout.readline().decode()
@@ -237,8 +239,10 @@ def logOutputRun(args,log, **kargs):
                 res=True
             if not res:
                 break
+        return result
+    result = ""
     while process.poll() is None:
-        check_io()
+        result = result + check_io()
     return (process.returncode,result)
 
 def main():
