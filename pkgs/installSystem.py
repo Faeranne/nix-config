@@ -156,7 +156,7 @@ def submit(content):
     log = logging.getLogger("submit")
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect(("termbin.com", 9999))
-    s.sendall(content)
+    s.sendall(bytes(content,'utf-8'))
     s.shutdown(socket.SHUT_WR)
     res = ""
     while True:
@@ -168,25 +168,25 @@ def submit(content):
 
 def prepSystem():
     log = logging.getLogger("prep")
-    res = logRun(["zfs","umount","zroot"])
+    res = logRun(["zfs","umount","zroot"],log)
     if res:
         log.error(f'Failed to unmount zroot contents.')
         dialog.msgbox(f'Failed to unmount zroot contents.')
         raise Exception("System Prep Error")
-    res = logRun(["mount","-t","tmpfs","tmpfs","/mnt"])
+    res = logRun(["mount","-t","tmpfs","tmpfs","/mnt"],log)
     if res:
         log.error(f'Failed to tmp mount /mnt.')
         dialog.msgbox(f'Failed to tmp mount /mnt.')
         raise Exception("System Prep Error")
     for p in ["nix","persist","boot"]:
         os.makedirs(f'/mnt/{p}',exist_ok=True)
-    res = logRun(["mount","/dev/disk/by-partlabel/ESP"])
+    res = logRun(["mount","/dev/disk/by-partlabel/ESP","/mnt/boot"],log)
     if res:
         log.error(f'Failed to mount boot partition.')
         dialog.msgbox(f'Failed to mount boot partition.')
         raise Exception("System Prep Error")
     for p in ["nix","persist"]:
-        res = logRun(["mount","-t","zfs","-o","zfsutil","zroot/{p}","/mnt/{p}"])
+        res = logRun(["mount","-t","zfs","-o","zfsutil",f'zroot/{p}',f'/mnt/{p}'],log)
         if res:
             log.error(f'Failed to mount zfs volume {p}.')
             dialog.msgbox(f'Failed to mount zfs volume {p}.')
@@ -194,15 +194,19 @@ def prepSystem():
 
 def copySystem(system):
     log = logging.getLogger("copy")
-    res = logRun(["nix","copy","--to","/mnt",system],log)
+    res = logRun(["nix","copy","--no-check-sigs","--to","/mnt",system],log)
 
 def installSystem(system):
     log = logging.getLogger("install")
     res = logRun(["nixos-install","--system",system,"--no-channel-copy","--no-root-password"],log)
 
-def logRun(args,log, **kargs):
-    process = Popen(args,**kargs,stdout=PIPE, stderr=PIPE)
+def logRun(args,log, input=None, **kargs):
+    process = Popen(args,**kargs,stdin=PIPE, stdout=PIPE, stderr=PIPE)
     log.info(f'Executing command {" ".join(args)}')
+    if input:
+        log.info(f'Writing {input} to command')
+        process.stdin.write(input)
+    process.stdin.close()
     def check_io():
         while True:
             res = False
@@ -220,10 +224,14 @@ def logRun(args,log, **kargs):
         check_io()
     return process.returncode
 
-def logOutputRun(args,log, **kargs):
+def logOutputRun(args,log, input=None, **kargs):
     #TODO: need to parse input into something popen can use
-    process = Popen(args,**kargs,stdout=PIPE, stderr=PIPE)
+    process = Popen(args,**kargs,stdin=PIPE, stdout=PIPE, stderr=PIPE)
     log.info(f'Executing command {" ".join(args)}')
+    if input:
+        log.info(f'Writing {input} to command')
+        process.stdin.write(input)
+    process.stdin.close()
     def check_io():
         result = ""
         while True:
@@ -263,10 +271,8 @@ def main():
                 boot1 = bootID[:4]
                 boot2 = bootID[4:]
                 res = json.dumps({"bootID": (f'{boot1}-{boot2}').upper(), "pubkey": pubkey, "mac": mac}, indent=4)
-                (res,content) = encrypt(res)
-                if res:
-                    log.error("Failed to encrypt content")
-                    return
+                content = encrypt(res)
+                dialog.infobox("Attempting to upload config to termbin.")
                 try:
                     log.info("Attempting to upload to termbin.com")
                     code = submit(content.strip('\n'))
@@ -274,17 +280,21 @@ def main():
                     with open('/zroot/persist/code','w') as f:
                         f.write(code)
                 except Exception as e:
-                    log.error("Couldn't upload.")
+                    dialog.msgbox("Failed to upload to termbin.")
+                    log.exception(f'Couldn\'t upload.')
                 log.info("Storing contents at /persist/content.json")
                 with open('/zroot/persist/content.json', 'w') as f:
                     f.write(res)
                 log.info("Preparing to install")
+                dialog.infobox("Preparing to install.")
                 prepSystem()
                 with open('/etc/systemPath','r') as f:
                     system = f.read().strip('\n')
                     log.info(f'Copying {system} to new install')
+                    dialog.infobox(f'Copying {system} to new system.')
                     copySystem(system)
                     log.info(f'Running nixos-install with {system}')
+                    dialog.infobox(f'Installing {system} to new system.')
                     installSystem(system)
 
 if (__name__ == "__main__"):
