@@ -30,6 +30,7 @@
         "dialout"
         "audio"
         "dialout"
+        "networkmanager"
       ];
     };
     groups.nina = {
