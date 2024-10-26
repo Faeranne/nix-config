@@ -30,6 +30,10 @@
     ];
   };
 
+  programs = {
+    dconf.enable = true;
+  };
+
   services = {
     flatpak.enable = true;
     dbus.enable = true;
