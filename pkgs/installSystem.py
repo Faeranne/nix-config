@@ -6,10 +6,9 @@ import json
 import requests
 import socket
 import logging
-
 from diskinfo import DiskInfo, Disk
 from dialog import Dialog
-from subprocess import Popen,PIPE
+from subprocess import Popen,PIPE,STDOUT
 from netifaces import ifaddresses, interfaces, AF_LINK
 locale.setlocale(locale.LC_ALL, '')
 
@@ -144,7 +143,7 @@ def getMac(id):
 
 def encrypt(content):
     log = logging.getLogger("encrypt")
-    (res, enc) = logOutputRun(["age", "-a", "-r", "age1yubikey1qtfy343ld8e5sxlvfufa4hh22pm33f6sjq2usx6mmydrmu7txzu7g5xm9vr"], log, input=bytes(content, "utf-8"))
+    (res, enc) = logOutputRun(["age", "-a", "-r", "age1yubikey1qtfy343ld8e5sxlvfufa4hh22pm33f6sjq2usx6mmydrmu7txzu7g5xm9vr"], log, input=content)
     if res:
         log.error(f'Failed to encrypt {content}.')
         dialog.msgbox(f'Failed to encrypt {content}.')
@@ -194,14 +193,42 @@ def prepSystem():
 
 def copySystem(system):
     log = logging.getLogger("copy")
-    res = logRun(["nix","copy","--no-check-sigs","--to","/mnt",system],log)
+    def rel(cont):
+        dialog.infobox(f'Copying {system} to new system.\n{cont}')
+    res = logNix(["nix","copy","--no-check-sigs","--log-format","internal-json","--to","/mnt",system],log,rel)
 
 def installSystem(system):
     log = logging.getLogger("install")
-    res = logRun(["nixos-install","--system",system,"--no-channel-copy","--no-root-password"],log)
+    def rel(cont):
+        dialog.infobox(f'Installing {system} to new system.\n{cont}')
+    res = logRun(["nixos-install","--system",system,"--no-channel-copy","--no-root-password"],log,rel=rel)
 
-def logRun(args,log, input=None, **kargs):
-    process = Popen(args,**kargs,stdin=PIPE, stdout=PIPE, stderr=PIPE)
+def logNix(args, log, ret):
+    process = Popen(args
+                    , stderr = PIPE
+                    , stdout = PIPE
+                    , text = True
+                    )
+    def collectIO():
+        resOut = ""
+        resErr = ""
+        while True:
+            res = True
+            error = process.stderr.readline()
+            if error:
+                parse = json.loads(error.lstrip("@nix").strip(" "))
+                if 'text' in parse:
+                    text = parse['text']
+                    if text:
+                        ret(text)
+                log.error(error)
+            if not error:
+                return
+    while process.poll() is None:
+        collectIO()
+
+def logRun(args,log, input=None, rel=None, **kargs):
+    process = Popen(args,**kargs,stdin=PIPE, stdout=PIPE, stderr=STDOUT)
     log.info(f'Executing command {" ".join(args)}')
     if input:
         log.info(f'Writing {input} to command')
@@ -213,10 +240,8 @@ def logRun(args,log, input=None, **kargs):
             output = process.stdout.readline().decode()
             if output:
                 log.info(output)
-                res=True
-            error = process.stderr.readline().decode()
-            if error:
-                log.error(error)
+                if rel:
+                    rel(output)
                 res=True
             if not res:
                 break
@@ -224,9 +249,9 @@ def logRun(args,log, input=None, **kargs):
         check_io()
     return process.returncode
 
-def logOutputRun(args,log, input=None, **kargs):
+def logOutputRun(args,log, input=None, print=None, **kargs):
     #TODO: need to parse input into something popen can use
-    process = Popen(args,**kargs,stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    process = Popen(args,**kargs,stdin=PIPE, stdout=PIPE, stderr=PIPE, text = True)
     log.info(f'Executing command {" ".join(args)}')
     if input:
         log.info(f'Writing {input} to command')
@@ -236,18 +261,19 @@ def logOutputRun(args,log, input=None, **kargs):
         result = ""
         while True:
             res = False
-            output = process.stdout.readline().decode()
+            output = process.stdout.readline()
             if output:
                 log.info(output)
+                if print:
+                    print(output)
                 result = result + output
                 res=True
-            error = process.stderr.readline().decode()
+            error = process.stderr.readline()
             if error:
                 log.error(error)
                 res=True
             if not res:
-                break
-        return result
+                return result
     result = ""
     while process.poll() is None:
         result = result + check_io()
