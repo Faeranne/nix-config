@@ -27,6 +27,12 @@
   };
 
   system = {
+    # causes the system to run `nixos-rebuild` automatically each day (if it's changed), to ensure
+    # servers remain up-to-date
+    autoUpgrade = {
+      operation = "switch";
+      flake = "git+https://git.faeranne.com/faeranne/nix-config?ref=rebuild2";
+    };
     # Sets a `nixos-version --json` field to the current git repo, which can help with debugging
     configurationRevision = if self ? rev then self.rev else if self ? dirtyRev then self.dirtyRev else "dirty";
 
