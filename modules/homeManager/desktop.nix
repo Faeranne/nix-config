@@ -31,6 +31,8 @@
           ".config/jami"
           ".config/godot"
           ".config/keepassxc"
+          ".local/share/Jellyfin Media Player"
+          ".local/share/jellyfinmediaplayer"
           {
             directory = "Desktop";
             method = "symlink";
@@ -65,6 +67,12 @@
           }
         ];
         files = [
+          ".config/obsidian/obsidian.json"
+          ".config/obsidian/id"
+          ".config/obsidian/Perferences"
+          ".config/obsidian/Trust Tokens"
+          ".config/obsidian/Trust Tokens-journal"
+          ".cache/keepassxc/keepassxc.ini"
         ];
       };
     };
