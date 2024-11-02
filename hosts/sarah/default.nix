@@ -96,6 +96,13 @@ in{
   home-manager = {
     backupFileExtension = "bak";
     sharedModules = [
+      {
+        home = {
+          packages = with pkgs; [
+            jellyfin-media-player
+          ];
+        };
+      }
       ({...}:{
         home.file = {
           ".local/state/wireplumber/default-routes".text = ''
