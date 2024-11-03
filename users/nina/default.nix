@@ -31,6 +31,7 @@
         "audio"
         "dialout"
         "networkmanager"
+        "vboxuser"
       ];
     };
     groups.nina = {
