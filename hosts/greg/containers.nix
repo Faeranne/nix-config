@@ -2,8 +2,7 @@
   mkPeer = myLib.mkPeer "greg";
 in {
   imports = [
-    self.containerModules.jellyfin
-    self.containerModules.servarr
+    self.containerModules.jellyfin self.containerModules.servarr
     self.containerModules.rss
     self.containerModules.paperless
     self.containerModules.traefik
@@ -131,10 +130,16 @@ in {
             service = "actual";
             entryPoints = [ "websecure" ];
           };
+          lube = {
+            rule = "Host(`lube.faeranne.com`)";
+            service = "actual";
+            entryPoints = [ "websecure" ];
+          };
         };
         extraServices = {
           wizarr.loadBalancer.servers = [ {url = "http://10.88.1.3:5690"; } ];
           actual.loadBalancer.servers = [ {url = "http://10.88.1.4:5006"; } ];
+          lube.loadBalancer.servers = [ {url = "http://10.88.1.5:5006"; } ];
         };
       };
     };

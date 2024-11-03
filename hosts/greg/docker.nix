@@ -15,6 +15,31 @@
       ];
     };
     */
+    "lubelogger" = {
+      autoStart = true;
+      image = "ghcr.io/hargata/lubelogger:v1.3.9";
+      ports = [
+        "8080:8080"
+      ];
+      environment = {
+        LC_ALL="en_US";
+        LANG="en_US";
+        LUBELOGGER_LOGO_URL="https://cloud.faeranne.com/s/bTkqNMymYAdP5Ww/download/g1061.png";
+      };
+      volumes = [
+        "config:/Storage/volumes/lubelogger/config"
+        "data:/Storage/volumes/lubelogger/data"
+        "translations:/Storage/volumes/lubelogger/translations"
+        "documents:/Storage/volumes/lubelogger/documents"
+        "images:/Storage/volumes/lubelogger/images"
+        "temp:/Storage/volumes/lubelogger/temp"
+        "log:/Storage/volumes/lubelogger/log"
+        "keys:/Storage/volumes/lubelogger/keys"
+      ];
+      extraOptions = [
+        "--ip=10.88.1.5"
+      ];
+    };
     "actual" = {
       autoStart = true;
       image = "actualbudget/actual-server:24.10.1";
