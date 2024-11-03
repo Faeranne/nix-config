@@ -132,7 +132,7 @@ in {
           };
           lube = {
             rule = "Host(`lube.faeranne.com`)";
-            service = "actual";
+            service = "lube";
             entryPoints = [ "websecure" ];
           };
         };
