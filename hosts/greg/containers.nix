@@ -139,7 +139,7 @@ in {
         extraServices = {
           wizarr.loadBalancer.servers = [ {url = "http://10.88.1.3:5690"; } ];
           actual.loadBalancer.servers = [ {url = "http://10.88.1.4:5006"; } ];
-          lube.loadBalancer.servers = [ {url = "http://10.88.1.5:5006"; } ];
+          lube.loadBalancer.servers = [ {url = "http://10.88.1.5:8080"; } ];
         };
       };
     };
