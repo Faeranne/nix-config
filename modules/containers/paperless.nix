@@ -46,6 +46,7 @@ in {
         paperless = {
           inherit port;
           enable = true;
+          address = "10.100.1.4";
           user = "paperless";
           passwordFile = "/run/secrets/paperless_superuser";
           settings = {
