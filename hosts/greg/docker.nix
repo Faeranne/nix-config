@@ -24,7 +24,7 @@
       environment = {
         LC_ALL="en_US";
         LANG="en_US";
-        LUBELOGGER_LOGO_URL="https://cloud.faeranne.com/s/oTkyPs8JLLYfbMt/download/logo.png";
+        LUBELOGGER_LOGO_URL="https://cloud.faeranne.com/s/qSnYxnzi7pbCWKT/download/logo64.png";
       };
       volumes = [
         "config:/Storage/volumes/lubelogger/config"
