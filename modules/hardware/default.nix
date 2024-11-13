@@ -10,4 +10,7 @@
     amd = import ./gpu/amd.nix;
     nvidia = import ./gpu/nvidia.nix;
   };
+  printers = {
+    hp-colorjet = import ./hp-printer.nix;
+  };
 }

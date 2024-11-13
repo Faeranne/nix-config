@@ -11,6 +11,7 @@ in{
     extras.storage
     hardware.cpu.amd
     hardware.gpu.amd
+    hardware.printers.hp-colorjet
     self.userModules.nina
   ];
 
