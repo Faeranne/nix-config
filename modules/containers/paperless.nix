@@ -1,5 +1,6 @@
-{config, ...}:let
+{config, lib, ...}:let
   containerName = "paperless";
+  hostConfig = config;
 in {
   imports = [
     (import ./template.nix containerName)
@@ -64,6 +65,8 @@ in {
           };
         };
       };
+      users.users.paperless.uid = lib.mkForce hostConfig.users.users.container.uid;
+      users.groups.paperless.gid = lib.mkForce hostConfig.users.groups.container.gid;
     };
   };
 }

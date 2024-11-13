@@ -27,14 +27,14 @@
         LUBELOGGER_LOGO_URL="https://cloud.faeranne.com/s/qSnYxnzi7pbCWKT/download/logo64.png";
       };
       volumes = [
-        "config:/Storage/volumes/lubelogger/config"
-        "data:/Storage/volumes/lubelogger/data"
-        "translations:/Storage/volumes/lubelogger/translations"
-        "documents:/Storage/volumes/lubelogger/documents"
-        "images:/Storage/volumes/lubelogger/images"
-        "temp:/Storage/volumes/lubelogger/temp"
-        "log:/Storage/volumes/lubelogger/log"
-        "keys:/Storage/volumes/lubelogger/keys"
+        "/Storage/volumes/lubelogger/config:/App/config"
+        "/Storage/volumes/lubelogger/data:/App/data"
+        "/Storage/volumes/lubelogger/translations:/App/translations"
+        "/Storage/volumes/lubelogger/documents:/App/documents"
+        "/Storage/volumes/lubelogger/images:/App/images"
+        "/Storage/volumes/lubelogger/temp:/App/temp"
+        "/Storage/volumes/lubelogger/log:/App/log"
+        "/Storage/volumes/lubelogger/keys:/App/keys"
       ];
       extraOptions = [
         "--ip=10.88.1.5"
