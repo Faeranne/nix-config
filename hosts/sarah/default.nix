@@ -54,7 +54,7 @@ in{
   virtualisation.waydroid.enable = true;
   programs.corectrl.enable = true;
 
-  boot.binfmt.emulatedSystems = [];
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
   networking = {
     nat = {
