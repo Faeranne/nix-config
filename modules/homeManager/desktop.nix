@@ -3,6 +3,18 @@
     swaylock-bin = "${pkgs.swaylock}/bin/swaylock";
   in {
     home = {
+      packages = with pkgs; [
+        firefoxpwa
+        jami 
+        gimp
+        inkscape
+        raysession
+        jackmix
+        lutris
+        samba
+        swayimg
+        keepassxc
+      ];
       file = {
         ".mozilla/native-messaging-hosts/de.kkapsner.keepassxc_mail.json" = {
           text = ''
@@ -20,10 +32,37 @@
       };
       persistence."/persist/home/nina" = {
         directories = [
-          ".mozilla"
+          {
+            directory = ".mozilla/firefox/default/bookmarkbackups";
+            method = "symlink";
+          }
+          {
+            directory = ".mozilla/firefox/default/storage";
+            method = "symlink";
+          }
+          {
+            directory = ".mozilla/firefox/default/extension-store";
+            method = "symlink";
+          }
+          {
+            directory = ".mozilla/firefox/default/extension-store-menu";
+            method = "symlink";
+          }
           ".thunderbird"
           {
             directory = ".local/share/Steam";
+            method = "symlink";
+          }
+          {
+            directory = ".local/share/firefoxpwa";
+            method = "symlink";
+          }
+          {
+            directory = ".local/share/applications";
+            method = "symlink";
+          }
+          {
+            directory = ".local/share/icons/hicolor";
             method = "symlink";
           }
           ".config/vesktop"
@@ -73,46 +112,64 @@
           ".config/obsidian/Trust Tokens"
           ".config/obsidian/Trust Tokens-journal"
           ".cache/keepassxc/keepassxc.ini"
+          ".mozilla/firefox/default/cookies.sqlite"
+          ".mozilla/firefox/default/cookies.sqlite-wal"
         ];
       };
     };
     programs = {
       firefox = {
         enable = true;
+        nativeMessagingHosts = [
+          pkgs.firefoxpwa
+        ];
         profiles = {
           default = {
-            extensions = (with pkgs.nur.repos.bandithedoge.firefoxAddons; [
+            extensions = let
+            frankerfacez = pkgs.nur.repos.rycee.firefox-addons.buildFirefoxXpiAddon {
+                addonId = "{d53b1948-c569-4e95-bad3-d873db4885a9}";
+                version = "4.75.7.0";
+                pname = "frankerfacez";
+                url = "https://addons.mozilla.org/firefox/downloads/file/4383952/frankerfacez-4.75.7.0.xpi";
+                sha256 = "sha256-6k4L9aaaWOtUuLBu9FCcoF3y66/BSUGdIVATV1dSZrI=";
+                meta = {
+                };
+              };
+            in [
+              frankerfacez
+            ] ++ (with pkgs.nur.repos.bandithedoge.firefoxAddons; [
               augmented-steam
-              betterviewer
-              downthemall
+              #betterviewer
+              #downthemall
               enhanced-github
               indie-wiki-buddy
               lovely-forks
-              pronoundb
+              #pronoundb
               sponsorblock
-              steam-database
-              tridactyl
+              #steam-database
+              #tridactyl
               ublock-origin
               violentmonkey
             ]) ++ (with pkgs.nur.repos.ethancedwards8.firefox-addons; [
               enhancer-for-youtube
             ]) ++ (with pkgs.nur.repos.rycee.firefox-addons; [
               awesome-rss
-              betterttv
+              #betterttv
               consent-o-matic
               container-tab-groups
               darkreader
-              duckduckgo-privacy-essentials
-              gsconnect
+              #duckduckgo-privacy-essentials
+              #gsconnect
               kagi-search
               keepassxc-browser
               modrinthify
-              mullvad
+              #mullvad
               multi-account-containers
               private-relay
+              pwas-for-firefox
               return-youtube-dislikes
               shinigami-eyes
-              tetrio-plus
+              #tetrio-plus
             ]);
 
             settings = {
@@ -163,19 +220,6 @@
         ];
         terminal = "${config.programs.foot.package}/bin/foot";
       };
-    };
-    home = {
-      packages = with pkgs; [
-        jami 
-        gimp
-        inkscape
-        raysession
-        jackmix
-        lutris
-        samba
-        swayimg
-        keepassxc
-      ];
     };
     wayland.windowManager.sway = {
       enable = true;

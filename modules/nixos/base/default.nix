@@ -88,6 +88,7 @@
               --unset WAYLAND_DISPLAY
           '';
         };
+        firefoxpwa = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.firefoxpwa;
       })
     ];
   };

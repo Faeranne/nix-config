@@ -108,6 +108,11 @@
     nur = {
       url = "github:nix-community/NUR";
     };
+
+    firefox-addons = {
+      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # since `inputs` is a single variable here, it's the set of flakes input above.
