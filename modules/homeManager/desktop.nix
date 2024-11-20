@@ -45,7 +45,11 @@
             method = "symlink";
           }
           {
-            directory = ".mozilla/firefox/default/extension-store-menu";
+            directory = ".mozilla/firefox/default/extension-store-menus";
+            method = "symlink";
+          }
+          {
+            directory = ".mozilla/firefox/default/settings";
             method = "symlink";
           }
           ".thunderbird"
@@ -114,6 +118,11 @@
           ".cache/keepassxc/keepassxc.ini"
           ".mozilla/firefox/default/cookies.sqlite"
           ".mozilla/firefox/default/cookies.sqlite-wal"
+          "storage.sqlite"
+          "storage-sync-v2.sqlite"
+          "storage-sync-v2.sqlite-wal"
+          "storage-sync-v2.sqlite-shm"
+          "content-prefs.sqlite"
         ];
       };
     };
