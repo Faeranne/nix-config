@@ -9,7 +9,7 @@
         height = 30;
         margin = "0 0 0 0";
         modules-left = [
-          "sway/workspaces"
+          #"sway/workspaces"
           "tray"
           "sway/mode"
         ];
@@ -17,9 +17,8 @@
           "clock"
         ];
         modules-right = [
-          "backlight"
+          "upower"
           "pulseaudio"
-          "temperature"
           "memory"
           "network"
         ];

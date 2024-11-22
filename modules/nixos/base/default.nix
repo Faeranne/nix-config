@@ -107,6 +107,10 @@
     };
   };
 
+  services = {
+    upower.enable = true;
+  };
+
   programs = {
     # I like ZSH, and having it as a system level shell is nice
     zsh.enable = true;

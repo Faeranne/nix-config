@@ -37,6 +37,10 @@
             method = "symlink";
           }
           {
+            directory = ".local/share/ruffle/SharedObjects/localhost";
+            method = "symlink";
+          }
+          {
             directory = ".mozilla/firefox/default/storage";
             method = "symlink";
           }
