@@ -29,6 +29,19 @@
             }
           '';
         };
+        ".mozilla/native-messaging-hosts/org.keepassxc.keepassxc_browser.json" = {
+          text = ''
+            {
+              "allowed_extensions": [
+                  "keepassxc-browser@keepassxc.org"
+              ],
+              "description": "KeePassXC integration with native messaging support",
+              "name": "org.keepassxc.keepassxc_browser",
+              "path": "${pkgs.keepassxc}/bin/keepassxc-proxy",
+              "type": "stdio"
+            }
+          '';
+        };
       };
       persistence."/persist/home/nina" = {
         directories = [
@@ -122,11 +135,12 @@
           ".cache/keepassxc/keepassxc.ini"
           ".mozilla/firefox/default/cookies.sqlite"
           ".mozilla/firefox/default/cookies.sqlite-wal"
-          "storage.sqlite"
-          "storage-sync-v2.sqlite"
-          "storage-sync-v2.sqlite-wal"
-          "storage-sync-v2.sqlite-shm"
-          "content-prefs.sqlite"
+          ".mozilla/firefox/default/storage.sqlite"
+          ".mozilla/firefox/default/storage-sync-v2.sqlite"
+          ".mozilla/firefox/default/storage-sync-v2.sqlite-wal"
+          ".mozilla/firefox/default/storage-sync-v2.sqlite-shm"
+          ".mozilla/firefox/default/content-prefs.sqlite"
+          ".mozilla/firefox/default/prefs.js"
         ];
       };
     };
