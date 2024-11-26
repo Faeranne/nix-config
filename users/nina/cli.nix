@@ -6,6 +6,7 @@
       passage
       picocom
       alejandra
+      nix-output-monitor
     ];
     persistence."/persist/home/nina" = {
       directories = [

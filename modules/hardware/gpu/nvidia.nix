@@ -1,5 +1,4 @@
-{...}: let
-in {
+{pkgs, ...}: {
   #boot.initrd.kernelModules = [ "nvidia" ];
   services.xserver.videoDrivers = ["nvidia"];
   environment.systemPackages = with pkgs; [

@@ -83,6 +83,7 @@
     # or backward certain packages.
     overlays = [
       inputs.nur.overlay
+      inputs.nix-alien.overlays.default
       (final: prev: {
         # I like using the newest features of Kicad, and they tend to trickle down to stable a little
         # slowly
@@ -127,6 +128,7 @@
   programs = {
     # I like ZSH, and having it as a system level shell is nice
     zsh.enable = true;
+    nix-ld.enable = true;
   };
 
   # Some of the default programs I use that aren't explicitly configured
@@ -136,6 +138,7 @@
         appimagekit
         appimage-run
         p7zip
+        nix-alien
       ])
       ++
       # This next block only makes sense on x86 systems
