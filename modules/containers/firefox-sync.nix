@@ -1,4 +1,10 @@
-{self, myLib, config, pkgs, ...}:let
+{
+  self,
+  myLib,
+  config,
+  pkgs,
+  ...
+}: let
   containerName = "firefoxsync";
 in {
   imports = [
@@ -24,7 +30,8 @@ in {
 
   containers.${containerName} = {
     bindMounts = {
-      "/var/lib/mysql" = { #Prefer not including host path here, save it for the host itself
+      "/var/lib/mysql" = {
+        #Prefer not including host path here, save it for the host itself
         isReadOnly = false;
         create = true;
       };
@@ -38,14 +45,19 @@ in {
       port = 8096;
     };
 
-    config = {config, port, ...}: {
+    config = {
+      config,
+      port,
+      ...
+    }: {
       imports = [
         ./base.nix
       ];
 
       networking = {
-        firewall = { # Make sure to add any ports needed for wireguard
-          allowedTCPPorts = [ port ];
+        firewall = {
+          # Make sure to add any ports needed for wireguard
+          allowedTCPPorts = [port];
         };
       };
       services.firefox-syncserver = {

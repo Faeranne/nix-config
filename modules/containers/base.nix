@@ -1,4 +1,8 @@
-{inputs, lib, ...}:{
+{
+  inputs,
+  lib,
+  ...
+}: {
   imports = [
     inputs.nix-topology.nixosModules.default
   ];
@@ -11,7 +15,7 @@
   time.timeZone = "America/Indiana/Indianapolis";
   i18n.defaultLocale = "en_US.UTF-8";
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = ["nix-command" "flakes"];
 
   system.stateVersion = "23.11";
 }

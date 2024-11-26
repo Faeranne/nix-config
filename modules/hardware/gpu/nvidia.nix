@@ -1,8 +1,14 @@
-{ config, systemConfig, lib, pkgs, ... }: let
+{
+  config,
+  systemConfig,
+  lib,
+  pkgs,
+  ...
+}: let
   isDesktop = (builtins.elem "gnome" systemConfig.elements) || (builtins.elem "kde" systemConfig.elements);
 in {
   #boot.initrd.kernelModules = [ "nvidia" ];
-  services.xserver.videoDrivers = [ "nvidia" ];
+  services.xserver.videoDrivers = ["nvidia"];
   environment.systemPackages = with pkgs; [
     cudatoolkit
   ];

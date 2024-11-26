@@ -1,8 +1,13 @@
-{self, config, pkgs, ...}:let
+{
+  self,
+  config,
+  pkgs,
+  ...
+}: let
   localCfg = builtins.fromJSON (builtins.readFile ./config.json);
 in {
   imports = with self.nixosModules; [
-    base 
+    base
     desktop
     laptop
     extras.storage
@@ -17,7 +22,7 @@ in {
       mode = "770";
       generator = {
         script = "wireguard";
-        tags = [ "wireguard" ];
+        tags = ["wireguard"];
       };
     };
   };
@@ -31,8 +36,8 @@ in {
     hostName = "laura";
     hostId = "3896b7b3";
     firewall = {
-      allowedTCPPorts = [ ];
-      allowedUDPPorts = [ ];
+      allowedTCPPorts = [];
+      allowedUDPPorts = [];
     };
   };
 
@@ -40,7 +45,7 @@ in {
     "/boot" = {
       device = "/dev/disk/by-uuid/${localCfg.bootID}";
       fsType = "vfat";
-      options = [ "fmask=0022" "dmask=0022" ];
+      options = ["fmask=0022" "dmask=0022"];
     };
   };
 
@@ -57,7 +62,7 @@ in {
 
   home-manager = {
     sharedModules = [
-      ({...}:{
+      ({...}: {
         wayland.windowManager.sway = {
           config = {
             output = {

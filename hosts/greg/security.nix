@@ -1,4 +1,4 @@
-{self, ...}:{
+{self, ...}: {
   age.secrets = {
     "openvpn_pass" = {
       rekeyFile = self + "/secrets/containers/wireguard.age";
@@ -26,7 +26,7 @@
       mode = "770";
       generator = {
         script = "passphrase";
-        tags = [ "pregen" ];
+        tags = ["pregen"];
       };
     };
     paperless_superuser = {
@@ -35,7 +35,7 @@
       mode = "770";
       generator = {
         script = "passphrase";
-        tags = [ "pregen" ];
+        tags = ["pregen"];
       };
     };
     mullvad = {
@@ -44,7 +44,7 @@
       mode = "770";
       generator = {
         script = "wireguard";
-        tags = [ "fixed" ];
+        tags = ["fixed"];
       };
     };
     "wggreg" = {
@@ -53,7 +53,7 @@
       mode = "770";
       generator = {
         script = "wireguard";
-        tags = [ "wireguard" ];
+        tags = ["wireguard"];
       };
     };
   };

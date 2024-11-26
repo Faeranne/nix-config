@@ -1,4 +1,4 @@
-{...}:let
+{...}: let
   containerName = "jellyfin";
 in {
   imports = [
@@ -49,7 +49,8 @@ in {
       "/dev/nvidia-modeset" = {
         hostPath = "/dev/nvidia-modeset";
         isReadOnly = false;
-      }; "/dev/nvidia-uvm" = {
+      };
+      "/dev/nvidia-uvm" = {
         hostPath = "/dev/nvidia-uvm";
         isReadOnly = false;
       };
@@ -97,21 +98,25 @@ in {
       port = 8096;
     };
 
-    config = {pkgs, port, ...}: {
+    config = {
+      pkgs,
+      port,
+      ...
+    }: {
       imports = [
         ./base.nix
       ];
 
       networking = {
         firewall = {
-          allowedTCPPorts = [ port ];
+          allowedTCPPorts = [port];
         };
       };
 
       nixpkgs.config.allowUnfree = true;
 
       services = {
-        xserver.videoDrivers = [ "nvidia" ];
+        xserver.videoDrivers = ["nvidia"];
         jellyfin.enable = true;
       };
 
@@ -142,7 +147,6 @@ in {
         users.jellyfin.uid = 997;
         groups.jellyfin.gid = 997;
       };
-
     };
   };
 }

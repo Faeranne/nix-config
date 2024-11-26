@@ -1,4 +1,8 @@
-{config, lib, ...}:{
+{
+  config,
+  lib,
+  ...
+}: {
   options = {
     environment = {
       # This defines an `environment.createDir` option
@@ -105,18 +109,21 @@
       # This is a script that runs on *every* activation.  Activations
       # happen when `nixos-rebuild test` or `nixos-rebuild switch` is
       # run, as well as every single time the system boots.
-      # 
+      #
       # This script handles creating useful directories ahead of time.
-      # these are defined in `environments.createDir`.  See in the 
+      # these are defined in `environments.createDir`.  See in the
       # options field at the top for more info.
-      allDirs = lib.foldl' (acc: value: acc + ''
-        mkdir -p --mode="${value.permissions}" "${value.path}"
-        chown "${value.owner}" "${value.path}"
-      '') "" cfg;
+      allDirs = lib.foldl' (acc: value:
+        acc
+        + ''
+          mkdir -p --mode="${value.permissions}" "${value.path}"
+          chown "${value.owner}" "${value.path}"
+        '') ""
+      cfg;
     in {
       createDirectories = {
         text = allDirs;
-        deps = [ "persist-files" ];
+        deps = ["persist-files"];
       };
     };
   };

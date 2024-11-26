@@ -1,4 +1,8 @@
-{config, myLib, ...}:let
+{
+  config,
+  myLib,
+  ...
+}: let
   # Traefik is dependent on the host, so we're gonna make each traefik unique
   containerName = "traefik${config.networking.hostName}";
   hostConfig = config;
@@ -33,12 +37,20 @@ in {
       ];
     };
 
-    config = {hostName, port, lib, toForward, extraServices, extraRouters, ...}: let
+    config = {
+      hostName,
+      port,
+      lib,
+      toForward,
+      extraServices,
+      extraRouters,
+      ...
+    }: let
       containers = myLib.gatherContainers;
-      services = lib.genAttrs toForward (serv: let 
-        path = (lib.splitString "."  serv); # path starts out as "container.service" getAttrFromPath requires it as a list.
+      services = lib.genAttrs toForward (serv: let
+        path = lib.splitString "." serv; # path starts out as "container.service" getAttrFromPath requires it as a list.
         # this and set turn it into something getAttrFromPath expects ([ "container" "services" "service"]
-        set = [(builtins.elemAt path 0)] ++ [ "services" ] ++ [(builtins.elemAt path 1)];
+        set = [(builtins.elemAt path 0)] ++ ["services"] ++ [(builtins.elemAt path 1)];
         ip = (lib.getAttrFromPath [(builtins.elemAt path 0)] containers).ip;
         service = lib.getAttrFromPath set containers;
       in {
@@ -52,8 +64,9 @@ in {
       ];
 
       networking = {
-        firewall = { # Make sure to add any ports needed for wireguard
-          allowedTCPPorts = [ port ];
+        firewall = {
+          # Make sure to add any ports needed for wireguard
+          allowedTCPPorts = [port];
         };
       };
       systemd = {
@@ -96,20 +109,27 @@ in {
             ping.entrypoint = "internal";
           };
           dynamicConfigOptions.http = {
-            routers = (builtins.mapAttrs (name: value: {
-              rule = "Host(`${value.hostName}`)";
-              service = name;
-              entryPoints = [ "websecure" ];
-            }) services) // {
-              dashboard = {
-                rule = "Host(`${hostName}`)";
-                service = "api@internal";
-                entryPoints = [ "websecure" ];
-              };
-            } // extraRouters;
-            services = (builtins.mapAttrs (name: value: {
-              loadBalancer.servers = [ {url = "http://${value.ip}:${toString value.port}"; } ];
-            }) services) // extraServices;
+            routers =
+              (builtins.mapAttrs (name: value: {
+                  rule = "Host(`${value.hostName}`)";
+                  service = name;
+                  entryPoints = ["websecure"];
+                })
+                services)
+              // {
+                dashboard = {
+                  rule = "Host(`${hostName}`)";
+                  service = "api@internal";
+                  entryPoints = ["websecure"];
+                };
+              }
+              // extraRouters;
+            services =
+              (builtins.mapAttrs (name: value: {
+                  loadBalancer.servers = [{url = "http://${value.ip}:${toString value.port}";}];
+                })
+                services)
+              // extraServices;
           };
         };
       };

@@ -1,14 +1,20 @@
-{ config, lib, pkgs, modulesPath, inputs, ... }:
 {
-  imports =
-    [ (modulesPath + "/installer/scan/not-detected.nix")
-      inputs.nixos-hardware.nixosModules.raspberry-pi-4
-    ];
+  config,
+  lib,
+  pkgs,
+  modulesPath,
+  inputs,
+  ...
+}: {
+  imports = [
+    (modulesPath + "/installer/scan/not-detected.nix")
+    inputs.nixos-hardware.nixosModules.raspberry-pi-4
+  ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" ];
-  boot.initrd.kernelModules = [ "genet" "broadcom" ];
+  boot.initrd.availableKernelModules = ["xhci_pci"];
+  boot.initrd.kernelModules = ["genet" "broadcom"];
   boot.kernelModules = config.boot.initrd.kernelModules;
-  boot.extraModulePackages = [ ];
+  boot.extraModulePackages = [];
 
   # We rely on Tow-boot to ensure a uniform platform
   boot.loader = {

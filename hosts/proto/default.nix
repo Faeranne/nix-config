@@ -1,4 +1,11 @@
-{config, self, pkgs, inputs, lib, ...}:{
+{
+  config,
+  self,
+  pkgs,
+  inputs,
+  lib,
+  ...
+}: {
   imports = [
     self.nixosModules.base
     self.nixosModules.proto
@@ -14,7 +21,7 @@
     };
   };
   users.users.nina = {
-    extraGroups = [ "wheel" "networkmanager" "video" ];
+    extraGroups = ["wheel" "networkmanager" "video"];
     initialHashedPassword = "$6$a85Gz9ZfsaqMElt9$3Z2d.KCAal.vJ6nhhZ.MUZ/jGGgMM/PSLamfzsTAlbs/sMJNk1RFKbkOeDWj5GpqgkFYuiXGVi0p79aLMPfgD0";
     hashedPasswordFile = lib.mkForce null;
   };
@@ -32,11 +39,13 @@
     userControlled.enable = true;
   };
   environment = {
-    systemPackages = [
-      self.packages.${pkgs.system}.wifi
-    ] ++ (with pkgs; [
-      git
-      age
-    ]);
+    systemPackages =
+      [
+        self.packages.${pkgs.system}.wifi
+      ]
+      ++ (with pkgs; [
+        git
+        age
+      ]);
   };
 }

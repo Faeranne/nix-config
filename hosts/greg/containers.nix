@@ -1,8 +1,15 @@
-{self, config, myLib, lib, ...}: let
+{
+  self,
+  config,
+  myLib,
+  lib,
+  ...
+}: let
   mkPeer = myLib.mkPeer "greg";
 in {
   imports = [
-    self.containerModules.jellyfin self.containerModules.servarr
+    self.containerModules.jellyfin
+    self.containerModules.servarr
     self.containerModules.rss
     self.containerModules.paperless
     self.containerModules.traefik
@@ -123,23 +130,23 @@ in {
           wizarr = {
             rule = "Host(`wizarr.faeranne.com`)";
             service = "wizarr";
-            entryPoints = [ "websecure" ];
+            entryPoints = ["websecure"];
           };
           actual = {
             rule = "Host(`actual.faeranne.com`)";
             service = "actual";
-            entryPoints = [ "websecure" ];
+            entryPoints = ["websecure"];
           };
           lube = {
             rule = "Host(`lube.faeranne.com`)";
             service = "lube";
-            entryPoints = [ "websecure" ];
+            entryPoints = ["websecure"];
           };
         };
         extraServices = {
-          wizarr.loadBalancer.servers = [ {url = "http://10.88.1.3:5690"; } ];
-          actual.loadBalancer.servers = [ {url = "http://10.88.1.4:5006"; } ];
-          lube.loadBalancer.servers = [ {url = "http://10.88.1.5:8080"; } ];
+          wizarr.loadBalancer.servers = [{url = "http://10.88.1.3:5690";}];
+          actual.loadBalancer.servers = [{url = "http://10.88.1.4:5006";}];
+          lube.loadBalancer.servers = [{url = "http://10.88.1.5:8080";}];
         };
       };
     };
@@ -171,10 +178,12 @@ in {
     };
     paperless = {
       bindMounts = {
-        "/var/lib/paperless" = { #Prefer not including host path here, save it for the host itself
+        "/var/lib/paperless" = {
+          #Prefer not including host path here, save it for the host itself
           hostPath = "/Storage/volumes/paperless";
         };
-        "/var/lib/paperless/media" = { #Prefer not including host path here, save it for the host itself
+        "/var/lib/paperless/media" = {
+          #Prefer not including host path here, save it for the host itself
           hostPath = "/Storage/media/paperless";
         };
       };

@@ -1,4 +1,10 @@
-{self, config, inputs, lib, ...}:{
+{
+  self,
+  config,
+  inputs,
+  lib,
+  ...
+}: {
   # This madates that the `sudo` command
   # requires a password.
   security.sudo.wheelNeedsPassword = true;
@@ -15,7 +21,11 @@
     generators = {
       # This generates ssh private keys.  This is primarily used for the git container, since it needs
       # to pass ssh commands through the host. See modules/nixos/base/security.nix for more details
-      sshkey = {pkgs, file, ...}: ''
+      sshkey = {
+        pkgs,
+        file,
+        ...
+      }: ''
         priv=$(mkfifo key && ((cat key ; rm key)&) && (echo y | ${pkgs.openssh}/bin/ssh-keygen -N "" -q -f key > /dev/null))
         cat key.pub > ${lib.escapeShellArg (lib.removeSuffix ".age" file + ".pub")}
         echo "$priv"
@@ -26,7 +36,7 @@
     {
       path = "/persist/home";
       owner = "nobody:users";
-      permissions = "775"; 
+      permissions = "775";
     }
   ];
 

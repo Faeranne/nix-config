@@ -1,4 +1,8 @@
-{config, lib, ...}: {
+{
+  config,
+  lib,
+  ...
+}: {
   environment.persistence = lib.mkIf config.nexus.storage.impermanence {
     "/persist" = {
       directories = [
@@ -33,5 +37,5 @@
       ping.entrypoint = "internal";
     };
   };
-  networking.firewall.allowedTCPPorts = [ 80 443 ];
+  networking.firewall.allowedTCPPorts = [80 443];
 }

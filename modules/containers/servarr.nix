@@ -1,10 +1,11 @@
-{config, ...}:let
+{config, ...}: let
   containerName = "servarr";
 in {
   imports = [
     (import ./template.nix containerName)
   ];
-  networking = { wireguard.interfaces = {
+  networking = {
+    wireguard.interfaces = {
       "wg${containerName}" = {
         ips = ["10.100.1.6/32"];
       };
@@ -75,7 +76,11 @@ in {
         ombi = 5000;
       };
     };
-    config = {ports, lib, ...}: let
+    config = {
+      ports,
+      lib,
+      ...
+    }: let
       portList = lib.mapAttrsToList (service: port: port) ports;
       hostConfig = config;
     in {
@@ -90,7 +95,7 @@ in {
       };
 
       services = {
-        prowlarr.enable = true; 
+        prowlarr.enable = true;
         sonarr = {
           enable = true;
           dataDir = "/var/lib/sonarr";

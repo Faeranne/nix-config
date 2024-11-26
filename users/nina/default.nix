@@ -1,8 +1,11 @@
-{config, pkgs, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
+  nix.settings.trusted-users = ["nina"];
 
-  nix.settings.trusted-users = [ "nina" ];
-
-  home-manager.users.nina = {...}:{
+  home-manager.users.nina = {...}: {
     imports = [
       ./base.nix
     ];
@@ -43,7 +46,7 @@
     {
       path = "/persist/home/nina";
       owner = "nina:nina";
-      permissions = "770"; 
+      permissions = "770";
     }
   ];
 

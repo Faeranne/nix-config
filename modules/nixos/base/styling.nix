@@ -1,4 +1,4 @@
-{self, ...}:{
+{self, ...}: {
   stylix = {
     autoEnable = false;
     polarity = "dark";

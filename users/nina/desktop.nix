@@ -1,6 +1,11 @@
-{pkgs, lib, systemConfig, ...}: {
+{
+  pkgs,
+  lib,
+  systemConfig,
+  ...
+}: {
   # Using xdg.portal as my trigger to identify desktop systems, vs server systems
-  config = lib.mkIf systemConfig.xdg.portal.enable{
+  config = lib.mkIf systemConfig.xdg.portal.enable {
     programs = {
       firefox = {
         profiles.default = {
@@ -61,7 +66,7 @@
       };
     };
     services = {
-      syncthing.tray.enable =true;
+      syncthing.tray.enable = true;
       mako = {
         enable = true;
         output = "ViewSonic Corporation VP2468 Series UN8170400211";
@@ -75,7 +80,7 @@
     # TODO: fix monitor layout options.
     wayland.windowManager.sway.config = {
       startup = [
-        { command = "vesktop"; }
+        {command = "vesktop";}
       ];
     };
     home = {
@@ -98,7 +103,7 @@
         qimgv
         blockbench
         #TODO: Fixes nixos/nixpkgs#310227 while waiting for nixos/nixpkgs#310696 to make it to release
-        (vesktop.override { withSystemVencord = false; })
+        (vesktop.override {withSystemVencord = false;})
         transmission-remote-gtk
         pavucontrol
         ryujinx

@@ -1,5 +1,4 @@
-{pkgs, ...}:
-{
+{pkgs, ...}: {
   services.ssh-agent.enable = true;
   programs.ssh = {
     forwardAgent = true;

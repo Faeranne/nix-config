@@ -1,5 +1,4 @@
-{pkgs, ...}:
-{
+{pkgs, ...}: {
   programs = {
     git = {
       userEmail = "nina@projectmakeit.com";

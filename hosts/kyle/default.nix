@@ -1,6 +1,12 @@
-{self, config, pkgs, lib, ...}:{
+{
+  self,
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   imports = with self.nixosModules; [
-    base 
+    base
     desktop
     gaming
     services.clamav
@@ -37,7 +43,7 @@
     "/boot" = {
       device = "/dev/disk/by-uuid/";
       fsType = "vfat";
-      options = [ "fmask=0022" "dmask=0022" ];
+      options = ["fmask=0022" "dmask=0022"];
     };
   };
 
@@ -50,7 +56,10 @@
       addresses = ["192.168.1.81"];
       network = "home";
       physicalConnections = [
-        {node = "switch3"; interface = "eth2";}
+        {
+          node = "switch3";
+          interface = "eth2";
+        }
       ];
     };
   };

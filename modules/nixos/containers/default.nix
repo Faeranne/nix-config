@@ -1,10 +1,15 @@
-{config, self, lib, ...}: {
+{
+  config,
+  self,
+  lib,
+  ...
+}: {
   options = {
     containers = lib.mkOption {
-      type = lib.types.attrsOf (lib.types.submodule ({...}:{
+      type = lib.types.attrsOf (lib.types.submodule ({...}: {
         options = {
           bindMounts = lib.mkOption {
-            type = lib.types.attrsOf (lib.types.submodule ({...}:{
+            type = lib.types.attrsOf (lib.types.submodule ({...}: {
               options = {
                 create = lib.mkOption {
                   type = lib.types.bool;
@@ -28,12 +33,18 @@
   config = let
     cfg = config.containers;
     foldPaths = lib.foldlAttrs (acc: _: value: let
-      res = if (value.create) then [{
-        inherit (value) owner;
-        path = value.hostPath;
-        permissions = value.permissions;
-      }] else [];
-    in acc ++ res) [];
+      res =
+        if (value.create)
+        then [
+          {
+            inherit (value) owner;
+            path = value.hostPath;
+            permissions = value.permissions;
+          }
+        ]
+        else [];
+    in
+      acc ++ res) [];
     createMounts = lib.foldlAttrs (acc: _: value: acc ++ (foldPaths value.bindMounts)) [] cfg;
   in {
     environment.createDir = createMounts;
@@ -44,7 +55,7 @@
         mode = "770";
         generator = {
           script = "wireguard";
-          tags = [ "wireguard" ];
+          tags = ["wireguard"];
         };
       };
       "wggateway" = {
@@ -53,7 +64,7 @@
         mode = "770";
         generator = {
           script = "wireguard";
-          tags = [ "wireguard" ];
+          tags = ["wireguard"];
         };
       };
     };
@@ -79,7 +90,6 @@
       };
 
       wireguard.interfaces = {
-
         # Is used to join container wireguards between hosts
         "wghub" = {
           privateKeyFile = config.age.secrets."wghub".path;
@@ -98,7 +108,7 @@
 
       nat = {
         enable = true;
-        internalInterfaces = [ "wggateway" ];
+        internalInterfaces = ["wggateway"];
       };
     };
     users = {
@@ -112,7 +122,7 @@
           gid = 997;
         };
         users = {
-          members = [ "container" ];
+          members = ["container"];
         };
       };
     };

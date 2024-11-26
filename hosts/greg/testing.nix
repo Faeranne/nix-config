@@ -1,4 +1,8 @@
-{config, lib, ...}:{
+{
+  config,
+  lib,
+  ...
+}: {
   virtualisation.vmVariant = {
     virtualisation = {
       sharedDirectories = {

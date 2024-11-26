@@ -1,11 +1,16 @@
-{config, pkgs, lib, ...}: {
-  config =  let
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
+  config = let
     swaylock-bin = "${pkgs.swaylock}/bin/swaylock";
   in {
     home = {
       packages = with pkgs; [
         firefoxpwa
-        jami 
+        jami
         gimp
         inkscape
         raysession
@@ -153,7 +158,7 @@
         profiles = {
           default = {
             extensions = let
-            frankerfacez = pkgs.nur.repos.rycee.firefox-addons.buildFirefoxXpiAddon {
+              frankerfacez = pkgs.nur.repos.rycee.firefox-addons.buildFirefoxXpiAddon {
                 addonId = "{d53b1948-c569-4e95-bad3-d873db4885a9}";
                 version = "4.75.7.0";
                 pname = "frankerfacez";
@@ -162,42 +167,46 @@
                 meta = {
                 };
               };
-            in [
-              frankerfacez
-            ] ++ (with pkgs.nur.repos.bandithedoge.firefoxAddons; [
-              augmented-steam
-              #betterviewer
-              #downthemall
-              enhanced-github
-              indie-wiki-buddy
-              lovely-forks
-              #pronoundb
-              sponsorblock
-              #steam-database
-              #tridactyl
-              ublock-origin
-              violentmonkey
-            ]) ++ (with pkgs.nur.repos.ethancedwards8.firefox-addons; [
-              enhancer-for-youtube
-            ]) ++ (with pkgs.nur.repos.rycee.firefox-addons; [
-              awesome-rss
-              #betterttv
-              consent-o-matic
-              container-tab-groups
-              darkreader
-              #duckduckgo-privacy-essentials
-              #gsconnect
-              kagi-search
-              keepassxc-browser
-              modrinthify
-              #mullvad
-              multi-account-containers
-              private-relay
-              pwas-for-firefox
-              return-youtube-dislikes
-              shinigami-eyes
-              #tetrio-plus
-            ]);
+            in
+              [
+                frankerfacez
+              ]
+              ++ (with pkgs.nur.repos.bandithedoge.firefoxAddons; [
+                augmented-steam
+                #betterviewer
+                #downthemall
+                enhanced-github
+                indie-wiki-buddy
+                lovely-forks
+                #pronoundb
+                sponsorblock
+                #steam-database
+                #tridactyl
+                ublock-origin
+                violentmonkey
+              ])
+              ++ (with pkgs.nur.repos.ethancedwards8.firefox-addons; [
+                enhancer-for-youtube
+              ])
+              ++ (with pkgs.nur.repos.rycee.firefox-addons; [
+                awesome-rss
+                #betterttv
+                consent-o-matic
+                container-tab-groups
+                darkreader
+                #duckduckgo-privacy-essentials
+                #gsconnect
+                kagi-search
+                keepassxc-browser
+                modrinthify
+                #mullvad
+                multi-account-containers
+                private-relay
+                pwas-for-firefox
+                return-youtube-dislikes
+                shinigami-eyes
+                #tetrio-plus
+              ]);
 
             settings = {
               "extensions.autoDisableScopes" = 0;
@@ -205,11 +214,13 @@
             search = {
               engines = {
                 "Kagi" = {
-                  urls = [{
-                    template = "https://kagi.com/search?q={searchTerms}";
-                  }];
+                  urls = [
+                    {
+                      template = "https://kagi.com/search?q={searchTerms}";
+                    }
+                  ];
                   iconUpdateURL = "https://assets.kagi.com/v2/favicon-32x32.png";
-                  definedAliases = [ "@kagi" ];
+                  definedAliases = ["@kagi"];
                 };
               };
               force = true;
@@ -277,12 +288,13 @@
           modifier = config.wayland.windowManager.sway.config.modifier;
           menu = config.wayland.windowManager.sway.config.menu;
           swaylock-bin = "${pkgs.swaylock}/bin/swaylock";
-        in lib.mkOptionDefault {
-          "${modifier}+g" = "exec TIMESTAMP=$(date +\"%Y%m%d%H%M\") grim /tmp/screenshot$TIMESTAMP.png && gimp /tmp/screenshot$TIMESTAMP.png && rm /tmp/screenshot$TIMESTAMP.png";
-          "${modifier}+Mod1+f" = "exec ${pkgs.grim}/bin/grim -g \"$(${pkgs.slurp}/bin/slurp)\" - | ${pkgs.qrscan}/bin/qrscan - | sed -nr 's/.*secret=([[a-zA-Z0-9]*)&.*/\\1/p' | ${pkgs.wl-clipboard}/bin/wl-copy";
-          "${modifier}+Mod1+l" = "exec ${swaylock-bin} -fF";
-          "${modifier}+space" = "exec ${menu}";
-        };
+        in
+          lib.mkOptionDefault {
+            "${modifier}+g" = "exec TIMESTAMP=$(date +\"%Y%m%d%H%M\") grim /tmp/screenshot$TIMESTAMP.png && gimp /tmp/screenshot$TIMESTAMP.png && rm /tmp/screenshot$TIMESTAMP.png";
+            "${modifier}+Mod1+f" = "exec ${pkgs.grim}/bin/grim -g \"$(${pkgs.slurp}/bin/slurp)\" - | ${pkgs.qrscan}/bin/qrscan - | sed -nr 's/.*secret=([[a-zA-Z0-9]*)&.*/\\1/p' | ${pkgs.wl-clipboard}/bin/wl-copy";
+            "${modifier}+Mod1+l" = "exec ${swaylock-bin} -fF";
+            "${modifier}+space" = "exec ${menu}";
+          };
         input = {
           "*" = {
             xkb_layout = "us";
@@ -291,8 +303,8 @@
           };
         };
         startup = [
-          { command = "mako"; }
-          { command = "kdeconnect-indicator"; }
+          {command = "mako";}
+          {command = "kdeconnect-indicator";}
         ];
       };
     };
@@ -301,16 +313,16 @@
         Unit = {
           Description = "Idle Inhibit based on audio";
           ConditionEnvironment = "WAYLAND_DISPLAY";
-          PartOf = ["graphical-session.target" ];
+          PartOf = ["graphical-session.target"];
         };
         Service = {
           Type = "simple";
           Restart = "always";
-          Environment = [ "PATH=${lib.makeBinPath [ pkgs.bash ]}" ];
-          ExecStart = "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit";     
+          Environment = ["PATH=${lib.makeBinPath [pkgs.bash]}"];
+          ExecStart = "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit";
         };
         Install = {
-          WantedBy = [ "sway-session.target" ];
+          WantedBy = ["sway-session.target"];
         };
       };
     };
@@ -357,7 +369,7 @@
         waybar.enable = true;
         firefox = {
           enable = true;
-          profileNames = [ "default" ];
+          profileNames = ["default"];
         };
       };
     };

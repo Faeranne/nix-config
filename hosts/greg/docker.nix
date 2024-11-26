@@ -1,4 +1,4 @@
-{config, ...}:{
+{config, ...}: {
   virtualisation.oci-containers.containers = {
     /*
     "fasten" = {
@@ -22,9 +22,9 @@
         "8080:8080"
       ];
       environment = {
-        LC_ALL="en_US";
-        LANG="en_US";
-        LUBELOGGER_LOGO_URL="https://cloud.faeranne.com/s/qSnYxnzi7pbCWKT/download/logo64.png";
+        LC_ALL = "en_US";
+        LANG = "en_US";
+        LUBELOGGER_LOGO_URL = "https://cloud.faeranne.com/s/qSnYxnzi7pbCWKT/download/logo64.png";
       };
       volumes = [
         "/Storage/volumes/lubelogger/config:/App/config"
@@ -63,12 +63,13 @@
         "9091:9091"
       ];
       environment = {
-        PUID="999"; GUID="100";
-        VPN_SERVICE_PROVIDER="mullvad";
-        VPN_TYPE="wireguard";
-        SERVER_COUNTRIES="Sweden";
-        SERVER_CITIES="Gothenburg";
-        TZ="America/Indiana/Indianapolis";
+        PUID = "999";
+        GUID = "100";
+        VPN_SERVICE_PROVIDER = "mullvad";
+        VPN_TYPE = "wireguard";
+        SERVER_COUNTRIES = "Sweden";
+        SERVER_CITIES = "Gothenburg";
+        TZ = "America/Indiana/Indianapolis";
       };
       volumes = [
         "/Storage/volumes/gluetun:/gluetun"
@@ -85,17 +86,17 @@
       autoStart = true;
       image = "lscr.io/linuxserver/transmission:latest";
       environment = {
-        PUID="999";
-        GUID="100";
-        TZ="America/Indiana";
-        TRANSMISSION_WEB_HOME="/transmission";
+        PUID = "999";
+        GUID = "100";
+        TZ = "America/Indiana";
+        TRANSMISSION_WEB_HOME = "/transmission";
       };
       volumes = [
         "/Storage/volumes/transmission:/config"
         "/Storage/volumes/transmission:/downloads"
         "/Storage/volumes/gluetun_port:/mnt/gluetun_port"
       ];
-      dependsOn = [ "gluetun" ];
+      dependsOn = ["gluetun"];
       extraOptions = [
         "--network=container:gluetun"
       ];

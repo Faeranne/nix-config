@@ -1,6 +1,5 @@
-{
-  writeScriptBin
-}: writeScriptBin "setupWifi" ''
+{writeScriptBin}:
+writeScriptBin "setupWifi" ''
   set -e
   SSID=\"$1\"
   PSK=\"$2\"

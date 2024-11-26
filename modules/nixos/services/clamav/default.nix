@@ -1,4 +1,8 @@
-{config, pkgs, ...}:{
+{
+  config,
+  pkgs,
+  ...
+}: {
   /*
   environment = {
     persistence."/persist" = {
@@ -44,7 +48,7 @@
         StateDirectoryMode = "0755";
       };
     };
-    
+
     freshclam = {
       description = "ClamAV Virus Database Updater";
       after = [ "network.target" ];

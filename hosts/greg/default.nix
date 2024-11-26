@@ -1,8 +1,13 @@
-{self, config, myLib, ...}: let
+{
+  self,
+  config,
+  myLib,
+  ...
+}: let
   mkPeer = myLib.mkPeer "sarah";
-in{
+in {
   imports = with self.nixosModules; [
-    base 
+    base
     emulation
     containers
     server
@@ -19,26 +24,26 @@ in{
 
   boot = {
     binfmt.emulatedSystems = ["aarch64-linux"];
-    zfs.extraPools = [ "Storage" ];
+    zfs.extraPools = ["Storage"];
   };
 
   networking = {
     hostName = "greg";
     hostId = "ccd933cc";
     firewall = {
-      allowedTCPPorts = [ 25565 25566 3876 9091 80 443 52821 ];
-      allowedUDPPorts = [ 24454 ];
+      allowedTCPPorts = [25565 25566 3876 9091 80 443 52821];
+      allowedUDPPorts = [24454];
     };
     nat = {
       externalInterface = "eno1";
     };
     wireguard.interfaces = {
       wghub = {
-        ips = [ "10.110.1.2/32" ];
+        ips = ["10.110.1.2/32"];
         listenPort = 51821;
       };
       wggateway = {
-        ips = [ "10.120.1.2/32" ];
+        ips = ["10.120.1.2/32"];
       };
     };
   };
@@ -47,7 +52,7 @@ in{
     "/boot" = {
       device = "/dev/disk/by-uuid/6698-1CCF";
       fsType = "vfat";
-      options = [ "fmask=0022" "dmask=0022" ];
+      options = ["fmask=0022" "dmask=0022"];
     };
   };
 
@@ -72,7 +77,7 @@ in{
   age.rekey.hostPubkey = "age176vf5an9s7sy83ulchn08qkpm246vxdahhms3pnkjf80er8h8gqsux36hg";
 
   services = {
-    zfs.autoScrub.pools = [ "zpool" "Storage" ];
-    xserver.videoDrivers = [ "nvidia" ];
+    zfs.autoScrub.pools = ["zpool" "Storage"];
+    xserver.videoDrivers = ["nvidia"];
   };
 }

@@ -1,4 +1,10 @@
-{self, inputs, config, pkgs, ...}: {
+{
+  self,
+  inputs,
+  config,
+  pkgs,
+  ...
+}: {
   imports = [
     inputs.impermanence.nixosModules.impermanence
     inputs.home-manager.nixosModules.home-manager
@@ -34,12 +40,20 @@
       flake = "git+https://git.faeranne.com/faeranne/nix-config?ref=rebuild2";
     };
     # Sets a `nixos-version --json` field to the current git repo, which can help with debugging
-    configurationRevision = if self ? rev then self.rev else if self ? dirtyRev then self.dirtyRev else "dirty";
+    configurationRevision =
+      if self ? rev
+      then self.rev
+      else if self ? dirtyRev
+      then self.dirtyRev
+      else "dirty";
 
     # Since nixos.label is only really used when running a boot switch, which doesn't happen
     # normally in a dirty repo, I'm only including it.  Dirty just reminds me that I intentionally
     # escaped my normal methods
-    nixos.label = if self ? rev then "git-rev:${builtins.substring 0 8 self.rev}" else "dirty";
+    nixos.label =
+      if self ? rev
+      then "git-rev:${builtins.substring 0 8 self.rev}"
+      else "dirty";
 
     # This is primarily for handling stateful stuff that doesn't move correctly from version
     # to version. For example, one cannot simply upgrade Postgres, and NextCloud must be upgraded
@@ -60,7 +74,6 @@
   i18n.defaultLocale = "en_US.UTF-8";
 
   nixpkgs = {
-
     # This allows programs packaged with unknown or propriatry libraries.  Things like Discord
     # Otherwise, nix will refuse to build these programs, and thus this install will refuse
     # to build
@@ -73,16 +86,16 @@
       (final: prev: {
         # I like using the newest features of Kicad, and they tend to trickle down to stable a little
         # slowly
-        #kicad = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.kicad; 
+        #kicad = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.kicad;
         # As of this commit, PrismLauncher doesn't work right with the stable version.  Some login
         # issues. Check this later and roll back when it makes sense
-        prismlauncher = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.prismlauncher; 
-        # Inkscape crashes on wayland when a tablet is connected. 
+        prismlauncher = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.prismlauncher;
+        # Inkscape crashes on wayland when a tablet is connected.
         # https://gitlab.com/inkscape/inkscape/-/issues/4649
         inkscape = prev.pkgs.symlinkJoin {
           name = "inkscape";
-          paths = [ prev.inkscape ];
-          buildInputs = [ prev.pkgs.makeWrapper ];
+          paths = [prev.inkscape];
+          buildInputs = [prev.pkgs.makeWrapper];
           postBuild = ''
             wrapProgram $out/bin/inkscape \
               --unset WAYLAND_DISPLAY
@@ -118,29 +131,38 @@
 
   # Some of the default programs I use that aren't explicitly configured
   environment = {
-    systemPackages = ((with pkgs; 
-      [
+    systemPackages = (
+      (with pkgs; [
         appimagekit
         appimage-run
         p7zip
-      ]) ++
+      ])
+      ++
       # This next block only makes sense on x86 systems
-      (if (
-        pkgs.system == "x86_64-linux"
-      ) then (
-        # There are different packages for headless and graphical
-        # otherwise I would jsut set this in a desktop config.
-        # xdg.portal is needed for wayland desktops, so I just
-        # look for that.
-        if config.xdg.portal.enable then [ 
-          pkgs.wineWowPackages.waylandFull
-          pkgs.lxqt.lxqt-policykit
-        ] else [ 
-          pkgs.wineWowPackages.stagingFull
-        ]
-      # Nix requires else blocks. since I don't want to do anything
-      # on non-x86 systems, I just return an empty result
-      ) else [])
+      (
+        if
+          (
+            pkgs.system == "x86_64-linux"
+          )
+        then
+          (
+            # There are different packages for headless and graphical
+            # otherwise I would jsut set this in a desktop config.
+            # xdg.portal is needed for wayland desktops, so I just
+            # look for that.
+            if config.xdg.portal.enable
+            then [
+              pkgs.wineWowPackages.waylandFull
+              pkgs.lxqt.lxqt-policykit
+            ]
+            else [
+              pkgs.wineWowPackages.stagingFull
+            ]
+            # Nix requires else blocks. since I don't want to do anything
+            # on non-x86 systems, I just return an empty result
+          )
+        else []
+      )
     );
   };
 

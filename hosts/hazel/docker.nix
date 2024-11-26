@@ -1,4 +1,4 @@
-{...}:{
+{...}: {
   virtualisation.oci-containers.containers = {
     "cozy-minecraft" = {
       autoStart = true;
@@ -7,24 +7,24 @@
         "/persist/minecraft/cozy1:/data"
       ];
       environment = {
-        UID="1000";
-        EULA="true";
-        MEMORY="4G";
-        ENABLE_ROLLING_LOGS="true";
-        USE_AIKAR_FLAGS="true";
-        TYPE="FORGE";
-        VERSION="1.18.2";
-        FORGE_VERSION="40.2.17";
-        MAX_PLAYERS="10";
+        UID = "1000";
+        EULA = "true";
+        MEMORY = "4G";
+        ENABLE_ROLLING_LOGS = "true";
+        USE_AIKAR_FLAGS = "true";
+        TYPE = "FORGE";
+        VERSION = "1.18.2";
+        FORGE_VERSION = "40.2.17";
+        MAX_PLAYERS = "10";
         SNOOPER_ENABLE = "false";
-        ALLOW_FLIGHT="true";
-        GUI="false";
-        MOTD="Cozy Craft 2.0";
-        ENABLE_WHITELIST="true";
-        ENFORCE_WHITELIST="true";
-        OPS="faeranne";
-        PACKWIZ_URL="https://raw.githubusercontent.com/Faeranne/cozy-pack/master/pack.toml";
-        SPAWN_PROTECTION="0";
+        ALLOW_FLIGHT = "true";
+        GUI = "false";
+        MOTD = "Cozy Craft 2.0";
+        ENABLE_WHITELIST = "true";
+        ENFORCE_WHITELIST = "true";
+        OPS = "faeranne";
+        PACKWIZ_URL = "https://raw.githubusercontent.com/Faeranne/cozy-pack/master/pack.toml";
+        SPAWN_PROTECTION = "0";
       };
       extraOptions = [
         "--ip=10.88.1.5"
@@ -37,23 +37,23 @@
         "/persist/minecraft/gobbo:/data"
       ];
       environment = {
-        UID="1000";
-        EULA="true";
-        MEMORY="4G";
-        ENABLE_ROLLING_LOGS="true";
-        USE_AIKAR_FLAGS="true";
-        TYPE="FORGE";
-        VERSION="1.18.2";
-        FORGE_VERSION="40.2.21";
-        MAX_PLAYERS="4";
+        UID = "1000";
+        EULA = "true";
+        MEMORY = "4G";
+        ENABLE_ROLLING_LOGS = "true";
+        USE_AIKAR_FLAGS = "true";
+        TYPE = "FORGE";
+        VERSION = "1.18.2";
+        FORGE_VERSION = "40.2.21";
+        MAX_PLAYERS = "4";
         SNOOPER_ENABLE = "false";
-        ALLOW_FLIGHT="true";
-        GUI="false";
-        MOTD="Sleepover!";
-        ENABLE_WHITELIST="true";
-        ENFORCE_WHITELIST="true";
-        OPS="faeranne";
-        SPAWN_PROTECTION="0";
+        ALLOW_FLIGHT = "true";
+        GUI = "false";
+        MOTD = "Sleepover!";
+        ENABLE_WHITELIST = "true";
+        ENFORCE_WHITELIST = "true";
+        OPS = "faeranne";
+        SPAWN_PROTECTION = "0";
       };
       extraOptions = [
         "--ip=10.88.1.4"
@@ -70,26 +70,26 @@
         "24454:24454/udp"
       ];
       environment = {
-        UID="1000";
-        EULA="true";
-        MEMORY="8G";
-        ENABLE_ROLLING_LOGS="true";
-        USE_AIKAR_FLAGS="true";
-        TYPE="NEOFORGE";
-        VERSION="1.20.1";
-        NEOFORGE_VERSION="47.1.106";
-        MAX_PLAYERS="10";
+        UID = "1000";
+        EULA = "true";
+        MEMORY = "8G";
+        ENABLE_ROLLING_LOGS = "true";
+        USE_AIKAR_FLAGS = "true";
+        TYPE = "NEOFORGE";
+        VERSION = "1.20.1";
+        NEOFORGE_VERSION = "47.1.106";
+        MAX_PLAYERS = "10";
         SNOOPER_ENABLE = "false";
-        ALLOW_FLIGHT="true";
-        GUI="false";
-        LEVEL_TYPE="large_biomes";
-        ENABLE_COMMAND_BLOCK="true";
-        MOTD="Create: Lab";
-        ENABLE_WHITELIST="true";
-        ENFORCE_WHITELIST="true";
-        OPS="faeranne";
-        PACKWIZ_URL="https://git.faeranne.com/faeranne/create-labs/raw/branch/main/src/pack.toml";
-        SPAWN_PROTECTION="0";
+        ALLOW_FLIGHT = "true";
+        GUI = "false";
+        LEVEL_TYPE = "large_biomes";
+        ENABLE_COMMAND_BLOCK = "true";
+        MOTD = "Create: Lab";
+        ENABLE_WHITELIST = "true";
+        ENFORCE_WHITELIST = "true";
+        OPS = "faeranne";
+        PACKWIZ_URL = "https://git.faeranne.com/faeranne/create-labs/raw/branch/main/src/pack.toml";
+        SPAWN_PROTECTION = "0";
       };
       extraOptions = [
         "--ip=10.88.1.3"

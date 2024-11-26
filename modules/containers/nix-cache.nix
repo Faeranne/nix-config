@@ -1,4 +1,4 @@
-{config, ...}:let
+{config, ...}: let
   containerName = "nixcache";
 in {
   imports = [
@@ -13,7 +13,8 @@ in {
 
   containers.${containerName} = {
     bindMounts = {
-      "/var/lib/nixcache" = { #Prefer not including host path here, save it for the host itself
+      "/var/lib/nixcache" = {
+        #Prefer not including host path here, save it for the host itself
         isReadOnly = false;
         create = true;
       };
@@ -27,15 +28,20 @@ in {
       port = 5000;
     };
 
-    config = {hostName, port, ...}: {
+    config = {
+      hostName,
+      port,
+      ...
+    }: {
       imports = [
         # Covers some basic values, as well as fixing some potentially buggy networking issues
         ./base.nix
       ];
 
       networking = {
-        firewall = { # Make sure to add any ports needed for wireguard
-          allowedTCPPorts = [ port ];
+        firewall = {
+          # Make sure to add any ports needed for wireguard
+          allowedTCPPorts = [port];
         };
       };
       services.nix-serve = {

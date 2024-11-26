@@ -4,12 +4,12 @@
   # Inputs are locked with flake.lock, to ensure versions match
   # then are fetched as per <name>.url and passed as a set to the
   # function `outputs` below.
-  inputs = { 
+  inputs = {
     # This is the base nixpkgs repo.  Contains almost anything you could need.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     #nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-23.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs";
-    # Flake utils does some cool things with flakes. there's more 
+    # Flake utils does some cool things with flakes. there's more
     # details where they're used
     flake-utils.url = "github:numtide/flake-utils/main";
     # nixos-hardware contains defaults for a lot of well-known hardware
@@ -19,7 +19,7 @@
     # temporary.  On each reboot the / directory is fresh and setup from
     # scratch.  This helps prevent weird state from building up.
     impermanence.url = "github:nix-community/impermanence";
-    # Ragenix is a `rage` based secret management tool.  More details 
+    # Ragenix is a `rage` based secret management tool.  More details
     # are below in the `agenix-rekey` section of `outputs` below
     ragenix = {
       url = "github:yaxitech/ragenix";
@@ -117,7 +117,13 @@
 
   # since `inputs` is a single variable here, it's the set of flakes input above.
   # this also includes this flake as `self`.
-  outputs = {self, nixpkgs, agenix-rekey, nix-topology, ...}@inputs: let
+  outputs = {
+    self,
+    nixpkgs,
+    agenix-rekey,
+    nix-topology,
+    ...
+  } @ inputs: let
     forAllSystems = nixpkgs.lib.genAttrs [
       "aarch64-linux"
       "x86_64-linux"
@@ -146,23 +152,24 @@
 
     userModules = import ./users;
 
-
     # This is for handling agenix rekey and generate commands
     devShells = forAllSystems (system: let
       pkgs = import inputs.nixpkgs {
         inherit system;
-        overlays = [ 
+        overlays = [
           nix-topology.overlays.default
           (final: prev: {
             installSystem = self.legacyPackages.${system}.installSystem;
             gatherClues = self.legacyPackages.${system}.gatherClues;
-            pythonPackagesOverlays = prev.pythonPackagesOverlays ++ [
-              (
-                python-final: python-prev: {
-                  diskinfo = self.legacyPackages.${system}.diskinfo;
-                }
-              )
-            ];
+            pythonPackagesOverlays =
+              prev.pythonPackagesOverlays
+              ++ [
+                (
+                  python-final: python-prev: {
+                    diskinfo = self.legacyPackages.${system}.diskinfo;
+                  }
+                )
+              ];
           })
           inputs.agenix-rekey.overlays.default
         ];
@@ -174,23 +181,26 @@
         '';
         # there's a split here because the agenix-rekey package has the same name as the input,
         # so we have to manually call agenix-rekey from the pkgs set to prevent it from breaking.
-        packages = (with pkgs; [ 
-          age-plugin-yubikey
-          age
-          installSystem
-          gatherClues
-        ]) ++ [
-          pkgs.agenix-rekey 
-        ];
+        packages =
+          (with pkgs; [
+            age-plugin-yubikey
+            age
+            installSystem
+            gatherClues
+          ])
+          ++ [
+            pkgs.agenix-rekey
+          ];
       };
       installSystem = pkgs.mkShell (let
-        python = pkgs.python312.withPackages (python-pkgs: with python-pkgs; [
-          pythondialog
-          pyparted
-          netifaces
-          requests
-          self.legacyPackages.${system}.diskinfo
-        ]);
+        python = pkgs.python312.withPackages (python-pkgs:
+          with python-pkgs; [
+            pythondialog
+            pyparted
+            netifaces
+            requests
+            self.legacyPackages.${system}.diskinfo
+          ]);
       in {
         packages = [
           python
@@ -208,13 +218,14 @@
           nix-topology.overlays.default
         ];
       };
-    in import nix-topology {
-      inherit pkgs;
-      modules = [
-        ./modules/topology
-        { nixosConfigurations = self.nixosConfigurations; }
-      ];
-    });
+    in
+      import nix-topology {
+        inherit pkgs;
+        modules = [
+          ./modules/topology
+          {nixosConfigurations = self.nixosConfigurations;}
+        ];
+      });
 
     # This imports everything from pkgs as usable commands.  Makes deploying easier,
     # while making things like generating tokens and keys easier to script
@@ -225,19 +236,23 @@
           inputs.agenix-rekey.overlays.default
           nix-topology.overlays.default
           (final: prev: {
-            pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
-              (
-                python-final: python-prev: {
-                  diskinfo = self.legacyPackages.${system}.diskinfo;
-                }
-              )
-            ];
+            pythonPackagesExtensions =
+              prev.pythonPackagesExtensions
+              ++ [
+                (
+                  python-final: python-prev: {
+                    diskinfo = self.legacyPackages.${system}.diskinfo;
+                  }
+                )
+              ];
           })
         ];
       };
-    in {
-      default = self.legacyPackages.${system}.deploy;
-    } // pkgs.callPackages ./pkgs {inherit self inputs ;});
+    in
+      {
+        default = self.legacyPackages.${system}.deploy;
+      }
+      // pkgs.callPackages ./pkgs {inherit self inputs;});
     packages = forAllSystems (system: nixpkgs.lib.filterAttrs (_: v: nixpkgs.lib.isDerivation v) self.legacyPackages.${system});
   };
 }

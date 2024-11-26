@@ -1,5 +1,4 @@
-{pkgs, ...}:
-{
+{pkgs, ...}: {
   programs = {
     tmux = {
       enable = true;
@@ -12,7 +11,7 @@
         tmuxPlugins.vim-tmux-navigator
       ];
       mouse = true;
-      baseIndex = 1; 
+      baseIndex = 1;
       extraConfig = ''
         set -g allow-passthrough on
         set -ga update-environment TERM

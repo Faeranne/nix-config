@@ -1,5 +1,10 @@
-{config, pkgs, lib, self, ...}:{
-
+{
+  config,
+  pkgs,
+  lib,
+  self,
+  ...
+}: {
   networking = {
     # I've switched to systemd-networkd, so this option
     # is mandatory.  This is mostly due to how I handle
@@ -10,15 +15,25 @@
     # my computer.
     firewall = {
       #
-      allowedTCPPorts = [ 22000 ];
+      allowedTCPPorts = [22000];
       # for KDEConnect
       # TODO: move to desktop
-      allowedTCPPortRanges = [ {from = 1714; to = 1764; } ];
+      allowedTCPPortRanges = [
+        {
+          from = 1714;
+          to = 1764;
+        }
+      ];
       #
-      allowedUDPPorts = [ 22000 21027 ];
+      allowedUDPPorts = [22000 21027];
       # also for KDEConnect
       # TODO: move to desktop
-      allowedUDPPortRanges = [ {from = 1714; to = 1764; } ];
+      allowedUDPPortRanges = [
+        {
+          from = 1714;
+          to = 1764;
+        }
+      ];
     };
   };
 
@@ -60,7 +75,7 @@
       };
       openMulticastPort = true;
       group = "wheel";
-      denyDhcpcdInterfaces = [ "tap" ];
+      denyDhcpcdInterfaces = ["tap"];
       configFile = config.age.secrets.yggdrasil.path;
     };
   };
@@ -73,7 +88,11 @@
       # secret.ip - the final ipv6 address that this secret shows up as
       # secret.pub - the public key of this secret
       # secret.net - the subnet address that this secret responds to
-      yggdrasilKeyConf = {pkgs, file, ...}: ''
+      yggdrasilKeyConf = {
+        pkgs,
+        file,
+        ...
+      }: ''
         pkey=$(${pkgs.openssl}/bin/openssl genpkey -algorithm ed25519 -outform pem | ${pkgs.openssl}/bin/openssl pkey -inform pem -text -noout)
         priv=$(echo "$pkey" | sed '3,5p;d' | tr -d "\n :")
         pub=$(echo "$pkey" | sed '7,10p;d' | tr -d "\n :")
@@ -86,7 +105,11 @@
       # Creates a wireguard private and public key pair.
       # secret.age - encrypted private key for this secret.
       # secret.pub - plaintext public key for this secret. used in wireguard peer configs
-      wireguard = {pkgs, file, ...}: ''
+      wireguard = {
+        pkgs,
+        file,
+        ...
+      }: ''
         priv=$(${pkgs.wireguard-tools}/bin/wg genkey)
         ${pkgs.wireguard-tools}/bin/wg pubkey <<< "$priv" > ${lib.escapeShellArg (lib.removeSuffix ".age" file + ".pub")}
         echo "$priv"

@@ -1,6 +1,11 @@
-{self, config, myLib, ...}: {
+{
+  self,
+  config,
+  myLib,
+  ...
+}: {
   imports = with self.nixosModules; [
-    base 
+    base
     server
     extras.storage
     hardware.cpu.intel
@@ -18,7 +23,7 @@
     "/boot" = {
       device = "/dev/disk/by-uuid/E6D1-9B8A";
       fsType = "vfat";
-      options = [ "fmask=0022" "dmask=0022" ];
+      options = ["fmask=0022" "dmask=0022"];
     };
   };
 
@@ -27,6 +32,6 @@
   age.rekey.hostPubkey = "age1ma4a9xsfpl79agyltqaaey7cc7k8te5tcr4yqn494f4tn0272gqs7nvjkw";
 
   services = {
-    zfs.autoScrub.pools = [ "zpool" ];
+    zfs.autoScrub.pools = ["zpool"];
   };
 }

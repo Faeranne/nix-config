@@ -1,8 +1,9 @@
 {
   zfs,
   jq,
-  writeScriptBin
-}: writeScriptBin "finishInstall" ''
+  writeScriptBin,
+}:
+writeScriptBin "finishInstall" ''
   set -e
   SYSTEM=$1
   URL=git+https://git.faeranne.com/faeranne/nix-config

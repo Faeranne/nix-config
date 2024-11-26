@@ -1,4 +1,9 @@
-{self, config, lib, ...}:let
+{
+  self,
+  config,
+  lib,
+  ...
+}: let
   containerName = "netbox";
 in {
   imports = [
@@ -15,7 +20,11 @@ in {
 
   age.secrets.netbox = {
     rekeyFile = self + "/secrets/containers/${containerName}/secret_key.age";
-    generator.script = {pkgs, file, ...}:''
+    generator.script = {
+      pkgs,
+      file,
+      ...
+    }: ''
       ${pkgs.pwgen}/bin/pwgen 50 1 -ys1nc
     '';
     mode = "550";
@@ -50,53 +59,60 @@ in {
 
     config = let
       hostConfig = config;
-    in {port, pkgs, ...}: {
-      imports = [
-        ./base.nix
-      ];
-      networking = {
-        firewall = {
-          allowedTCPPorts = [ port ];
-        };
-      };
-      services = {
-        postgresql = {
-          dataDir = "/var/lib/postgres";
-          package = pkgs.postgresql_15;
-        };
-        netbox = {
-          enable = true;
-          port = 8001;
-          package = pkgs.netbox;
-          secretKeyFile = "/run/secrets/netbox";
-          listenAddress = "127.0.0.1";
-          settings = {
-            ALLOWED_HOSTS = [ "netbox.faeranne.com" ];
-            CSRF_TRUSTED_ORIGINS = [ "https://netbox.faeranne.com" ];
+    in
+      {
+        port,
+        pkgs,
+        ...
+      }: {
+        imports = [
+          ./base.nix
+        ];
+        networking = {
+          firewall = {
+            allowedTCPPorts = [port];
           };
         };
-        nginx = {
-          enable = true;
-          user = "netbox"; # otherwise nginx cant access netbox files
-          recommendedProxySettings = true; # otherwise you will get CSRF error while login
-          defaultListen = [{
-           addr = (lib.removeSuffix "/32" (lib.elemAt hostConfig.networking.wireguard.interfaces."wg${containerName}".ips 0));
-           port = port;
-          }];
-          virtualHosts.default = {
-            default = true;
-            locations = {
-              "/" = {
-                proxyPass = "http://127.0.0.1:8001";
+        services = {
+          postgresql = {
+            dataDir = "/var/lib/postgres";
+            package = pkgs.postgresql_15;
+          };
+          netbox = {
+            enable = true;
+            port = 8001;
+            package = pkgs.netbox;
+            secretKeyFile = "/run/secrets/netbox";
+            listenAddress = "127.0.0.1";
+            settings = {
+              ALLOWED_HOSTS = ["netbox.faeranne.com"];
+              CSRF_TRUSTED_ORIGINS = ["https://netbox.faeranne.com"];
+            };
+          };
+          nginx = {
+            enable = true;
+            user = "netbox"; # otherwise nginx cant access netbox files
+            recommendedProxySettings = true; # otherwise you will get CSRF error while login
+            defaultListen = [
+              {
+                addr = lib.removeSuffix "/32" (lib.elemAt hostConfig.networking.wireguard.interfaces."wg${containerName}".ips 0);
+                port = port;
+              }
+            ];
+            virtualHosts.default = {
+              default = true;
+              locations = {
+                "/" = {
+                  proxyPass = "http://127.0.0.1:8001";
+                };
+                "/static/" = {alias = "${config.services.netbox.dataDir}/static/";};
               };
-              "/static/" = { alias = "${config.services.netbox.dataDir}/static/"; };
             };
           };
         };
+        users.users.netbox.uid = hostConfig.users.users.container.uid;
+        users.groups.netbox.gid = hostConfig.users.groups.container.gid;
       };
-      users.users.netbox.uid = hostConfig.users.users.container.uid;
-      users.groups.netbox.gid = hostConfig.users.groups.container.gid;
-    };
   };
 
   # Setting up postgres user to match the nixos postgres user

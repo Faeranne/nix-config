@@ -1,4 +1,9 @@
-{self, config, lib, ...}: let 
+{
+  self,
+  config,
+  lib,
+  ...
+}: let
   inherit (config.lib.topology) mkInternet;
 in {
   imports = [
@@ -6,7 +11,7 @@ in {
   ];
   options = {
     networks = lib.mkOption {
-      type = lib.types.attrsOf (lib.types.submodule ({...}:{
+      type = lib.types.attrsOf (lib.types.submodule ({...}: {
         options = {
           router = lib.mkOption {
             type = lib.types.str;
@@ -15,7 +20,7 @@ in {
       }));
     };
     nodes = lib.mkOption {
-      type = lib.types.attrsOf (lib.types.submodule ({...}:{
+      type = lib.types.attrsOf (lib.types.submodule ({...}: {
         options = {
           primaryNetwork = lib.mkOption {
             type = lib.types.str;
@@ -29,8 +34,9 @@ in {
   };
   config = {
     nodes = {
-      internet = mkInternet {
-      };
+      internet =
+        mkInternet {
+        };
     };
     networks.internet = {
       name = "Internet";

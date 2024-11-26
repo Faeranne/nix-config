@@ -1,4 +1,4 @@
-{config, ...}:let
+{config, ...}: let
   containerName = "rss";
 in {
   imports = [
@@ -15,7 +15,8 @@ in {
 
   containers.${containerName} = {
     bindMounts = {
-      "/var/lib/freshrss" = { #Prefer not including host path here, save it for the host itself
+      "/var/lib/freshrss" = {
+        #Prefer not including host path here, save it for the host itself
         isReadOnly = false;
         create = true;
       };
@@ -29,15 +30,20 @@ in {
       port = 80;
     };
 
-    config = {hostName, port, ...}: {
+    config = {
+      hostName,
+      port,
+      ...
+    }: {
       imports = [
         # Covers some basic values, as well as fixing some potentially buggy networking issues
         ./base.nix
       ];
 
       networking = {
-        firewall = { # Make sure to add any ports needed for wireguard
-          allowedTCPPorts = [ port ];
+        firewall = {
+          # Make sure to add any ports needed for wireguard
+          allowedTCPPorts = [port];
         };
       };
       services.freshrss = {

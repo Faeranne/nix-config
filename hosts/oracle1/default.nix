@@ -1,6 +1,10 @@
-{config, self, ...}: {
+{
+  config,
+  self,
+  ...
+}: {
   imports = with self.nixosModules; [
-    base 
+    base
     emulation
     containers
     extras.storage
@@ -24,7 +28,7 @@
     "/boot" = {
       device = "/dev/disk/by-uuid/CC42-7BE8";
       fsType = "vfat";
-      options = [ "fmask=0022" "dmask=0022" ];
+      options = ["fmask=0022" "dmask=0022"];
     };
   };
 
@@ -48,7 +52,7 @@
   age.rekey.hostPubkey = "age1ytw5hv3k50qnh6yn0ana3l932q7azkx0l2fg9zp9h02gknvqx4yq7yvcgl";
 
   services = {
-    zfs.autoScrub.pools = [ "zpool" "Storage" ];
-    xserver.videoDrivers = [ "nvidia" ];
+    zfs.autoScrub.pools = ["zpool" "Storage"];
+    xserver.videoDrivers = ["nvidia"];
   };
 }

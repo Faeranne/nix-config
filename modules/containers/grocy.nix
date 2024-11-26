@@ -1,4 +1,4 @@
-{...}:{
+{...}: {
   imports = [
     (import ./template.nix "grocy")
   ];
@@ -22,7 +22,7 @@
       ];
       networking = {
         firewall = {
-          allowedTCPPorts = [ 80 ];
+          allowedTCPPorts = [80];
         };
       };
 

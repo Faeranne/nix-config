@@ -1,4 +1,9 @@
-{lib, self, inputs, pkgs}: let 
+{
+  lib,
+  self,
+  inputs,
+  pkgs,
+}: let
   callPackage = lib.callPackageWith (pkgs // packages // {inherit self inputs systemTest systemDeploy;});
   python3 = callPackage ./python3 {};
   systemTest = callPackage ./test.nix {};
@@ -13,4 +18,5 @@
     efi = callPackage ./efi.nix {};
     wifi = callPackage ./wifi.nix {};
   };
-in packages // systemTest // systemDeploy
+in
+  packages // systemTest // systemDeploy

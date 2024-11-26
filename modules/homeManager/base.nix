@@ -1,4 +1,8 @@
-{inputs, pkgs, ...}: {
+{
+  inputs,
+  pkgs,
+  ...
+}: {
   _module.args = {
     nur-no-packages = import inputs.nur {
       nurpkgs = pkgs;

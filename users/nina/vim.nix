@@ -1,17 +1,22 @@
-{inputs, systemConfig, pkgs, lib, ...}:
-let
-  fromGitHub = rev: user: repo: hash: pkgs.vimUtils.buildVimPlugin {
-    pname = "${lib.strings.sanitizeDerivationName repo}";
-    version = rev;
-    src = pkgs.fetchFromGitHub {
-      owner = user;
-      repo = repo;
-      rev = rev;
-      hash = hash;
-    };
-  };
-in
 {
+  inputs,
+  systemConfig,
+  pkgs,
+  lib,
+  ...
+}: let
+  fromGitHub = rev: user: repo: hash:
+    pkgs.vimUtils.buildVimPlugin {
+      pname = "${lib.strings.sanitizeDerivationName repo}";
+      version = rev;
+      src = pkgs.fetchFromGitHub {
+        owner = user;
+        repo = repo;
+        rev = rev;
+        hash = hash;
+      };
+    };
+in {
   home = {
     packages = with pkgs; [
       alejandra
@@ -24,7 +29,7 @@ in
         vim-fugitive
         vim-airline-themes
         (
-          fromGitHub 
+          fromGitHub
           "4a93122ae2139a12e2a56f064d086c05160b6835"
           "segeljakt"
           "vim-silicon"
@@ -43,7 +48,6 @@ in
           enable = true;
           openOnSetup = true;
           openOnSetupFile = true;
-
         };
         nix = {
           enable = true;

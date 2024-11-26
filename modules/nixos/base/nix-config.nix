@@ -1,7 +1,11 @@
 # This file sets some nix configuration values.  these are used to manage
 # the nix daemon and other features on this syste. often these affect
 # nix.config directly
-{self, inputs, ...}:{
+{
+  self,
+  inputs,
+  ...
+}: {
   nix = {
     settings = {
       substituters = [
@@ -24,7 +28,7 @@
       #   of some derivations by detecting that they will result in the same
       #   content, and just reusing the same derivation address.
       #   used in some nur stuff.
-      experimental-features = [ "nix-command" "flakes" "ca-derivations"];
+      experimental-features = ["nix-command" "flakes" "ca-derivations"];
     };
     nixPath = [
       "nixpkgs=${inputs.nixpkgs}"

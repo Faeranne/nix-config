@@ -1,8 +1,11 @@
-{config, pkgs, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
+  nix.settings.trusted-users = ["livingroom"];
 
-  nix.settings.trusted-users = [ "livingroom" ];
-
-  home-manager.users.livingroom = {...}:{
+  home-manager.users.livingroom = {...}: {
     imports = [
       ./base.nix
     ];

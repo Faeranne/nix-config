@@ -1,4 +1,10 @@
-{self, config, pkgs, lib, ...}:{
+{
+  self,
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   virtualisation.vmVariant = {
     virtualisation = {
       graphics = lib.mkForce true;

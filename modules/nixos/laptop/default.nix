@@ -1,4 +1,8 @@
-{self, config, ...}: {
+{
+  self,
+  config,
+  ...
+}: {
   age.secrets.wifi-secrets.rekeyFile = self + "/secrets/wifi.age";
   networking.networkmanager = {
     enable = true;

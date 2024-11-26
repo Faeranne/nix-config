@@ -1,3 +1,3 @@
-{...}:{
+{...}: {
   image = ./resources/background.png;
 }

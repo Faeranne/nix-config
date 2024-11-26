@@ -1,8 +1,14 @@
-{self, config, myLib, pkgs, ...}: let
+{
+  self,
+  config,
+  myLib,
+  pkgs,
+  ...
+}: let
   mkPeer = myLib.mkPeer "sarah";
-in{
+in {
   imports = with self.nixosModules; [
-    base 
+    base
     emulation
     gaming
     desktop
@@ -23,7 +29,7 @@ in{
       mode = "770";
       generator = {
         script = "wireguard";
-        tags = [ "wireguard" ];
+        tags = ["wireguard"];
       };
     };
   };
@@ -32,7 +38,8 @@ in{
     name = "Sarah";
     hardware = {
       info = "Desktop Computer";
-    }; primaryNetwork = "home";
+    };
+    primaryNetwork = "home";
     primaryInterface = "enp10s0";
     interfaces.enp10s0 = {
       addresses = ["192.168.1.80"];
@@ -54,7 +61,7 @@ in{
   virtualisation.waydroid.enable = true;
   programs.corectrl.enable = true;
 
-  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+  boot.binfmt.emulatedSystems = ["aarch64-linux"];
 
   networking = {
     nat = {
@@ -63,8 +70,8 @@ in{
     hostName = "sarah";
     hostId = "586769c4";
     firewall = {
-      allowedTCPPorts = [ 4747 4748 39595 43751 6567 ];
-      allowedUDPPorts = [ 43751 6567 ];
+      allowedTCPPorts = [4747 4748 39595 43751 6567];
+      allowedUDPPorts = [43751 6567];
     };
     wireguard.interfaces = {
       wgsarah = {
@@ -81,12 +88,11 @@ in{
     pkgs.xsane
   ];
 
-
   fileSystems = {
     "/boot" = {
       device = "/dev/disk/by-uuid/A15D-1FC6";
       fsType = "vfat";
-      options = [ "fmask=0022" "dmask=0022" ];
+      options = ["fmask=0022" "dmask=0022"];
     };
   };
 
@@ -104,7 +110,7 @@ in{
           ];
         };
       }
-      ({...}:{
+      ({...}: {
         home.file = {
           ".local/state/wireplumber/default-routes".text = ''
             [default-routes]

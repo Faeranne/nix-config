@@ -1,4 +1,4 @@
-{config, ...}:let
+{config, ...}: let
   containerName = "githubrunner";
 in {
   imports = [
@@ -15,7 +15,8 @@ in {
 
   containers.${containerName} = {
     bindMounts = {
-      "/media" = { #Prefer not including host path here, save it for the host itself
+      "/media" = {
+        #Prefer not including host path here, save it for the host itself
         isReadOnly = false;
         create = true;
       };
@@ -32,8 +33,9 @@ in {
       ];
 
       networking = {
-        firewall = { # Make sure to add any ports needed for wireguard
-          allowedTCPPorts = [ 80 ];
+        firewall = {
+          # Make sure to add any ports needed for wireguard
+          allowedTCPPorts = [80];
         };
       };
       services = {

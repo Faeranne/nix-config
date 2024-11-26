@@ -1,9 +1,10 @@
-{config, ...}: let 
-  inherit (config.lib.topology) 
-  mkConnection
-  mkRouter
-  mkSwitch
-  ;
+{config, ...}: let
+  inherit
+    (config.lib.topology)
+    mkConnection
+    mkRouter
+    mkSwitch
+    ;
 in {
   nodes = {
     switch1 = mkSwitch "Rack PoE Switch" {
@@ -44,7 +45,7 @@ in {
         ["wan1" "wan2"]
       ];
       primaryNetwork = "home";
-      connections =  {
+      connections = {
         wan2 = mkConnection "internet" "*";
       };
       interfaces = {

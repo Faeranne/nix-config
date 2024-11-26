@@ -1,4 +1,11 @@
-{self, config, inputs, lib, pkgs, ...}:let
+{
+  self,
+  config,
+  inputs,
+  lib,
+  pkgs,
+  ...
+}: let
   containerName = "git";
   containerIp = lib.removeSuffix "/32" (builtins.elemAt config.networking.wireguard.interfaces."wg${containerName}".ips 0);
   sshWKey = "${pkgs.openssh}/bin/ssh -i ${config.age.secrets.gitSshKey.path}";
@@ -61,10 +68,10 @@ in {
     };
   };
 
-
   containers.${containerName} = {
     bindMounts = {
-      "/var/lib/forgejo" = { #Prefer not including host path here, save it for the host itself
+      "/var/lib/forgejo" = {
+        #Prefer not including host path here, save it for the host itself
         isReadOnly = false;
         create = true;
         owner = "container:container";
@@ -82,86 +89,93 @@ in {
 
     config = let
       hostConfig = config;
-    in {hostName, port, pkgs, ...}: {
-      imports = [
-        ./base.nix
-      ];
+    in
+      {
+        hostName,
+        port,
+        pkgs,
+        ...
+      }: {
+        imports = [
+          ./base.nix
+        ];
 
-      networking = {
-        firewall = { # Make sure to add any ports needed for wireguard
-          allowedTCPPorts = [ port 22 2222 ];
-        };
-      };
-      services = {
-        openssh = {
-          enable = true;
-          startWhenNeeded = false;
-          hostKeys = [
-            {
-              bits = 4096;
-              path = "/etc/ssh/keys/ssh_host_rsa_key";
-              type = "rsa";
-            }
-            {
-              path = "/etc/ssh/keys/ssh_host_ed25519_key";
-              type = "ed25519";
-            }
-          ];
-        };
-        forgejo = {
-          enable = true;
-          package = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.forgejo;
-          settings = {
-            federation = {
-              ENABLE = true;
-            };
-            repository = {
-              ENABLE_PUSH_CREATE_USER = true;
-              ENABLE_PUSH_CREATE_ORG = true;
-            };
-            server = {
-              START_SSH_SERVER=false;
-              SSH_LISTEN_PORT=2222;
-              SSH_CREATE_AUTHORIZED_KEYS_FILE=false;
-              SSH_USER = "git";
-              DOMAIN="${hostName}";
-              HTTP_PORT=port;
-              ROOT_URL="https://${hostName}";
-            };
-            service = {
-              DISABLE_REGISTRATION = true;
-            };
-            session = {
-              COOKIE_SECURE=true;
-            };
+        networking = {
+          firewall = {
+            # Make sure to add any ports needed for wireguard
+            allowedTCPPorts = [port 22 2222];
           };
         };
-      };
-      users = {
-        users = {
+        services = {
+          openssh = {
+            enable = true;
+            startWhenNeeded = false;
+            hostKeys = [
+              {
+                bits = 4096;
+                path = "/etc/ssh/keys/ssh_host_rsa_key";
+                type = "rsa";
+              }
+              {
+                path = "/etc/ssh/keys/ssh_host_ed25519_key";
+                type = "ed25519";
+              }
+            ];
+          };
           forgejo = {
-            uid = hostConfig.users.users.container.uid;
-            openssh.authorizedKeys.keyFiles  = [
-              # add the generated sshkey for git to the keyfile list.  hopefully this works as intended
-              (lib.removeSuffix ".age" (config.age.secrets.gitSshKey.rekeyFile) + ".pub")
-            ];
-          };
-          git = {
-            group = "git";
-            uid = hostConfig.users.users.git.uid;
-            isNormalUser = true;
-            createHome = true;
-            openssh.authorizedKeys.keyFiles  = [
-              # add the generated sshkey for git to the keyfile list.  hopefully this works as intended
-              (lib.removeSuffix ".age" (config.age.secrets.gitSshKey.rekeyFile) + ".pub")
-            ];
+            enable = true;
+            package = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.forgejo;
+            settings = {
+              federation = {
+                ENABLE = true;
+              };
+              repository = {
+                ENABLE_PUSH_CREATE_USER = true;
+                ENABLE_PUSH_CREATE_ORG = true;
+              };
+              server = {
+                START_SSH_SERVER = false;
+                SSH_LISTEN_PORT = 2222;
+                SSH_CREATE_AUTHORIZED_KEYS_FILE = false;
+                SSH_USER = "git";
+                DOMAIN = "${hostName}";
+                HTTP_PORT = port;
+                ROOT_URL = "https://${hostName}";
+              };
+              service = {
+                DISABLE_REGISTRATION = true;
+              };
+              session = {
+                COOKIE_SECURE = true;
+              };
+            };
           };
         };
-        groups = {
-          forgejo.gid = hostConfig.users.groups.container.gid;
-          git.gid = hostConfig.users.groups.git.gid;
+        users = {
+          users = {
+            forgejo = {
+              uid = hostConfig.users.users.container.uid;
+              openssh.authorizedKeys.keyFiles = [
+                # add the generated sshkey for git to the keyfile list.  hopefully this works as intended
+                (lib.removeSuffix ".age" (config.age.secrets.gitSshKey.rekeyFile) + ".pub")
+              ];
+            };
+            git = {
+              group = "git";
+              uid = hostConfig.users.users.git.uid;
+              isNormalUser = true;
+              createHome = true;
+              openssh.authorizedKeys.keyFiles = [
+                # add the generated sshkey for git to the keyfile list.  hopefully this works as intended
+                (lib.removeSuffix ".age" (config.age.secrets.gitSshKey.rekeyFile) + ".pub")
+              ];
+            };
+          };
+          groups = {
+            forgejo.gid = hostConfig.users.groups.container.gid;
+            git.gid = hostConfig.users.groups.git.gid;
+          };
         };
       };
-    };
   };
 }
