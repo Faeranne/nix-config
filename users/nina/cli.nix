@@ -6,6 +6,7 @@
       pinentry
       passage
       picocom
+      alejandra
     ];
     persistence."/persist/home/nina" = {
       directories = [
