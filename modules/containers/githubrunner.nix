@@ -26,7 +26,7 @@ in {
       };
     };
 
-    config = {pkgs, ...}: {
+    config = {...}: {
       imports = [
         # Covers some basic values, as well as fixing some potentially buggy networking issues
         ./base.nix

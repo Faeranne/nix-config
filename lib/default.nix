@@ -145,7 +145,8 @@ inputs: let
             hostName = hostNames.${service};
             port = ports.${service};
           });
-        }) hostConfig.containers
+        })
+        hostConfig.containers
     )
     self.nixosConfigurations
   );

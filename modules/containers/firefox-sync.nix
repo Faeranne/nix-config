@@ -1,8 +1,6 @@
 {
   self,
-  myLib,
   config,
-  pkgs,
   ...
 }: let
   containerName = "firefoxsync";
@@ -45,11 +43,7 @@ in {
       port = 8096;
     };
 
-    config = {
-      config,
-      port,
-      ...
-    }: {
+    config = {port, ...}: {
       imports = [
         ./base.nix
       ];

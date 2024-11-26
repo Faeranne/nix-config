@@ -4,9 +4,7 @@
   pkgs,
   lib,
 }:
-inputs.nixos-generators.nixosGenerate (let
-  system = self.nixosConfigurations.proto;
-in {
+inputs.nixos-generators.nixosGenerate {
   system = pkgs.system;
   modules = [
     (inputs.nixpkgs + "/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix")
@@ -56,4 +54,4 @@ in {
     })
   ];
   format = "raw-efi";
-})
+}

@@ -1,4 +1,4 @@
-{systemConfig, ...}: {
+{...}: {
   stylix = {
     enable = true;
     autoEnable = false;

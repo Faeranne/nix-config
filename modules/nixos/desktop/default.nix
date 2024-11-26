@@ -49,7 +49,8 @@
     };
     tumbler.enable = true;
     greetd = let
-      swayConfig = pkgs.writeText "greetd-sway-config" ''
+      /*
+        swayConfig = pkgs.writeText "greetd-sway-config" ''
         exec "${config.programs.regreet.package}/bin/regreet; swaymsg exit;
         bindsym Mod4+shift+e exec swaynag \
           -t warning \
@@ -57,6 +58,7 @@
           -b 'Poweroff' 'systemctl poweroff' \
           -b 'Reboot' 'systemctl reboot'
       '';
+      */
     in {
       enable = true;
       vt = 7;

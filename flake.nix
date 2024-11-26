@@ -194,11 +194,13 @@
       };
       installSystem = pkgs.mkShell (let
         python = pkgs.python312.withPackages (python-pkgs:
-          with python-pkgs; [
+          (with python-pkgs; [
             pythondialog
             pyparted
             netifaces
             requests
+          ])
+          ++ [
             self.legacyPackages.${system}.diskinfo
           ]);
       in {

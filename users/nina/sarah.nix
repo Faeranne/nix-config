@@ -7,7 +7,9 @@
     wayland.windowManager.sway.config = {
       assigns = {
         "4" = [
-          {app_id = "vesktop";}
+          {
+            app_id = "vesktop";
+          }
         ];
       };
     };

@@ -1,11 +1,4 @@
-{
-  config,
-  systemConfig,
-  lib,
-  pkgs,
-  ...
-}: let
-  isDesktop = (builtins.elem "gnome" systemConfig.elements) || (builtins.elem "kde" systemConfig.elements);
+{...}: let
 in {
   #boot.initrd.kernelModules = [ "nvidia" ];
   services.xserver.videoDrivers = ["nvidia"];

@@ -1,8 +1,5 @@
 {
-  sourceConfig,
-  config,
   lib,
-  pkgs,
   modulesPath,
   ...
 }: {
@@ -10,12 +7,17 @@
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
-  boot.initrd.availableKernelModules = ["xhci_pci" "ahci" "nvme" "usb_storage" "usbhid" "sd_mod"];
-  boot.initrd.kernelModules = [];
-  boot.extraModulePackages = [];
-
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot = {
+    initrd = {
+      availableKernelModules = ["xhci_pci" "ahci" "nvme" "usb_storage" "usbhid" "sd_mod"];
+      kernelModules = [];
+    };
+    extraModulePackages = [];
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+  };
 
   networking = {
     hostId = lib.mkDefault "8425e349"; #use the nixos iso hostId for compatibility

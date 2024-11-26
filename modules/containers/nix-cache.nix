@@ -1,4 +1,4 @@
-{config, ...}: let
+{...}: let
   containerName = "nixcache";
 in {
   imports = [
@@ -28,11 +28,7 @@ in {
       port = 5000;
     };
 
-    config = {
-      hostName,
-      port,
-      ...
-    }: {
+    config = {port, ...}: {
       imports = [
         # Covers some basic values, as well as fixing some potentially buggy networking issues
         ./base.nix
