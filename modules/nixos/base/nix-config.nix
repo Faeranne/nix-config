@@ -37,6 +37,7 @@
     # but it didn't work right due to agenix not being correctly supported here.
     # TODO: readd when scalple is working
     extraOptions = ''
+      connect-timeout = 5
     '';
     # this controls the store garbage collection.  Mostly used to ensure
     # /nix/store doesn't ballon from being used a bunch and holding
@@ -45,6 +46,9 @@
       automatic = true;
       dates = "weekly";
       options = "--delete-older-than 7d";
+    };
+    registry = {
+      nixpkgs.flake = inputs.nixpkgs;
     };
   };
 
