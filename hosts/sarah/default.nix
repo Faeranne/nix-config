@@ -58,7 +58,14 @@ in {
     '';
   };
 
-  virtualisation.waydroid.enable = true;
+  virtualisation = {
+    podman = {
+      enable = true;
+      dockerCompat = true;
+      defaultNetwork.settings.dns_enable = true;
+    };
+    waydroid.enable = true;
+  };
   programs.corectrl.enable = true;
 
   boot.binfmt.emulatedSystems = ["aarch64-linux"];
