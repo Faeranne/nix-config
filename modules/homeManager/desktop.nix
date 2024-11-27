@@ -48,6 +48,9 @@
           '';
         };
       };
+      sessionVariables = {
+        _JAVA_AWT_WM_NONREPARENTING = "1";
+      };
       persistence."/persist/home/nina" = {
         directories = [
           {
