@@ -161,13 +161,21 @@
         profiles = {
           default = {
             extensions = let
-              frankerfacez = pkgs.nur.repos.rycee.firefox-addons.buildFirefoxXpiAddon {
-                addonId = "{d53b1948-c569-4e95-bad3-d873db4885a9}";
+              frankerfacez = pkgs.nur.repos.rycee.firefox-addons.buildFirefoxXpiAddon rec {
+                addonId = "frankerfacez@frankerfacez.com";
                 version = "4.75.7.0";
                 pname = "frankerfacez";
-                url = "https://addons.mozilla.org/firefox/downloads/file/4383952/frankerfacez-4.75.7.0.xpi";
+                url = "https://addons.mozilla.org/firefox/downloads/file/4383952/${pname}-${version}.xpi";
                 sha256 = "sha256-6k4L9aaaWOtUuLBu9FCcoF3y66/BSUGdIVATV1dSZrI=";
                 meta = {
+                  homepage = "https://www.frankerfacez.com/";
+                  description = "The Twitch enhancement suite. Get custom emotes and tons of new features you'll never want to go without.";
+                  license = lib.licenses.asl20;
+                  mozPermissions = [
+                    "https://*.twitch.tv/*"
+                    "https://*.frankerfacez.com/*"
+                  ];
+                  platforms = lib.platforms.all;
                 };
               };
             in
