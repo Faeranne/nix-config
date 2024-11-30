@@ -101,11 +101,6 @@ in {
       };
 
       services = {
-<<<<<<< Updated upstream
-        prowlarr.enable = true;
-||||||| Stash base
-        prowlarr.enable = true; 
-=======
         /*
         prowlarr = {
           enable = true; 
@@ -117,7 +112,6 @@ in {
           user = "container";
           group = "users";
         };
->>>>>>> Stashed changes
         sonarr = {
           enable = true;
           dataDir = "/var/lib/sonarr";
