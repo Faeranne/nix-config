@@ -53,10 +53,7 @@
       };
       persistence."/persist/home/nina" = {
         directories = [
-          {
-            directory = ".local/share/godot/app_userdata";
-            method = "symlink";
-          }
+          ".local/share/godot/app_userdata"
           {
             directory = ".mozilla/firefox/default/bookmarkbackups";
             method = "symlink";
