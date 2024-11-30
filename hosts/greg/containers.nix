@@ -13,8 +13,7 @@ in {
     self.containerModules.rss
     self.containerModules.paperless
     self.containerModules.traefik
-    self.containerModules.git
-    self.containerModules.netbox
+    self.containerModules.git self.containerModules.netbox
     self.containerModules.nextcloud
     self.containerModules.nix-cache
   ];
@@ -119,7 +118,7 @@ in {
           "servarr.sonarr"
           "servarr.radarr"
           "servarr.lidarr"
-          "servarr.prowlarr"
+          "servarr.jackett"
           "servarr.bazarr"
           "servarr.ombi"
           "netbox.netbox"
@@ -138,7 +137,7 @@ in {
             entryPoints = ["websecure"];
           };
           lube = {
-            rule = "Host(`lube.faeranne.com`)";
+            rule = "Host(`garage.faeranne.com`)";
             service = "lube";
             entryPoints = ["websecure"];
           };
@@ -241,6 +240,9 @@ in {
     };
     servarr = {
       bindMounts = {
+        "/var/lib/jackett" = {
+          hostPath = "/Storage/volumes/jackett";
+        };
         "/var/lib/sonarr" = {
           hostPath = "/Storage/volumes/sonarr";
         };
@@ -277,7 +279,8 @@ in {
           sonarr = "sonarr.faeranne.com";
           radarr = "radarr.faeranne.com";
           lidarr = "lidarr.faeranne.com";
-          prowlarr = "prowlarr.faeranne.com";
+          #prowlarr = "prowlarr.faeranne.com";
+          jackett = "jackett.faeranne.com";
           bazarr = "bazarr.faeranne.com";
           ombi = "request.faeranne.com";
         };

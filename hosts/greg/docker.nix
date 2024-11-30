@@ -15,6 +15,18 @@
       ];
     };
     */
+    "flaresolverr" = {
+      image = "ghcr.io/flaresolverr/flaresolverr:v3.3.21";
+      environment = {
+        LOG_LEVEL="info";
+        LOG_HTML="false";
+        CAPTCHA_SOLVER="none";
+        TZ="America/Indiana/Indianapolis";
+      };
+      extraOptions = [
+        "--ip=10.88.1.7"
+      ];
+    };
     "lubelogger" = {
       autoStart = true;
       image = "ghcr.io/hargata/lubelogger:v1.3.9";

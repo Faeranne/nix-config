@@ -1,5 +1,6 @@
-{...}: let
+{config, lib, ...}:let
   containerName = "jellyfin";
+  hostConfig = config;
 in {
   imports = [
     (import ./template.nix containerName)
@@ -144,8 +145,8 @@ in {
       ];
 
       users = {
-        users.jellyfin.uid = 997;
-        groups.jellyfin.gid = 997;
+        users.jellyfin.uid = lib.mkForce hostConfig.users.users.container.uid;
+        groups.jellyfin.gid = lib.mkForce hostConfig.users.groups.container.gid;
       };
     };
   };

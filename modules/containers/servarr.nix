@@ -34,6 +34,11 @@ in {
         create = true;
         owner = "container:users";
       };
+      "/var/lib/jackett" = {
+        isReadOnly = false;
+        create = true;
+        owner = "container:users";
+      };
       "/var/lib/ombi" = {
         isReadOnly = false;
         create = true;
@@ -71,7 +76,8 @@ in {
         sonarr = 8989;
         radarr = 7878;
         lidarr = 8686;
-        prowlarr = 9696;
+        #prowlarr = 9696;
+        jackett = 9117;
         bazarr = 6767;
         ombi = 5000;
       };
@@ -95,7 +101,23 @@ in {
       };
 
       services = {
+<<<<<<< Updated upstream
         prowlarr.enable = true;
+||||||| Stash base
+        prowlarr.enable = true; 
+=======
+        /*
+        prowlarr = {
+          enable = true; 
+          package = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.prowlarr;
+        };
+        */
+        jackett = {
+          enable = true;
+          user = "container";
+          group = "users";
+        };
+>>>>>>> Stashed changes
         sonarr = {
           enable = true;
           dataDir = "/var/lib/sonarr";
