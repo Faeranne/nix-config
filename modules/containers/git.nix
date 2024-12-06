@@ -132,6 +132,10 @@ in {
               repository = {
                 ENABLE_PUSH_CREATE_USER = true;
                 ENABLE_PUSH_CREATE_ORG = true;
+                MAX_CREATION_LIMIT = 0;
+              };
+              log = {
+                #LEVEL = "Debug";
               };
               server = {
                 START_SSH_SERVER = false;
@@ -143,7 +147,17 @@ in {
                 ROOT_URL = "https://${hostName}";
               };
               service = {
-                DISABLE_REGISTRATION = true;
+                DISABLE_REGISTRATION = false;
+                DEFAULT_KEEP_EMAIL_PRIVATE = true;
+                DEFAULT_ALLOW_CREATE_ORGANIZATION = false;
+                ALLOW_ONLY_EXTERNAL_REGISTRATION = true;
+                DEFAULT_USER_IS_RESTRICTED = false;
+                SHOW_REGISTRATION_BUTTON = false;
+                DEFAULT_USER_VISIBILITY = "private";
+                ALLOWED_USER_VISIBILITY_MODES = "private";
+              };
+              oauth2_client = {
+                ENABLE_AUTO_REGISTRATION = true;
               };
               session = {
                 COOKIE_SECURE = true;
