@@ -57,6 +57,7 @@ in {
         };
         git-conflict.enable = true;
         neocord.enable = true;
+        web-devicons.enable = true;
         lsp = {
           enable = true;
           servers = {

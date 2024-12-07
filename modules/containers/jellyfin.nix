@@ -113,24 +113,25 @@ in {
         };
       };
 
-
       services = {
         xserver.videoDrivers = ["nvidia"];
         jellyfin.enable = true;
       };
 
-      hardware.opengl = {
-        enable = true;
-        driSupport = true;
-        driSupport32Bit = true;
-        extraPackages = with pkgs; [
-          nvidia-vaapi-driver
-          libvdpau-va-gl
-          intel-media-driver
-          intel-vaapi-driver # previously vaapiIntel
-          vaapiVdpau
-          intel-compute-runtime # OpenCL filter support (hardware tonemapping and subtitle burn-in)
-        ];
+      hardware = {
+        nvidia.open = false;
+        graphics = {
+          enable = true;
+          enable32Bit = true;
+          extraPackages = with pkgs; [
+            nvidia-vaapi-driver
+            libvdpau-va-gl
+            intel-media-driver
+            intel-vaapi-driver # previously vaapiIntel
+            vaapiVdpau
+            intel-compute-runtime # OpenCL filter support (hardware tonemapping and subtitle burn-in)
+          ];
+        };
       };
 
       environment.systemPackages = with pkgs; [
