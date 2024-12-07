@@ -53,6 +53,6 @@
 
   services = {
     zfs.autoScrub.pools = ["zpool" "Storage"];
-    xserver.videoDrivers = ["nvidia"];
+    #xserver.videoDrivers = ["nvidia"];
   };
 }
