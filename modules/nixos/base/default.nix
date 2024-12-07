@@ -77,7 +77,12 @@
     # This allows programs packaged with unknown or propriatry libraries.  Things like Discord
     # Otherwise, nix will refuse to build these programs, and thus this install will refuse
     # to build
-    config.allowUnfree = true;
+    config = {
+      allowUnfree = true;
+      permittedInsecurePackages = [
+        "aspnetcore-runtime-wrapped-6.0.36" #for sonarr
+      ];
+    };
 
     # This changes values in `pkgs`. Mostly used to add external packages (via NUR) or roll forward
     # or backward certain packages.
