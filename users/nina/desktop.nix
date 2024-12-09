@@ -90,6 +90,14 @@
             directory = ".local/share/PrismLauncher";
             method = "symlink";
           }
+          {
+            directory = "Arduino";
+            method = "symlink";
+          }
+          {
+            directory = ".arduino15";
+            method = "symlink";
+          }
         ];
       };
       packages = with pkgs; [
@@ -107,6 +115,7 @@
         transmission-remote-gtk
         pavucontrol
         ryujinx
+        arduino
       ];
     };
   };
