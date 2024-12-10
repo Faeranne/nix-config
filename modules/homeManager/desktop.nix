@@ -273,6 +273,9 @@
       systemd = {
         enable = true;
         xdgAutostart = true;
+        variables = [
+          "_JAVA_AWT_WM_NONREPARENTING"
+        ];
       };
       wrapperFeatures = {
         base = true;
