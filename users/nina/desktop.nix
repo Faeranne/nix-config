@@ -98,6 +98,10 @@
             directory = ".arduino15";
             method = "symlink";
           }
+          {
+            directory = ".config/Ryujinx";
+            method = "symlink";
+          }
         ];
       };
       packages = with pkgs; [
