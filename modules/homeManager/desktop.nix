@@ -48,9 +48,6 @@
           '';
         };
       };
-      sessionVariables = {
-        _JAVA_AWT_WM_NONREPARENTING = "1";
-      };
       persistence."/persist/home/nina" = {
         directories = [
           ".local/share/godot/app_userdata"
@@ -273,9 +270,6 @@
       systemd = {
         enable = true;
         xdgAutostart = true;
-        variables = [
-          "_JAVA_AWT_WM_NONREPARENTING"
-        ];
       };
       wrapperFeatures = {
         base = true;
