@@ -61,6 +61,10 @@ in {
         lsp = {
           enable = true;
           servers = {
+            arduino_language_server = {
+              enable = true;
+              autostart = true;
+            };
             nixd = {
               enable = true;
               settings = {

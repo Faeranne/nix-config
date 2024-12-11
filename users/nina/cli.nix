@@ -7,6 +7,7 @@
       picocom
       alejandra
       nix-output-monitor
+      arduino-cli
     ];
     persistence."/persist/home/nina" = {
       directories = [
