@@ -154,6 +154,8 @@
 
     userModules = import ./users;
 
+    overlays = import ./overlays {inherit self;};
+
     # This is for handling agenix rekey and generate commands
     devShells = forAllSystems (system: let
       pkgs = import inputs.nixpkgs {

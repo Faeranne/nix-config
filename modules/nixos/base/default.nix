@@ -92,6 +92,7 @@
     overlays = [
       inputs.nur.overlay
       inputs.nix-alien.overlays.default
+      self.overlays.arduino
       (final: prev: {
         # I like using the newest features of Kicad, and they tend to trickle down to stable a little
         # slowly
