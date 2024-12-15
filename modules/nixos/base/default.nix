@@ -92,27 +92,7 @@
     overlays = [
       inputs.nur.overlay
       inputs.nix-alien.overlays.default
-      self.overlays.arduino
-      (final: prev: {
-        # I like using the newest features of Kicad, and they tend to trickle down to stable a little
-        # slowly
-        #kicad = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.kicad;
-        # As of this commit, PrismLauncher doesn't work right with the stable version.  Some login
-        # issues. Check this later and roll back when it makes sense
-        prismlauncher = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.prismlauncher;
-        # Inkscape crashes on wayland when a tablet is connected.
-        # https://gitlab.com/inkscape/inkscape/-/issues/4649
-        inkscape = prev.pkgs.symlinkJoin {
-          name = "inkscape";
-          paths = [prev.inkscape];
-          buildInputs = [prev.pkgs.makeWrapper];
-          postBuild = ''
-            wrapProgram $out/bin/inkscape \
-              --unset WAYLAND_DISPLAY
-          '';
-        };
-        firefoxpwa = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.firefoxpwa;
-      })
+      self.overlays.desktop
     ];
   };
 
