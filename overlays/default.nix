@@ -22,7 +22,11 @@
     #kicad = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.kicad;
     # As of this commit, PrismLauncher doesn't work right with the stable version.  Some login
     # issues. Check this later and roll back when it makes sense
-    prismlauncher = self.inputs.nixpkgs-unstable.legacyPackages.${final.system}.prismlauncher;
+    prismlauncher = self.inputs.nixpkgs-unstable.legacyPackages.${final.system}.prismlauncher.overrideAttrs (finalAttrs: prevAttrs: {
+      qtWrapperArgs = prevAttrs.qtWrapperArgs ++ [
+        "--set _JAVA_AWT_WM_NONREPARENTING 1"
+      ];
+    });
     firefoxpwa = self.inputs.nixpkgs-unstable.legacyPackages.${final.system}.firefoxpwa;
   });
 }
