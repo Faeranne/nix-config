@@ -200,7 +200,7 @@ def copySystem(system):
 def installSystem(system):
     log = logging.getLogger("install")
     def rel(cont):
-        dialog.infobox(f'Installing {system} to new system.\n{cont}')
+        dialog.infobox(f'Installing {system} to new system.\n{cont.encode("utf-8")}')
     res = logRun(["nixos-install","--system",system,"--no-channel-copy","--no-root-password"],log,rel=rel)
 
 def logNix(args, log, ret):
