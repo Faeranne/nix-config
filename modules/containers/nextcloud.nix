@@ -73,42 +73,42 @@ in {
               inherit (config.services.nextcloud.package.packages.apps) bookmarks calendar contacts cookbook cospend deck forms polls phonetrack memories maps notify_push richdocuments spreed tasks twofactor_nextcloud_notification twofactor_webauthn;
               pride_flags = pkgs.fetchNextcloudApp {
                 url = "https://git.finally.coffee/finallycoffee/nextcloud-pride-flags/releases/download/1.1.0/pride_flags-1.1.0.tar.gz";
-                sha256 = "sha256-zsfSFv6CBkblT17CIf8j+wjtVfvxDazXlQZBGyDO5xA=";
+                sha256 = "sha256-vFdabHrdBqpS4I81cthtyoy7bRC7S/rDC5ixrwtkR/c=";
                 license = "gpl3";
               };
               integration_paperless = pkgs.fetchNextcloudApp {
                 url = "https://github.com/nextcloud-releases/integration_paperless/releases/download/v1.0.3/integration_paperless-v1.0.3.tar.gz";
-                sha256 = "sha256-3d3EgRCG4H5EcnQ3kmbVSEIsBNgrnuQA9pzdbiNtLyM=";
+                sha256 = "sha256-ARjs8cCUJICJaZiMIIt/lYk15WlXzzRqAQBWwax6HY4=";
                 license = "agpl3Only";
               };
               files_archive = pkgs.fetchNextcloudApp {
                 url = "https://github.com/rotdrop/nextcloud-app-files-archive/releases/download/v1.2.3/files_archive.tar.gz";
-                sha256 = "sha256-x7aXgahqlq8Z221iEG7lrfTpbiN5EwDLUHDxqSDpqtU=";
+                sha256 = "sha256-D4D8OXlgF0Gv3NRSuq69Quu9jN96Blk0+QwiF1X63EU=";
                 license = "agpl3Only";
               };
               memegen = pkgs.fetchNextcloudApp {
                 url = "https://github.com/nextcloud-releases/memegen/releases/download/v1.1.0/memegen-v1.1.0.tar.gz";
-                sha256 = "sha256-M26J7udmkL95M1+TaLAdsO/qjg3bV+pluC+SNmxTE+8=";
+                sha256 = "sha256-AuRZcyJcjlaGt/83+0BHqyN7tZwIvxQDUF3JqzSesk8=";
                 license = "agpl3Only";
               };
               secrets = pkgs.fetchNextcloudApp {
                 url = "https://github.com/theCalcaholic/nextcloud-secrets/releases/download/v2.0.3/secrets.tar.gz";
-                sha256 = "sha256-axIQet26lRAq3Ww8K8txKu6tB7kuWHilCcSLHZxq0Ug=";
+                sha256 = "sha256-6Q3j40EGENced4bKFAh1F63RVTk3gGHOmmaIX2ERj5c=";
                 license = "agpl3Only";
               };
               guests = pkgs.fetchNextcloudApp {
                 url = "https://github.com/nextcloud-releases/guests/releases/download/v3.1.0/guests-v3.1.0.tar.gz";
-                sha256 = "sha256-YpJWOOP/45Lnw6XlQ6PLitG2NzSyYXCD5D9lZyn+mcQ=";
+                sha256 = "sha256-3AuW/1fgINxLk5HXJ4Qy3rUB4G6IPa6TDsHG5PfzTiM=";
                 license = "agpl3Only";
               };
               duplicatefinder = pkgs.fetchNextcloudApp {
                 url = "https://github.com/eldertek/duplicatefinder/releases/download/v1.2.5/duplicatefinder-v1.2.5.tar.gz";
-                sha256 = "sha256-dnD+Qhxlz7RCOo3A1w6h+U0PVI1h4y+HRE/XwNsTxuk=";
+                sha256 = "sha256-gMrpbgXCZnKKWf1bEir71Ojd7N98i8xU/jg0N/DXKWM=";
                 license = "agpl3Only";
               };
               recognize = pkgs.fetchNextcloudApp {
                 url = "https://github.com/nextcloud/recognize/releases/download/v7.1.0/recognize-7.1.0.tar.gz";
-                sha256 = "sha256-GPxEM2Lvy5VrF2acDvIJgf+fG9xEEsVNc1DR8Xh6zvY=";
+                sha256 = "sha256-qR4SrTHFAc4YWiZAsL94XcH4VZqYtkRLa0y+NdiFZus=";
                 license = "agpl3Only";
               };
             };
