@@ -35,6 +35,7 @@
         "dialout"
         "networkmanager"
         "vboxuser"
+        "davfs2"
       ];
     };
     groups.nina = {
