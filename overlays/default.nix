@@ -11,6 +11,9 @@
           --unset WAYLAND_DISPLAY
       '';
     };
+    firefoxpwa = self.inputs.nixpkgs-unstable.legacyPackages.${final.system}.firefoxpwa;
+  });
+  java = (final: prev: {
     arduino-core-unwrapped = prev.arduino-core-unwrapped.overrideAttrs (finalAttrs: prevAttrs: {
       installPhase = prevAttrs.installPhase + ''
         wrapProgram $out/bin/arduino \
@@ -27,6 +30,5 @@
         "--set _JAVA_AWT_WM_NONREPARENTING 1"
       ];
     });
-    firefoxpwa = self.inputs.nixpkgs-unstable.legacyPackages.${final.system}.firefoxpwa;
   });
 }

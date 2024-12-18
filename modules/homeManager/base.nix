@@ -30,6 +30,7 @@
   nixpkgs = {
     overlays = [
       self.overlays.desktop
+      self.overlays.java
     ];
   };
   nix.settings = {
