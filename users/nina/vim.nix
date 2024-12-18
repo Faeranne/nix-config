@@ -25,6 +25,15 @@ in {
   };
   programs = {
     nixvim = {
+      opts = {
+        autoindent = true;
+        expandtab = true;
+        shiftwidth = 2;
+        smartindent = true;
+        tabstop = 2;
+        swapfile = false;
+        undofile = true;
+      };
       extraPlugins =
         (with pkgs.vimPlugins; [
           vim-fugitive
@@ -39,6 +48,7 @@ in {
             "sha256-8pCHtApD/xXav2UBVOVhkaHg3YS4aNCZ73mog04bYuA="
           )
         ];
+      extraPackages = [ pkgs.arduino-cli];
       plugins = {
         fugitive.enable = true;
         gitgutter = {
@@ -61,10 +71,8 @@ in {
         lsp = {
           enable = true;
           servers = {
-            arduino_language_server = {
-              enable = true;
-              autostart = true;
-            };
+            arduino_language_server.enable = true;
+            clangd.enable = true;
             nixd = {
               enable = true;
               settings = {
