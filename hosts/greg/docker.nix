@@ -2,9 +2,7 @@
   self, 
   config,
   ...
-}: let
-  sharkeyConfig = ./sharkey.yaml;
-in {
+}: {
   age.secrets = {
     sharkeyenv = {
       rekeyFile = self + "/secrets/containers/sharkey/env.age";
@@ -35,7 +33,7 @@ in {
 
       };
       environmentFiles = [
-        config.secrets.sharkeyenv.path
+        config.age.secrets.sharkeyenv.path
       ];
       volumes = [
         "/Storage/volumes/sharkey/db:/var/lib/postgresql/data"
@@ -66,7 +64,7 @@ in {
       environment = {
       };
       environmentFiles = [
-        config.secrets.sharkeyenv.path
+        config.age.secrets.sharkeyenv.path
       ];
       volumes = [
         "/Storage/volumes/sharkey/files:/sharkey/files"
