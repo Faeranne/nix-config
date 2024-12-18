@@ -1,4 +1,5 @@
 {
+  self,
   inputs,
   pkgs,
   ...
@@ -26,6 +27,12 @@
     stateVersion = "23.11";
   };
   programs.home-manager.enable = true;
+  nixpkgs = {
+    overlays = [
+      self.overlays.desktop
+      self.overlays.java
+    ];
+  };
   nix.settings = {
   };
 }

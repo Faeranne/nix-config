@@ -66,7 +66,7 @@
 
   boot = {
     # enables TPM2 support in systemd at boot time.
-    initrd.systemd.enableTpm2 = true;
+    initrd.systemd.tpm2.enable = true;
   };
 
   security = {

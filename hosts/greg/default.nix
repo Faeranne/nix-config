@@ -2,6 +2,7 @@
   self,
   config,
   myLib,
+  lib,
   ...
 }: let
   mkPeer = myLib.mkPeer "sarah";
@@ -26,6 +27,8 @@ in {
     binfmt.emulatedSystems = ["aarch64-linux"];
     zfs.extraPools = ["Storage"];
   };
+
+  virtualisation.virtualbox.host.enable = lib.mkForce false;
 
   networking = {
     hostName = "greg";

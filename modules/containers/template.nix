@@ -3,6 +3,7 @@ name: {
   inputs,
   lib,
   config,
+  pkgs,
   ...
 }: {
   age.secrets = {
@@ -72,5 +73,8 @@ name: {
     extraFlags = [
       "--network-namespace-path=/run/netns/${name}"
     ];
+    config = {...}:{
+      nixpkgs.pkgs = pkgs;
+    };
   };
 }

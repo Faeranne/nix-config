@@ -52,12 +52,12 @@
         Type = "oneshot";
         RemainAfterExit = true;
         ExecStart = "${pkgs.writers.writeDash "netns-up" ''
-          ${pkgs.iproute}/bin/ip netns add $1
+          ${pkgs.iproute2}/bin/ip netns add $1
           # the default loopback adapter doesn't set itself up
           # so this enables it
-          ${pkgs.iproute}/bin/ip netns exec $1 ${pkgs.iproute}/bin/ip link set lo up
+          ${pkgs.iproute2}/bin/ip netns exec $1 ${pkgs.iproute2}/bin/ip link set lo up
         ''} %I";
-        ExecStop = "${pkgs.iproute}/bin/ip netns del %I";
+        ExecStop = "${pkgs.iproute2}/bin/ip netns del %I";
       };
     };
   };

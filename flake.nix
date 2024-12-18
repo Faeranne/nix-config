@@ -6,8 +6,7 @@
   # function `outputs` below.
   inputs = {
     # This is the base nixpkgs repo.  Contains almost anything you could need.
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
-    #nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-23.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs";
     # Flake utils does some cool things with flakes. there's more
     # details where they're used
@@ -56,7 +55,7 @@
     # This is also a well documented flake, so check out https://github.com/nix-community/home-manager
     # for more details
     home-manager = {
-      url = "github:faeranne/home-manager/fix-5810";
+      url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # This generates pre-made nix disk images. I use it to build uefi install mediums with my
@@ -94,7 +93,7 @@
     };
 
     nixvim = {
-      url = "github:nix-community/nixvim/nixos-24.05";
+      url = "github:nix-community/nixvim";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         home-manager.follows = "home-manager";
@@ -154,6 +153,8 @@
     containerModules = import ./modules/containers;
 
     userModules = import ./users;
+
+    overlays = import ./overlays {inherit self;};
 
     # This is for handling agenix rekey and generate commands
     devShells = forAllSystems (system: let

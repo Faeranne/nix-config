@@ -51,6 +51,9 @@ in {
   };
 
   services = {
+    davfs2 = {
+      enable = true;
+    };
     saned.enable = true;
     udev.extraRules = ''
       SUBSYSTEM=="usb", ATTRS{idVendor}=="1038", ATTRS{idProduct}=="12e0", MODE="0666"

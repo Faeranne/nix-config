@@ -48,9 +48,6 @@
           '';
         };
       };
-      sessionVariables = {
-        _JAVA_AWT_WM_NONREPARENTING = "1";
-      };
       persistence."/persist/home/nina" = {
         directories = [
           ".local/share/godot/app_userdata"
@@ -173,8 +170,8 @@
                   description = "The Twitch enhancement suite. Get custom emotes and tons of new features you'll never want to go without.";
                   license = lib.licenses.asl20;
                   mozPermissions = [
-                    "https://*.twitch.tv/*"
-                    "https://*.frankerfacez.com/*"
+                    "*://twitch.tv/*"
+                    "*://frankerfacez.com/*"
                   ];
                   platforms = lib.platforms.all;
                 };
@@ -196,9 +193,6 @@
                 #tridactyl
                 ublock-origin
                 violentmonkey
-              ])
-              ++ (with pkgs.nur.repos.ethancedwards8.firefox-addons; [
-                enhancer-for-youtube
               ])
               ++ (with pkgs.nur.repos.rycee.firefox-addons; [
                 awesome-rss

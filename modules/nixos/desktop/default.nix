@@ -104,7 +104,6 @@
 
   hardware = {
     pulseaudio.enable = false;
-    opengl.enable = true;
     logitech.wireless = {
       enable = true;
       enableGraphical = true;

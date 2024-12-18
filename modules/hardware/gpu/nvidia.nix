@@ -4,13 +4,17 @@
   environment.systemPackages = with pkgs; [
     cudatoolkit
   ];
-  hardware.opengl = {
-    enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
-    extraPackages = with pkgs; [
-      nvidia-vaapi-driver
-      libvdpau-va-gl
-    ];
+  hardware = {
+    nvidia = {
+      open = false;
+    };
+    graphics = {
+      enable = true;
+      enable32Bit = true;
+      extraPackages = with pkgs; [
+        nvidia-vaapi-driver
+        libvdpau-va-gl
+      ];
+    };
   };
 }

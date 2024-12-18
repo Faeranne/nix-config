@@ -1,4 +1,13 @@
-{config, ...}: {
+{
+  self, 
+  config,
+  ...
+}: {
+  age.secrets = {
+    sharkeyenv = {
+      rekeyFile = self + "/secrets/containers/sharkey/env.age";
+    };
+  };
   virtualisation.oci-containers.containers = {
     /*
     "fasten" = {
@@ -15,16 +24,58 @@
       ];
     };
     */
-    "flaresolverr" = {
-      image = "ghcr.io/flaresolverr/flaresolverr:v3.3.21";
+    "sharkey-db" = {
+      autoStart = true;
+      image = "postgres:15-alpine";
+      ports = [
+      ];
       environment = {
-        LOG_LEVEL="info";
-        LOG_HTML="false";
-        CAPTCHA_SOLVER="none";
-        TZ="America/Indiana/Indianapolis";
+
       };
+      environmentFiles = [
+        config.age.secrets.sharkeyenv.path
+      ];
+      volumes = [
+        "/Storage/volumes/sharkey/db:/var/lib/postgresql/data"
+      ];
+      extraOptions = [
+        "--ip=10.88.1.8"
+      ];
+    };
+    "sharkey-redis" = {
+      autoStart = true;
+      image = "redis:7-alpine";
+      ports = [
+      ];
+      environment = {
+      };
+      volumes = [
+        "/Storage/volumes/sharkey/redis:/data"
+      ];
       extraOptions = [
         "--ip=10.88.1.7"
+      ];
+    };
+    "sharkey-web" = {
+      autoStart = true;
+      image = "registry.activitypub.software/transfem-org/sharkey:2024.9.4";
+      ports = [
+      ];
+      environment = {
+      };
+      environmentFiles = [
+        config.age.secrets.sharkeyenv.path
+      ];
+      volumes = [
+        "/Storage/volumes/sharkey/files:/sharkey/files"
+        "${./sharkey.yaml}:/sharkey/.config/default.yml:ro"
+      ];
+      dependsOn = [
+        "sharkey-db"
+        "sharkey-redis"
+      ];
+      extraOptions = [
+        "--ip=10.88.1.6"
       ];
     };
     "lubelogger" = {
