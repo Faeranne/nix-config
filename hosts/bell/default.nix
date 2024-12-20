@@ -6,6 +6,7 @@
 in {
   imports = with self.nixosModules; [
     base
+    server
     extras.storage
     hardware.cpu.intel
     self.userModules.nina
