@@ -1,5 +1,6 @@
 {
   self,
+  config,
   ...
 }: let
   localCfg = builtins.fromJSON (builtins.readFile ./config.json);
@@ -19,6 +20,13 @@ in {
       allowedTCPPorts = [];
       allowedUDPPorts = [];
     };
+  };
+
+  boot = {
+    kernelModules = [ "thecus_it87" ];
+    extraModulePackages = [
+      (config.boot.kernelPackages.callPackage self+"/pkgs/thecus_it87.nix")
+    ];
   };
 
   environment.systemPackages = [
