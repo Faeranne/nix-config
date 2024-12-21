@@ -8,11 +8,11 @@ stdenv.mkDerivation rec {
 		owner = "system1357";
 		repo = "Thecus_tools";
 		rev = "f269d4fc9b30a0ab66541e3e3b3aa283ef713b3c";
-		sha256 = "";
+		sha256 = "sha256-N+kEeaphmdVCs9NKq2HwkEInnKMgvfWpe4PIlzKxI2Y=";
 	};
 
 	setSourceRoot = ''
-		export sourceRoot=${src.name}/thecus_it87
+		export sourceRoot=$(pwd)/${src.name}/thecus_it87
 	'';
 
 	nativeBuildInputs = kernel.moduleBuildDependencies;

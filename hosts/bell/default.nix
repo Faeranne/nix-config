@@ -25,7 +25,7 @@ in {
   boot = {
     kernelModules = [ "thecus_it87" ];
     extraModulePackages = [
-      (config.boot.kernelPackages.callPackage self+"/pkgs/thecus_it87.nix")
+      (config.boot.kernelPackages.callPackage (self+"/pkgs/thecus_it87.nix") {})
     ];
   };
 

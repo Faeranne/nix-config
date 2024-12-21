@@ -17,7 +17,6 @@
     iso = callPackage ./iso.nix {};
     efi = callPackage ./efi.nix {};
     wifi = callPackage ./wifi.nix {};
-    thecus-it87 = callPackage ./thecus_it87.nix {};
   };
 in
   packages // systemTest // systemDeploy
