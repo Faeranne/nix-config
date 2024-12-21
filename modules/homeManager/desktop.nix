@@ -311,6 +311,7 @@
         startup = [
           {command = "mako";}
           {command = "kdeconnect-indicator";}
+          {command = "${lib.getExe pkgs.soteria}";}
         ];
       };
     };
