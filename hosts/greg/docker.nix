@@ -7,6 +7,9 @@
     sharkeyenv = {
       rekeyFile = self + "/secrets/containers/sharkey/env.age";
     };
+    docmostenv = {
+      rekeyFile = self + "/secrets/containers/docmost/env.age";
+    };
   };
   virtualisation.oci-containers.containers = {
     /*
@@ -24,6 +27,56 @@
       ];
     };
     */
+    "docmost-redis" = {
+      autoStart = true;
+      image = "redis:7.2-alpha";
+      environment = {
+      };
+      environmentFiles = [
+      ];
+      volumes = [
+        "/Storage/volumes/docmost/redis:/data"
+      ];
+      extraOptions = [
+        "--ip=10.88.1.11"
+      ];
+    };
+    "docmost-db" = {
+      autoStart = true;
+      image = "postgres:16-alpine";
+      environment = {
+      };
+      environmentFiles = [
+        config.age.secrets.docmostenv.path
+      ];
+      volumes = [
+        "/Storage/volumes/docmost/db:/var/lib/postgresql/data"
+      ];
+      extraOptions = [
+        "--ip=10.88.1.10"
+      ];
+    };
+    "docmost" = {
+      autoStart = true;
+      image = "docmost/docmost:0.6.2";
+      environment = {
+        APP_URL = "https://docmost.faeranne.com/";
+        REDIS_URL = "redis://10.88.1.10:6379";
+      };
+      environmentFiles = [
+        config.age.secrets.docmostenv.path
+      ];
+      volumes = [
+        "/Storage/volumes/docmost/data:/app/data/storage"
+      ];
+      extraOptions = [
+        "--ip=10.88.1.9"
+      ];
+      dependsOn = [
+        "docmost-db"
+        "docmost-redis"
+      ];
+    };
     "sharkey-db" = {
       autoStart = true;
       image = "postgres:15-alpine";
