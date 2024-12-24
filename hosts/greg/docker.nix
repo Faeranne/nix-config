@@ -7,6 +7,9 @@
     sharkeyenv = {
       rekeyFile = self + "/secrets/containers/sharkey/env.age";
     };
+    ehterpadenv = {
+      rekeyFile = self + "/secrets/containers/etherpad/env.age";
+    };
   };
   virtualisation.oci-containers.containers = {
     /*
@@ -24,6 +27,54 @@
       ];
     };
     */
+    "etherpad" = {
+      autoStart = true;
+      image = "etherpad/etherpad:2.2.7";
+      ports = [
+      ];
+      environment = {
+        NODE_ENV = "production";
+        DB_CHARSET = "utf8mb4";
+        DB_HOST = "10.88.1.10";
+        DB_PORT = "5432";
+        DB_TYPE = "postgres";
+        DB_USER = "etherpad";
+        TRUST_PROXY = "true";
+        DEFAULT_PAD_TEXT = " ";
+        DISABLE_IP_LOGGING="false";
+        SOFFICE = "null";
+      };
+      environmentFiles = [
+        config.age.secrets.etherpadenv.path
+      ];
+      volumes = [
+        "/Storage/volumes/etherpad/data:/opt/etherpad-lite/var"
+        "/Storage/volumes/etherpad/plugins:/opt/etherpad-lite/src/plugin_packages"
+      ];
+      dependsOn = [
+        "etherpad-db"
+      ];
+      extraOptions = [
+        "--ip=10.88.1.10"
+      ];
+    };
+    "etherpad-db" = {
+      autoStart = true;
+      image = "postgres:15-alpine";
+      ports = [
+      ];
+      environment = {
+      };
+      environmentFiles = [
+        config.age.secrets.etherpadenv.path
+      ];
+      volumes = [
+        "/Storage/volumes/etherpad/db:/var/lib/postgresql/data"
+      ];
+      extraOptions = [
+        "--ip=10.88.1.9"
+      ];
+    };
     "sharkey-db" = {
       autoStart = true;
       image = "postgres:15-alpine";

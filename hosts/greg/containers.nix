@@ -146,12 +146,18 @@ in {
             service = "sharkey";
             entryPoints = ["websecure"];
           };
+          etherpad = {
+            rule = "Host(`pad.faeranne.com`)";
+            service = "etherpad";
+            entryPoints = ["websecure"];
+          };
         };
         extraServices = {
           wizarr.loadBalancer.servers = [{url = "http://10.88.1.3:5690";}];
           actual.loadBalancer.servers = [{url = "http://10.88.1.4:5006";}];
           lube.loadBalancer.servers = [{url = "http://10.88.1.5:8080";}];
           sharkey.loadBalancer.servers = [{url = "http://10.88.1.6:3000";}];
+          etherpad.loadBalancer.servers = [{url = "http://10.88.1.10:9001";}];
         };
       };
     };
