@@ -16,6 +16,7 @@ in {
     self.containerModules.git self.containerModules.netbox
     self.containerModules.nextcloud
     self.containerModules.nix-cache
+    self.containerModules.hedgedoc
   ];
   networking = let
     traefikIp = lib.removeSuffix "/32" (builtins.elemAt config.networking.wireguard.interfaces.wgtraefikgreg.ips 0);
@@ -73,6 +74,7 @@ in {
           (mkPeer "netbox")
           (mkPeer "nextcloud")
           (mkPeer "nixcache")
+          (mkPeer "hedgedoc")
         ];
       };
       "wggit" = {
@@ -95,6 +97,12 @@ in {
       };
       "wgnixcache" = {
         listenPort = 51830;
+        peers = [
+          (mkPeer "traefikgreg")
+        ];
+      };
+      "wghedgedoc" = {
+        listenPort = 51831;
         peers = [
           (mkPeer "traefikgreg")
         ];
@@ -124,6 +132,7 @@ in {
           "netbox.netbox"
           "nextcloud.nextcloud"
           "nixcache.nixcache"
+          "hedgedoc.hedgedoc"
         ];
         extraRouters = {
           wizarr = {
@@ -232,6 +241,16 @@ in {
       };
       specialArgs = {
         hostName = "netbox.faeranne.com";
+      };
+    };
+    hedgedoc = {
+      bindMounts = {
+        "/storage" = {
+          hostPath = "/Storage/volumes/hedgedoc";
+        };
+      };
+      specialArgs = {
+        hostName = "hedge.faeranne.com";
       };
     };
     nixcache = {
