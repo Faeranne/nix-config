@@ -29,7 +29,7 @@
     */
     "docmost-redis" = {
       autoStart = true;
-      image = "redis:7.2-alpha";
+      image = "redis:7.2-alpine";
       environment = {
       };
       environmentFiles = [
@@ -61,7 +61,8 @@
       image = "docmost/docmost:0.6.2";
       environment = {
         APP_URL = "https://docmost.faeranne.com/";
-        REDIS_URL = "redis://10.88.1.10:6379";
+        REDIS_URL = "redis://10.88.1.11:6379";
+        STORAGE_DRIVER = "local";
       };
       environmentFiles = [
         config.age.secrets.docmostenv.path
