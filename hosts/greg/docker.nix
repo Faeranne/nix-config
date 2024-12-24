@@ -37,6 +37,7 @@
         DB_CHARSET = "utf8mb4";
         DB_HOST = "10.88.1.10";
         DB_PORT = "5432";
+        DB_NAME="etherpad";
         DB_TYPE = "postgres";
         DB_USER = "etherpad";
         TRUST_PROXY = "true";
@@ -64,6 +65,9 @@
       ports = [
       ];
       environment = {
+        POSTGRES_DB="etherpad";
+        POSTGRES_PORT="5432";
+        POSTGRES_USER="etherpad";
       };
       environmentFiles = [
         config.age.secrets.etherpadenv.path
