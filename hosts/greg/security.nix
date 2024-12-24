@@ -38,6 +38,11 @@
         tags = ["pregen"];
       };
     };
+    hedge = {
+      rekeyFile = self + "/secrets/containers/hedgedoc/environment.age";
+      group = "systemd-network";
+      mode = "770";
+    };
     mullvad = {
       rekeyFile = self + "/hosts/greg/secrets/mullvad.age";
       group = "systemd-network";
