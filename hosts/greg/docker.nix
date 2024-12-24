@@ -7,7 +7,7 @@
     sharkeyenv = {
       rekeyFile = self + "/secrets/containers/sharkey/env.age";
     };
-    ehterpadenv = {
+    etherpadenv = {
       rekeyFile = self + "/secrets/containers/etherpad/env.age";
     };
   };
