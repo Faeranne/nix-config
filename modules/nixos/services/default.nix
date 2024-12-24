@@ -3,4 +3,5 @@
   printers = import ./printers.nix;
   traefik = import ./traefik.nix;
   clamav = import ./clamav;
+  syncthing = import ./syncthing.nix;
 }

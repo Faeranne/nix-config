@@ -13,6 +13,7 @@ in {
     containers
     server
     extras.storage
+    services.syncthing
     hardware.cpu.intel
     hardware.gpu.nvidia
     ./docker.nix
