@@ -35,7 +35,7 @@
       environment = {
         NODE_ENV = "production";
         DB_CHARSET = "utf8mb4";
-        DB_HOST = "10.88.1.10";
+        DB_HOST = "10.88.1.9";
         DB_PORT = "5432";
         DB_NAME="etherpad";
         DB_TYPE = "postgres";
@@ -49,6 +49,7 @@
         config.age.secrets.etherpadenv.path
       ];
       volumes = [
+        "${./etherpad.json}:/opt/etherpad-lite/settings.json:ro"
         "/Storage/volumes/etherpad/data:/opt/etherpad-lite/var"
         "/Storage/volumes/etherpad/plugins:/opt/etherpad-lite/src/plugin_packages"
       ];

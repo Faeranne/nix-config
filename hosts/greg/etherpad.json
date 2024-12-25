@@ -1,0 +1,165 @@
+{
+  "title": "Nexus Lab",
+  "favicon": "${FAVICON:null}",
+  "skinName": "colibris",
+  "skinVariants": "super-light-toolbar super-light-editor light-background",
+  "ip": "0.0.0.0",
+  "port": "9001",
+  "showSettingsInAdminPage": "false",
+  "cleanup": {
+    "enabled": false,
+    "keepRevisions": 5
+  },
+  "authenticationMethod": "sso",
+  "updateServer": "https://etherpad.org/ep_infos",
+  "dbType": "postgres",
+  "dbSettings": {
+    "host":       "${DB_HOST:undefined}",
+    "port":       "${DB_PORT:undefined}",
+    "database":   "${DB_NAME:undefined}",
+    "user":       "${DB_USER:undefined}",
+    "password":   "${POSTGRES_PASSWORD:undefined}",
+    "charset":    "${DB_CHARSET:undefined}"
+  },
+  "defaultPadText" : "Welcome to Etherpad!\n\nThis pad text is synchronized as you type, so that everyone viewing this page sees the same text. This allows you to collaborate seamlessly on documents!\n\nGet involved with Etherpad at https:\/\/etherpad.org\n",
+  "padOptions": {
+    "noColors":         "false",
+    "showControls":     "true",
+    "showChat":         "true",
+    "showLineNumbers":  "true",
+    "useMonospaceFont": "false",
+    "rtl":              "false",
+    "alwaysShowChat":   "false",
+    "chatAndUsers":     "false",
+    "lang":             "null"
+  },
+  "padShortcutEnabled" : {
+    "altF9":     "${PAD_SHORTCUTS_ENABLED_ALT_F9:true}",
+    "altC":      "${PAD_SHORTCUTS_ENABLED_ALT_C:true}",
+    "cmdShift2": "${PAD_SHORTCUTS_ENABLED_CMD_SHIFT_2:true}",
+    "delete":    "${PAD_SHORTCUTS_ENABLED_DELETE:true}",
+    "return":    "${PAD_SHORTCUTS_ENABLED_RETURN:true}",
+    "esc":       "${PAD_SHORTCUTS_ENABLED_ESC:true}",
+    "cmdS":      "${PAD_SHORTCUTS_ENABLED_CMD_S:true}",
+    "tab":       "${PAD_SHORTCUTS_ENABLED_TAB:true}",
+    "cmdZ":      "${PAD_SHORTCUTS_ENABLED_CMD_Z:true}",
+    "cmdY":      "${PAD_SHORTCUTS_ENABLED_CMD_Y:true}",
+    "cmdI":      "${PAD_SHORTCUTS_ENABLED_CMD_I:true}",
+    "cmdB":      "${PAD_SHORTCUTS_ENABLED_CMD_B:true}",
+    "cmdU":      "${PAD_SHORTCUTS_ENABLED_CMD_U:true}",
+    "cmd5":      "${PAD_SHORTCUTS_ENABLED_CMD_5:true}",
+    "cmdShiftL": "${PAD_SHORTCUTS_ENABLED_CMD_SHIFT_L:true}",
+    "cmdShiftN": "${PAD_SHORTCUTS_ENABLED_CMD_SHIFT_N:true}",
+    "cmdShift1": "${PAD_SHORTCUTS_ENABLED_CMD_SHIFT_1:true}",
+    "cmdShiftC": "${PAD_SHORTCUTS_ENABLED_CMD_SHIFT_C:true}",
+    "cmdH":      "${PAD_SHORTCUTS_ENABLED_CMD_H:true}",
+    "ctrlHome":  "${PAD_SHORTCUTS_ENABLED_CTRL_HOME:true}",
+    "pageUp":    "${PAD_SHORTCUTS_ENABLED_PAGE_UP:true}",
+    "pageDown":  "${PAD_SHORTCUTS_ENABLED_PAGE_DOWN:true}"
+  },
+  "suppressErrorsInPadText": "${SUPPRESS_ERRORS_IN_PAD_TEXT:false}",
+  "requireSession": "${REQUIRE_SESSION:false}",
+  "editOnly": "${EDIT_ONLY:false}",
+  "minify": "false",
+  "maxAge": "${MAX_AGE:21600}",
+  "abiword": "${ABIWORD:null}",
+  "soffice": "${SOFFICE:null}",
+  "allowUnknownFileEnds": "${ALLOW_UNKNOWN_FILE_ENDS:true}",
+  "requireAuthentication": "true",
+  "requireAuthorization": "true",
+  "trustProxy": "true",
+  "cookie": {
+    "keyRotationInterval": "${COOKIE_KEY_ROTATION_INTERVAL:86400000}",
+    "sameSite": "${COOKIE_SAME_SITE:Lax}",
+    "sessionLifetime": "${COOKIE_SESSION_LIFETIME:864000000}",
+    "sessionRefreshInterval": "${COOKIE_SESSION_REFRESH_INTERVAL:86400000}"
+  },
+  "disableIPlogging": "true",
+  "automaticReconnectionTimeout": "${AUTOMATIC_RECONNECTION_TIMEOUT:0}",
+  "scrollWhenFocusLineIsOutOfViewport": {
+    "percentage": {
+      "editionAboveViewport": "${FOCUS_LINE_PERCENTAGE_ABOVE:0}",
+      "editionBelowViewport": "${FOCUS_LINE_PERCENTAGE_BELOW:0}"
+    },
+    "duration": "${FOCUS_LINE_DURATION:0}",
+    "scrollWhenCaretIsInTheLastLineOfViewport": "${FOCUS_LINE_CARET_SCROLL:false}",
+    "percentageToScrollWhenUserPressesArrowUp": "${FOCUS_LINE_PERCENTAGE_ARROW_UP:0}"
+  },
+  "ep_guest": {
+    "username": "guest"
+  },
+  "users": {
+    "admin": {
+      "password": "${ADMIN_PASSWORD:null}",
+      "is_admin": true
+    },
+    "user": {
+      "password": "${USER_PASSWORD:null}",
+      "is_admin": false
+    },
+    "guest": {
+      "displayname": "Read-Only Guest",
+      "displaynameChangeable": false,
+      "readOnly": true
+    }
+  },
+  "socketTransportProtocols" : ["websocket", "polling"],
+  "socketIo": {
+    "maxHttpBufferSize": "${SOCKETIO_MAX_HTTP_BUFFER_SIZE:50000}"
+  },
+  "loadTest": "${LOAD_TEST:false}",
+  "dumpOnUncleanExit": "${DUMP_ON_UNCLEAN_EXIT:false}",
+  "importExportRateLimiting": {
+    "windowMs": "${IMPORT_EXPORT_RATE_LIMIT_WINDOW:90000}",
+    "max": "${IMPORT_EXPORT_MAX_REQ_PER_IP:10}"
+  },
+  "importMaxFileSize": "${IMPORT_MAX_FILE_SIZE:52428800}",
+  "commitRateLimiting": {
+    "duration": "${COMMIT_RATE_LIMIT_DURATION:1}",
+    "points": "${COMMIT_RATE_LIMIT_POINTS:10}"
+  },
+  "exposeVersion": "${EXPOSE_VERSION:false}",
+  "loglevel": "${LOGLEVEL:INFO}",
+  "customLocaleStrings": {},
+  "enableAdminUITests": false,
+  "lowerCasePadIds": "${LOWER_CASE_PAD_IDS:false}",
+  "sso": {
+    "issuer": "${SSO_ISSUER:http://localhost:9001}",
+    "clients": [
+      {
+        "client_id": "${ADMIN_CLIENT:admin_client}",
+        "client_secret": "${ADMIN_SECRET:admin}",
+        "grant_types": ["authorization_code"],
+        "response_types": ["code"],
+        "redirect_uris": ["${ADMIN_REDIRECT:http://localhost:9001/admin/}"]
+      },
+      {
+        "client_id": "${USER_CLIENT:user_client}",
+        "client_secret": "${USER_SECRET:user}",
+        "grant_types": ["authorization_code"],
+        "response_types": ["code"],
+        "redirect_uris": ["${USER_REDIRECT:http://localhost:9001/}"]
+      }
+    ]
+  },
+  "ep_discordauth": {
+    "client_id":"1312550123208835072",
+    "client_secret":"${DISCORD_SECRET:null}",
+    "authorizedUsers": {
+      "individuals": [],
+      "guilds":{
+        "1124064594915250186" : { "roles" : ["1321094965224275998"] }
+      }
+    },
+    "admins":{
+      "individuals":["134472669805412352"],
+       "guilds":{
+       }
+    },
+    "excluded":{
+      "individuals":[],
+      "guilds":{
+      }
+    }
+  }
+}
