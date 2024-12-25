@@ -16,6 +16,7 @@ in {
     self.containerModules.git self.containerModules.netbox
     self.containerModules.nextcloud
     self.containerModules.nix-cache
+    self.containerModules.whitebophir
   ];
   networking = let
     traefikIp = lib.removeSuffix "/32" (builtins.elemAt config.networking.wireguard.interfaces.wgtraefikgreg.ips 0);
@@ -73,6 +74,7 @@ in {
           (mkPeer "netbox")
           (mkPeer "nextcloud")
           (mkPeer "nixcache")
+          (mkPeer "whitebophir")
         ];
       };
       "wggit" = {
@@ -95,6 +97,12 @@ in {
       };
       "wgnixcache" = {
         listenPort = 51830;
+        peers = [
+          (mkPeer "traefikgreg")
+        ];
+      };
+      "wgwhitebophir" = {
+        listenPort = 51831;
         peers = [
           (mkPeer "traefikgreg")
         ];
@@ -160,6 +168,14 @@ in {
           etherpad.loadBalancer.servers = [{url = "http://10.88.1.10:9001";}];
         };
       };
+    };
+    whitebophir = {
+      bindMounts = {
+        "/var/lib/whitebophir" = {
+          hostPath = "/Storage/volumes/whitebophir";
+        };
+      };
+      specialArgs = "wbo.faeranne.com";
     };
     jellyfin = {
       bindMounts = {
