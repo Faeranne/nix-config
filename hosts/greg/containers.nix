@@ -17,6 +17,7 @@ in {
     self.containerModules.nextcloud
     self.containerModules.nix-cache
     self.containerModules.whitebophir
+    self.containerModules.grafana
   ];
   networking = let
     traefikIp = lib.removeSuffix "/32" (builtins.elemAt config.networking.wireguard.interfaces.wgtraefikgreg.ips 0);
@@ -75,6 +76,7 @@ in {
           (mkPeer "nextcloud")
           (mkPeer "nixcache")
           (mkPeer "whitebophir")
+          (mkPeer "grafana")
         ];
       };
       "wggit" = {
@@ -107,6 +109,12 @@ in {
           (mkPeer "traefikgreg")
         ];
       };
+      "wggrafana" = {
+        listenPort = 51832;
+        peers = [
+          (mkPeer "traefikgreg")
+        ];
+      };
     };
   };
   containers = {
@@ -132,6 +140,7 @@ in {
           "netbox.netbox"
           "nextcloud.nextcloud"
           "nixcache.nixcache"
+          "grafana.grafana"
         ];
         extraRouters = {
           wizarr = {
@@ -168,6 +177,14 @@ in {
           etherpad.loadBalancer.servers = [{url = "http://10.88.1.10:9001";}];
         };
       };
+    };
+    grafana = {
+      bindMounts = {
+        "/var/lib/grafana" = {
+          hostPath = "/Storage/volumes/grafana";
+        };
+      };
+      specialArgs = "grafana.faeranne.com";
     };
     whitebophir = {
       bindMounts = {
