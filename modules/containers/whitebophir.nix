@@ -4,7 +4,7 @@
   lib,
   ...
 }: let
-  containerName = "whiteborhir";
+  containerName = "whitebophir";
 in {
   imports = [
     (import ./template.nix containerName)
@@ -13,8 +13,6 @@ in {
   networking.wireguard.interfaces = {
     "wg${containerName}" = {
       ips = ["10.100.1.15/32"];
-      peers = [
-      ];
     };
   };
 
