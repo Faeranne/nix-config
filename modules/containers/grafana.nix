@@ -17,7 +17,8 @@ in {
   };
 
   age.secrets.grafana_adminPass = {
-    group = "systemd-network";
+    group = "container";
+    owner = "container";
     mode = "770";
     generator = {
       script = "passphrase";
@@ -61,6 +62,9 @@ in {
       services = {
         grafana = {
           enable = true;
+          declarativePlugins = [
+            pkgs.grafanaPlugins.yesoreyeram-infinity-datasource
+          ];
           settings = {
             server = {
               domain = hostName;
@@ -71,7 +75,7 @@ in {
             security = {
               disable_initial_admin_creation = true;
               admin_user = "admin";
-              admin_password = "$__file{/run/secrets/grafana/adminPass}";
+              admin_password = "$__file{/run/secrets/adminPass}";
             };
           };
         };

@@ -45,7 +45,7 @@ in {
         };
       };
       services = {
-        services.whitebophir = {
+        whitebophir = {
           enable = true;
           port = port;
         };

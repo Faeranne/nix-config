@@ -184,7 +184,7 @@ in {
           hostPath = "/Storage/volumes/grafana";
         };
       };
-      specialArgs = "grafana.faeranne.com";
+      specialArgs.hostName = "grafana.faeranne.com";
     };
     whitebophir = {
       bindMounts = {
@@ -192,7 +192,7 @@ in {
           hostPath = "/Storage/volumes/whitebophir";
         };
       };
-      specialArgs = "wbo.faeranne.com";
+      specialArgs.hostName = "wbo.faeranne.com";
     };
     jellyfin = {
       bindMounts = {
