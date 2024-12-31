@@ -76,7 +76,7 @@ in {
             serviceConfig = {
               # Normal 64 limit causes a 203 error in systemd.
               # Possibly a conflict between traefik and containerization
-              LimitNPROC = lib.mkForce 128;
+              LimitNPROC = lib.mkForce "infinity";
             };
           };
         };
