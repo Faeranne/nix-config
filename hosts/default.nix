@@ -1,4 +1,4 @@
-inputs: let
+{inputs, modules ? []}: let
   lib = inputs.nixpkgs.lib;
   specialArgs = {
     inherit (inputs.self) nixosModules;
@@ -12,52 +12,9 @@ inputs: let
   hostConfigs = lib.genAttrs hosts (host:
     lib.nixosSystem {
       inherit specialArgs;
-      modules = [
+      modules = modules ++ [
         ./${host}
       ];
     });
-  protoConfigs = lib.mapAttrs' (name: value:
-    lib.nameValuePair ("proto_" + name) (lib.nixosSystem {
-      specialArgs = {
-        inherit (inputs.self) nixosModules;
-        inherit (inputs) self;
-        inherit inputs;
-        sourceConfig = value.config;
-      };
-      modules = [
-        inputs.self.nixosModules.base
-        inputs.self.nixosModules.proto
-        inputs.self.nixosModules.extras.storage
-      ];
-    }))
-  hostConfigs;
 in
   hostConfigs
-/*
-in rec {
-  sarah = inputs.nixpkgs.lib.nixosSystem {
-    inherit specialArgs;
-    modules = [
-      ./sarah
-    ];
-  };
-  hazel = inputs.nixpkgs.lib.nixosSystem {
-    inherit specialArgs;
-    modules = [
-      ./hazel
-    ];
-  };
-  greg = inputs.nixpkgs.lib.nixosSystem {
-    inherit specialArgs;
-    modules = [
-      ./greg
-    ];
-  };
-} // forEachHost (hostCfg: inputs.nixpkgs.lib.nixosSystem {
-  inherit specialArgs;
-  modules = [
-    self.nixosModules.proto
-  ];
-});
-*/
-

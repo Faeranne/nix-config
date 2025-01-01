@@ -131,9 +131,15 @@
       "x86_64-linux"
     ];
     lib = import ./lib inputs;
+    nexos = import ./modules/nexos self;
   in {
     inherit lib;
-    nixosConfigurations = import ./hosts inputs;
+    nixosConfigurations = import ./hosts {
+      inherit inputs;
+      modules = [
+        nexos.nixosModules.default
+      ];
+    };
     # Agenix handles securing some secrets.  This can include passwords, authentication tokens
     # encryption key, etc.  It does so by using an age key who's public half is stored in
     # `./secrets/identities/`.  For me, that is `yubikey.nix` as I use a yubikey to store the
@@ -216,6 +222,29 @@
         ];
       });
     });
+
+    globalConfig = nexos.globalConfig {
+      modules = [
+        {
+          age = {
+            enableYubikey = true;
+            primaryKeys = [
+              "age1yubikey1qtfy343ld8e5sxlvfufa4hh22pm33f6sjq2usx6mmydrmu7txzu7g5xm9vr"
+              "age1yubikey1qdnfvhjlw8j2dkksj9eyxaqwldtqw4427cqjjqxulr5t7gn4flnt25lhuyw"
+              "age1yubikey1qw43gcah5lr95c4klyavduax0drqd5a95lhs8u2wpzqrtcklw5f0uwruyek"
+              "age1yubikey1qwcdxfaalqhntrsrkt7p2nyngdyjc72jr8tehgdzgwwpsl0veflrxncut3x"
+            ];
+          };
+          network = {
+            enable = true;
+            networks = {
+              home = {
+              };
+            };
+          };
+        }
+      ];
+    };
 
     topology = forAllSystems (system: let
       pkgs = import inputs.nixpkgs {
