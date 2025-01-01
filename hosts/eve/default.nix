@@ -8,30 +8,15 @@ in {
     base
     server
     extras.storage
-    hardware.cpu.intel
     self.userModules.nina
   ];
 
-  networking = {
-    hostName = "eve";
-    hostId = "586769c4";
-    firewall = {
-      allowedTCPPorts = [];
-      allowedUDPPorts = [];
+  nexos = {
+    info = {
+      name = "eve";
+      configPath = ./config.json;
     };
-  };
-
-  environment.systemPackages = [
-  ];
-
-  age.rekey.hostPubkey = "${localCfg.pubkey}";
-
-  fileSystems = {
-    "/boot" = {
-      device = "/dev/disk/by-uuid/${localCfg.bootID}";
-      fsType = "vfat";
-      options = ["fmask=0022" "dmask=0022"];
-    };
+    hardware.cpu.intel.enable = true;
   };
 
   nixpkgs.hostPlatform = "x86_64-linux";

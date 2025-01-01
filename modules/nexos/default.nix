@@ -21,6 +21,10 @@ self: {
 
       imports = [
         ./hardware
+        ./networking.nix
+        ./secrets.nix
+        ./storage.nix
+        ./info
       ];
     };
   };
