@@ -53,6 +53,7 @@ in {
     }: {
       imports = [
         ./base.nix
+        ./grafana/provision.nix
       ];
       networking = {
         firewall = {
