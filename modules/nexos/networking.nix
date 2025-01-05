@@ -6,6 +6,7 @@
   inherit (lib) mkIf mkOption mkEnableOption;
   inherit (lib.types) str;
   cfg = config.nexos.networking;
+  enable = config.nexos.enable;
   configFile = if config.nexos.info.configPath != null then builtins.fromJSON (builtins.readFile config.nexos.info.configPath) else null;
 in {
 
@@ -25,9 +26,9 @@ in {
     };
   };
 
-  config = {
+  config = mkIf enable {
     nexos.networking = {
-      upstream.mac = mkIf configFile configFile.mac;
+      upstream.mac = mkIf (configFile != null) configFile.mac;
     };
     age.secrets = {
       wggateway = {
@@ -50,7 +51,7 @@ in {
     systemd = {
       network = {
         links = {
-          "upstream" = cfg.upstream.enable {
+          "upstream" = mkIf cfg.upstream.enable {
             config = true;
             matchConfig = {
               PermanentMACAddress = cfg.upstream.mac;

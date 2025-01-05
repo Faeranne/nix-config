@@ -7,6 +7,7 @@
 }: let
   inherit (lib) mkIf mkOption;
   inherit (lib.types) str;
+  enable = config.nexos.enable;
   global = self.globalConfig;
   configFile = if config.nexos.info.configPath != null then builtins.fromJSON (builtins.readFile config.nexos.info.configPath) else null;
 in {
@@ -24,7 +25,7 @@ in {
       };
     };
   };
-  config = {
+  config = mkIf enable {
     age = {
       identityPaths = [
         "/persist/agenix.key"
@@ -36,20 +37,20 @@ in {
       in {
 
         storageMode = "local";
-        localStorageDir = global.secretsDir + "/rekeyed/${hostname}";
-        generatedSecretsDir = global.secretsDir + "/secrets/generated/${hostname}";
+        localStorageDir = global.age.secretsDir + "/rekeyed/${hostname}";
+        generatedSecretsDir = global.age.secretsDir + "/secrets/generated/${hostname}";
 
-        agePlugins = mkIf global.enableYubikey (with pkgs; [
+        agePlugins = mkIf global.age.enableYubikey (with pkgs; [
           age-plugin-yubikey
         ]);
 
         masterIdentities = [
-          global.primaryIdentityPath
+          global.age.primaryIdentityPath
         ];
 
         extraEncryptionPubkeys = global.primaryKeys;
 
-        hostPubkey = mkIf configFile configFile.pubkey;
+        hostPubkey = mkIf (configFile != null) configFile.pubkey;
       };
     };
   };

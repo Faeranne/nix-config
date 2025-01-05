@@ -4,8 +4,9 @@
   pkgs,
   ...
 }: let
-  inherit (lib) mkIf mkDefault mkOption mkEnableOption;
+  inherit (lib) mkIf mkMerge mkDefault mkOption mkEnableOption;
   inherit (lib.types) submodule;
+  enable = config.nexos.enable;
   cfg = config.nexos.hardware;
 in {
   options = {
@@ -30,60 +31,66 @@ in {
       };
     };
   };
-  config = {
-    boot = {
-      initrd = {
-        availableKernelModules = ["nvme" "usbhid" "usb_storage" "sd_mod"];
+  config = mkIf enable (mkMerge [
+    {
+      boot = {
+        initrd = {
+          availableKernelModules = ["nvme" "usbhid" "usb_storage" "sd_mod"];
+        };
       };
-    };
-  } // (mkIf cfg.efi.enable {
-    # EFI config
+    }
+    (mkIf cfg.efi.enable {
+      # EFI config
 
-    boot.loader = {
-      systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
-    };
-  }) // (mkIf cfg.cpu.intel.enable {
-    # Intel config
-
-    nixpkgs = {
-      hostPlatform = mkDefault "x86_64-linux";
-      config.packageOverrides = mkIf cfg.enableGpu (pkgs: {
-        vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
-      });
-    };
-
-    boot = {
-      initrd = {
-        availableKernelModules = ["xhci_pci" "ehci_pci" "ahci"];
+      boot.loader = {
+        systemd-boot.enable = true;
+        efi.canTouchEfiVariables = true;
       };
-      kernelModules = ["kvm-intel"];
-    };
+    })
+    (mkIf cfg.cpu.intel.enable {
+      # Intel config
 
-    hardware.cpu.intel.updateMicrocode = mkDefault config.hardware.enableRedistributableFirmware;
-  }) // (mkIf cfg.cpu.intel.enableGpu {
-    # Intel GPU config
+      nixpkgs = {
+        hostPlatform = mkDefault "x86_64-linux";
+        config.packageOverrides = mkIf cfg.enableGpu (pkgs: {
+          vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
+        });
+      };
 
-    hardware.graphics = {
-      enable = true;
-      extraPackages = with pkgs; [
-        intel-media-driver
-        intel-vaapi-driver
-        vaapiVdpau
-        libvdpau-va-gl
-        intel-compute-runtime
-      ];
-    };
-  }) // (mkIf cfg.cpu.amd.enable {
-    # AMD config
+      boot = {
+        initrd = {
+          availableKernelModules = ["xhci_pci" "ehci_pci" "ahci"];
+        };
+        kernelModules = ["kvm-intel"];
+      };
 
-    nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+      hardware.cpu.intel.updateMicrocode = mkDefault config.hardware.enableRedistributableFirmware;
+    })
+    (mkIf cfg.cpu.intel.enableGpu {
+      # Intel GPU config
 
-    boot = {
-      kernelModules = ["kvm-amd"];
-      initrd.availableKernelModules = ["xhci_pci" "ahci"];
-    };
+      hardware.graphics = {
+        enable = true;
+        extraPackages = with pkgs; [
+          intel-media-driver
+          intel-vaapi-driver
+          vaapiVdpau
+          libvdpau-va-gl
+          intel-compute-runtime
+        ];
+      };
+    })
+    (mkIf cfg.cpu.amd.enable {
+      # AMD config
 
-    hardware.cpu.amd.updateMicrocode = mkDefault config.hardware.enableRedistributableFirmware;
-  });
+      nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+
+      boot = {
+        kernelModules = ["kvm-amd"];
+        initrd.availableKernelModules = ["xhci_pci" "ahci"];
+      };
+
+      hardware.cpu.amd.updateMicrocode = mkDefault config.hardware.enableRedistributableFirmware;
+    })
+  ]);
 }

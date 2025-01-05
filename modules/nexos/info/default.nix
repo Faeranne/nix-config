@@ -4,9 +4,11 @@
   pkgs,
   ...
 }: let
-  inherit (lib) mkIf mkOption mkEnableOption;
-  inherit (lib.types) submodule nullOr str path;
+  inherit (lib) mkIf mkOption;
+  inherit (lib.types) nullOr str path;
   cfg = config.nexos.info;
+  enable = config.nexos.enable;
+  configFile = if config.nexos.info.configPath != null then builtins.fromJSON (builtins.readFile config.nexos.info.configPath) else null;
 in {
 
   options = {
@@ -34,10 +36,8 @@ in {
     };
   };
 
-  config = let
-    configFile = if config.nexos.info.configPath != null then builtins.fromJSON (builtins.readFile config.nexos.info.configPath) else null;
-  in {
-    nexos.info = mkIf configFile {
+  config = mkIf enable {
+    nexos.info = mkIf (configFile != null) {
       machineId = configFile.hostID;
     };
     networking = {
