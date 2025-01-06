@@ -11,6 +11,7 @@
       (self.inputs.nixpkgs + "/nixos/modules/misc/assertions.nix")
       ./age.nix
       ./network.nix
+      ./base.nix
     ];
     specialArgs = {
       inherit self lib;
