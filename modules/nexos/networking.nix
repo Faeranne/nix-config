@@ -4,7 +4,7 @@
   ...
 }: let
   inherit (lib) mkIf mkOption mkEnableOption;
-  inherit (lib.types) str;
+  inherit (lib.types) str bool;
   cfg = config.nexos.networking;
   enable = config.nexos.enable;
   configFile = if config.nexos.info.configPath != null then builtins.fromJSON (builtins.readFile config.nexos.info.configPath) else null;
@@ -13,12 +13,18 @@ in {
   options = {
     nexos = {
       networking = {
+        online = mkOption {
+          type = bool;
+          default = true;
+          description = "System generally has an internet connection when on.";
+        };
         wireguard = {
           enable = mkEnableOption "Enable underlying wireguard system";
         };
         upstream = {
           enable = mkEnableOption "Enable upstream port";
           mac = mkOption {
+            description = "Hardware MAC address of the default upstream port.";
             type = str;
           };
         };
