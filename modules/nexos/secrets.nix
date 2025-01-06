@@ -1,14 +1,14 @@
 {
-  self,
   config,
   pkgs,
   lib,
   ...
 }: let
   inherit (lib) mkIf mkOption;
-  inherit (lib.types) str;
+  inherit (lib.types) str path;
   enable = config.nexos.enable;
-  global = self.globalConfig;
+  global = config.nexos.global;
+  secrets = config.nexos.security.secretsFolder;
   configFile = if config.nexos.info.configPath != null then builtins.fromJSON (builtins.readFile config.nexos.info.configPath) else null;
 in {
   options = {
@@ -22,10 +22,17 @@ in {
             '';
           };
         };
+        secretsFolder = mkOption {
+          type = path;
+          description = ''
+            Location of all secrets.
+          '';
+        };
       };
     };
   };
   config = mkIf enable {
+    nexos.security.secretsFolder = mkIf global.enable global.age.secretsDir;
     age = {
       identityPaths = [
         "/persist/agenix.key"
@@ -37,8 +44,8 @@ in {
       in {
 
         storageMode = "local";
-        localStorageDir = global.age.secretsDir + "/rekeyed/${hostname}";
-        generatedSecretsDir = global.age.secretsDir + "/secrets/generated/${hostname}";
+        localStorageDir = secrets + "/rekeyed/${hostname}";
+        generatedSecretsDir = secrets + "/generated/${hostname}";
 
         agePlugins = mkIf global.age.enableYubikey (with pkgs; [
           age-plugin-yubikey
