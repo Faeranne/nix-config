@@ -17,6 +17,10 @@ self: {
       options = {
         nexos = {
           enable = mkEnableOption "Enable all NexOS defaults and features.";
+          lib = mkOption {
+            type = attrs;
+            default = import ./lib.nix lib;
+          };
           global = mkOption {
             description = "Global option entrypoint";
             type = attrs;
@@ -28,10 +32,12 @@ self: {
       imports = [
         ./hardware
         ./info
+        ./users
         ./networking.nix
         ./nixconfig.nix
         ./secrets.nix
         ./storage.nix
+        ./testing.nix
       ];
     };
   };

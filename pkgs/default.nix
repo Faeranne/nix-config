@@ -8,6 +8,7 @@
   python3 = callPackage ./python3 {};
   systemTest = callPackage ./test.nix {};
   systemDeploy = callPackage ./deploy.nix {};
+  vm-rekey = callPackage ./vm-rekey.nix {inherit (self) nixosConfigurations;};
   packages = {
     inherit (python3) diskinfo;
     generateUUID = callPackage ./generateUUID.nix {};
@@ -19,4 +20,4 @@
     wifi = callPackage ./wifi.nix {};
   };
 in
-  packages // systemTest // systemDeploy
+  packages // systemTest // systemDeploy // vm-rekey

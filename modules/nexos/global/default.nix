@@ -12,6 +12,8 @@
       ./age.nix
       ./network.nix
       ./base.nix
+      ./testing.nix
+      ./users.nix
     ];
     specialArgs = {
       inherit self lib;

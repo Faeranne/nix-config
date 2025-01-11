@@ -52,9 +52,6 @@ in {
 
       nixpkgs = {
         hostPlatform = mkDefault "x86_64-linux";
-        config.packageOverrides = mkIf cfg.enableGpu (pkgs: {
-          vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
-        });
       };
 
       boot = {
@@ -68,6 +65,12 @@ in {
     })
     (mkIf cfg.cpu.intel.enableGpu {
       # Intel GPU config
+
+      nixpkgs = {
+        config.packageOverrides = (pkgs: {
+          vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
+        });
+      };
 
       hardware.graphics = {
         enable = true;

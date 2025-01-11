@@ -33,7 +33,7 @@ in {
               this is where the temporary private identity file is stored.  Otherwise, this should point to the system's private identity.
               This *must* be a string, not a path.
             '';
-            default = "/tmp/yuibkey.pub";
+            default = "/tmp/yubikey.pub";
             type = str;
           };
           primaryKeys = mkOption {
