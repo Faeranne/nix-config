@@ -109,10 +109,17 @@
       mask = ''\xff\xff\xff\xff\x00\x00\x00\x00\xff\xff\xff'';
       magicOrExtension = ''\x7fELF....AI\x02'';
     };
+    blacklistedKernelModules = [
+      "hid_mcp2221"
+    ];
   };
 
   services = {
     upower.enable = true;
+    udev.extraRules = ''
+      SUBSYSTEM=="usb", ATTRS{idVendor}=="04d8", MODE="0666", GROUP="dialout"
+      KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="04d8", MODE="0666", GROUP="dialout"
+    '';
   };
 
   programs = {
