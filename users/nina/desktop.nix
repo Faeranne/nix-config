@@ -7,7 +7,7 @@
   # Using xdg.portal as my trigger to identify desktop systems, vs server systems
   config = lib.mkIf systemConfig.xdg.portal.enable {
     programs = {
-      firefox = {
+      floorp = {
         profiles.default = {
           containers = {
             personal = {

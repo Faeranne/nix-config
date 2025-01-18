@@ -9,7 +9,6 @@
   in {
     home = {
       packages = with pkgs; [
-        firefoxpwa
         jami
         gimp
         inkscape
@@ -47,12 +46,25 @@
             }
           '';
         };
+        ".floorp/native-messaging-hosts/org.keepassxc.keepassxc_browser.json" = {
+          text = ''
+            {
+              "allowed_extensions": [
+                  "keepassxc-browser@keepassxc.org"
+              ],
+              "description": "KeePassXC integration with native messaging support",
+              "name": "org.keepassxc.keepassxc_browser",
+              "path": "${pkgs.keepassxc}/bin/keepassxc-proxy",
+              "type": "stdio"
+            }
+          '';
+        };
       };
       persistence."/persist/home/nina" = {
         directories = [
           ".local/share/godot/app_userdata"
           {
-            directory = ".mozilla/firefox/default/bookmarkbackups";
+            directory = ".floorp/default/bookmarkbackups";
             method = "symlink";
           }
           {
@@ -60,28 +72,24 @@
             method = "symlink";
           }
           {
-            directory = ".mozilla/firefox/default/storage";
+            directory = ".floorp/default/storage";
             method = "symlink";
           }
           {
-            directory = ".mozilla/firefox/default/extension-store";
+            directory = ".floorp/default/extension-store";
             method = "symlink";
           }
           {
-            directory = ".mozilla/firefox/default/extension-store-menus";
+            directory = ".floorp/default/extension-store-menus";
             method = "symlink";
           }
           {
-            directory = ".mozilla/firefox/default/settings";
+            directory = ".floorp/default/settings";
             method = "symlink";
           }
           ".thunderbird"
           {
             directory = ".local/share/Steam";
-            method = "symlink";
-          }
-          {
-            directory = ".local/share/firefoxpwa";
             method = "symlink";
           }
           {
@@ -139,23 +147,20 @@
           ".config/obsidian/Trust Tokens"
           ".config/obsidian/Trust Tokens-journal"
           ".cache/keepassxc/keepassxc.ini"
-          ".mozilla/firefox/default/cookies.sqlite"
-          ".mozilla/firefox/default/cookies.sqlite-wal"
-          ".mozilla/firefox/default/storage.sqlite"
-          ".mozilla/firefox/default/storage-sync-v2.sqlite"
-          ".mozilla/firefox/default/storage-sync-v2.sqlite-wal"
-          ".mozilla/firefox/default/storage-sync-v2.sqlite-shm"
-          ".mozilla/firefox/default/content-prefs.sqlite"
-          ".mozilla/firefox/default/prefs.js"
+          ".floorp/default/cookies.sqlite"
+          ".floorp/default/cookies.sqlite-wal"
+          ".floorp/default/storage.sqlite"
+          ".floorp/default/storage-sync-v2.sqlite"
+          ".floorp/default/storage-sync-v2.sqlite-wal"
+          ".floorp/default/storage-sync-v2.sqlite-shm"
+          ".floorp/default/content-prefs.sqlite"
+          ".floorp/default/prefs.js"
         ];
       };
     };
     programs = {
-      firefox = {
+      floorp = {
         enable = true;
-        nativeMessagingHosts = [
-          pkgs.firefoxpwa
-        ];
         profiles = {
           default = {
             extensions = let
@@ -172,6 +177,8 @@
                   mozPermissions = [
                     "*://twitch.tv/*"
                     "*://frankerfacez.com/*"
+                    "*://*.twitch.tv/*"
+                    "*://*.frankerfacez.com/*"
                   ];
                   platforms = lib.platforms.all;
                 };
@@ -182,36 +189,27 @@
               ]
               ++ (with pkgs.nur.repos.bandithedoge.firefoxAddons; [
                 augmented-steam
-                #betterviewer
-                #downthemall
+                downthemall
                 enhanced-github
                 indie-wiki-buddy
                 lovely-forks
-                #pronoundb
+                pronoundb
                 sponsorblock
-                #steam-database
-                #tridactyl
                 ublock-origin
                 violentmonkey
               ])
               ++ (with pkgs.nur.repos.rycee.firefox-addons; [
                 awesome-rss
-                #betterttv
                 consent-o-matic
                 container-tab-groups
                 darkreader
-                #duckduckgo-privacy-essentials
-                #gsconnect
                 kagi-search
                 keepassxc-browser
                 modrinthify
-                #mullvad
                 multi-account-containers
                 private-relay
-                pwas-for-firefox
                 return-youtube-dislikes
                 shinigami-eyes
-                #tetrio-plus
               ]);
 
             settings = {
@@ -374,7 +372,7 @@
         foot.enable = true;
         gtk.enable = true;
         waybar.enable = true;
-        firefox = {
+        floorp = {
           enable = true;
           profileNames = ["default"];
         };
