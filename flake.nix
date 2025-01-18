@@ -77,7 +77,7 @@
     # and as part of home-manager.  This covers things like terminal colors, sway styling,
     # waybar, and others.
     stylix = {
-      url = "github:danth/stylix";
+      url = "git+https://git.faeranne.com/faeranne/stylix?ref=add_floorp";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         home-manager.follows = "home-manager";
