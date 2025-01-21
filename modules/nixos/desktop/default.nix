@@ -38,6 +38,10 @@
 
   programs = {
     dconf.enable = true;
+    ydotool = {
+      enable = true;
+      group = "wheel";
+    };
   };
 
   services = {

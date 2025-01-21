@@ -80,8 +80,8 @@ in {
     hostName = "sarah";
     hostId = "586769c4";
     firewall = {
-      allowedTCPPorts = [4747 4748 39595 43751 6567];
-      allowedUDPPorts = [43751 6567 53];
+      allowedTCPPorts = [ 6666 4747 4748 39595 43751 6567];
+      allowedUDPPorts = [ 6666 43751 6567 53];
     };
     wireguard.interfaces = {
       wgsarah = {
