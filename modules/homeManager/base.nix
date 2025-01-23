@@ -18,7 +18,7 @@
     ./git.nix
     ./styling.nix
     ./syncthing.nix
-    inputs.nur.nixosModules.nur
+    inputs.nur.modules.homeManager.default
   ];
   home = {
     persistence."/persist/home/nina" = {

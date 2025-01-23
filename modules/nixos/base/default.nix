@@ -90,7 +90,7 @@
     # This changes values in `pkgs`. Mostly used to add external packages (via NUR) or roll forward
     # or backward certain packages.
     overlays = [
-      inputs.nur.overlay
+      inputs.nur.overlays.default
       inputs.nix-alien.overlays.default
       self.overlays.desktop
       self.overlays.java

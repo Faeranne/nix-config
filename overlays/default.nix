@@ -2,7 +2,7 @@
   desktop = (final: prev: {
     # Inkscape crashes on wayland when a tablet is connected.
     # https://gitlab.com/inkscape/inkscape/-/issues/4649
-    inkscape = prev.pkgs.symlinkJoin {
+    inkscape-wayland = prev.pkgs.symlinkJoin {
       name = "inkscape";
       paths = [prev.inkscape];
       buildInputs = [prev.pkgs.makeWrapper];
@@ -11,7 +11,6 @@
           --unset WAYLAND_DISPLAY
       '';
     };
-    firefoxpwa = self.inputs.nixpkgs-unstable.legacyPackages.${final.system}.firefoxpwa;
   });
   java = (final: prev: {
     arduino-core-unwrapped = prev.arduino-core-unwrapped.overrideAttrs (finalAttrs: prevAttrs: {

@@ -11,7 +11,7 @@
       packages = with pkgs; [
         jami
         gimp
-        inkscape
+        inkscape-wayland
         raysession
         jackmix
         lutris
