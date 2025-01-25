@@ -17,14 +17,18 @@ in {
     hostName = "bell";
     hostId = "1cd0fa6c";
     firewall = {
-      allowedTCPPorts = [ 111 2049 4000 4001 4002 20048 ];
-      allowedUDPPorts = [ 111 2049 4000 4001 4002 20048 ];
+      allowedTCPPorts = [ 69 111 2049 4000 4001 4002 20048 ];
+      allowedUDPPorts = [ 69 111 2049 4000 4001 4002 20048 ];
     };
   };
 
   services = {
+    atftpd = {
+      enable = true;
+    };
     nfs.server = {
       enable = true;
+      # /export   *(rw,fsid=0,no_subtree_check)
       exports = ''
         /export   192.168.1.*(rw,fsid=0,no_subtree_check)
         /export/persist 192.168.1.*(rw,nohide=0,insecure,no_subtree_check)
