@@ -27,6 +27,7 @@ in {
       enable = true;
       exports = ''
         /export   192.168.1.*(rw,fsid=0,no_subtree_check)
+        /export/persist 192.168.1.*(rw,nohide=0,insecure,no_subtree_check)
         /export/nixstore   192.168.1.*(ro,nohide=0,insecure,no_subtree_check)
       '';
     };
@@ -61,6 +62,10 @@ in {
       device = "/dev/disk/by-uuid/${localCfg.bootID}";
       fsType = "vfat";
       options = ["fmask=0022" "dmask=0022"];
+    };
+    "/export/persist" = {
+      device = "/persist/other";
+      options = [ "bind" ];
     };
   };
 
