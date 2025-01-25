@@ -8,12 +8,6 @@
     # This is the base nixpkgs repo.  Contains almost anything you could need.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs";
-    # Flake utils does some cool things with flakes. there's more
-    # details where they're used
-    flake-utils.url = "github:numtide/flake-utils/main";
-    # nixos-hardware contains defaults for a lot of well-known hardware
-    # setups. we use it to get some defaults for the raspberry pi 4
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     # Impermanence allows us to use a default root directory that is
     # temporary.  On each reboot the / directory is fresh and setup from
     # scratch.  This helps prevent weird state from building up.
@@ -31,12 +25,6 @@
     # agenix-rekey used ragenix to automatically rekey secrets.
     agenix-rekey = {
       url = "github:oddlama/agenix-rekey";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    # Disko handles pre-paritioning systems during setup, as well as
-    # providing the filesystem setup that is used during normal use.
-    disko = {
-      url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # I run foundryvtt on a server, so this handles setting that up, since
@@ -81,14 +69,6 @@
       inputs = {
         nixpkgs.follows = "nixpkgs";
         home-manager.follows = "home-manager";
-      };
-    };
-    # Yazi is a fancy terminal-based file manager. it supports image previews (using sixel),
-    # and looks really cool while supporting many of the non-terminal file manager features.
-    yazi = {
-      url = "github:sxyazi/yazi";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
       };
     };
 
