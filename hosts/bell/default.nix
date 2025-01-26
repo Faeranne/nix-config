@@ -28,11 +28,12 @@ in {
     };
     nfs.server = {
       enable = true;
-      # /export   *(rw,fsid=0,no_subtree_check)
+      lockdPort = 4001;
+      mountdPort = 4002;
+      statdPort = 4000;
       exports = ''
-        /export   192.168.1.*(rw,fsid=0,no_subtree_check)
-        /export/persist 192.168.1.*(rw,nohide=0,insecure,no_subtree_check)
-        /export/nixstore   192.168.1.*(ro,nohide=0,insecure,no_subtree_check)
+        /nix/store   192.168.1.0/24(ro,insecure,no_subtree_check)
+        /export/persist 192.168.1.0/24(rw,insecure,no_subtree_check,anonuid=1001,anongid=1001)
       '';
     };
     udisks2 = {
