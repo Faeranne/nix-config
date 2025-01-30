@@ -75,6 +75,7 @@
           --cmd sway
       '';
     };
+    avahi.enable = true;
     pipewire = {
       enable = true;
       audio.enable = true;

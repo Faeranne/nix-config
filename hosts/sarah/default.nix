@@ -18,6 +18,7 @@ in {
     hardware.cpu.amd
     hardware.gpu.amd
     hardware.printers.hp-colorjet
+    hardware.bluetooth
     self.userModules.nina
   ];
 
@@ -59,6 +60,13 @@ in {
       SUBSYSTEM=="usb", ATTRS{idVendor}=="1038", ATTRS{idProduct}=="12e0", MODE="0666"
       SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1038", ATTRS{idProduct}=="12e0", MODE="0666"
     '';
+    pipewire.extraConfig.pipewire-pulse = {
+      "15-enable-zeroconf" = {
+        "pulse.cmd" = [
+          { cmd = "load-module"; args = "module-zeroconf-discover"; }
+        ];
+      };
+    };
   };
 
   virtualisation = {
