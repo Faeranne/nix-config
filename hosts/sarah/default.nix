@@ -64,6 +64,7 @@ in {
       "15-enable-zeroconf" = {
         "pulse.cmd" = [
           { cmd = "load-module"; args = "module-zeroconf-discover"; }
+          { cmd = "load-module"; args = "module-native-protocol-tcp"; }
         ];
       };
     };
@@ -88,8 +89,8 @@ in {
     hostName = "sarah";
     hostId = "586769c4";
     firewall = {
-      allowedTCPPorts = [ 6666 4747 4748 39595 43751 6567];
-      allowedUDPPorts = [ 6666 43751 6567 53];
+      allowedTCPPorts = [ 6666 4712 4747 4748 39595 43751 6567];
+      allowedUDPPorts = [ 6666 5353 43751 6567 53];
     };
     wireguard.interfaces = {
       wgsarah = {
