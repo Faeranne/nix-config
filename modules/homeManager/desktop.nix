@@ -298,6 +298,7 @@
             "${modifier}+Mod1+f" = "exec ${pkgs.grim}/bin/grim -g \"$(${pkgs.slurp}/bin/slurp)\" - | ${pkgs.qrscan}/bin/qrscan - | sed -nr 's/.*secret=([[a-zA-Z0-9]*)&.*/\\1/p' | ${pkgs.wl-clipboard}/bin/wl-copy";
             "${modifier}+Mod1+l" = "exec ${swaylock-bin} -fF";
             "${modifier}+space" = "exec ${menu}";
+            "${modifier}+f" = "exec ${lib.getExe config.programs.floorp.finalPackage}";
           };
         input = {
           "*" = {
