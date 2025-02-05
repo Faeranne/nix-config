@@ -90,7 +90,7 @@
     # This changes values in `pkgs`. Mostly used to add external packages (via NUR) or roll forward
     # or backward certain packages.
     overlays = [
-      inputs.nur.overlay
+      inputs.nur.overlays.default
       inputs.nix-alien.overlays.default
       self.overlays.desktop
       self.overlays.java
@@ -109,10 +109,23 @@
       mask = ''\xff\xff\xff\xff\x00\x00\x00\x00\xff\xff\xff'';
       magicOrExtension = ''\x7fELF....AI\x02'';
     };
+    blacklistedKernelModules = [
+      "hid_mcp2221"
+    ];
   };
 
   services = {
     upower.enable = true;
+    # 1. MCP2221 usb to Uart,i2c,spi,gpio adapter
+    # 2. MCP2221 HID access for circuitpython
+    # 3. Carthing
+    # 4. Carthing
+    udev.extraRules = ''
+      SUBSYSTEM=="usb", ATTRS{idVendor}=="04d8", MODE="0666", GROUP="dialout"
+      KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="04d8", MODE="0666", GROUP="dialout"
+      SUBSYSTEM=="usb", ATTRS{idVendor}=="1b8e", ATTRS{idProduct}=="c003", OWNER="nina", MODE="0666"
+      SUBSYSTEM=="usb", ATTRS{idVendor}=="1d6b", ATTRS{idProduct}=="1014", OWNER="nina", MODE="0666"
+    '';
   };
 
   programs = {

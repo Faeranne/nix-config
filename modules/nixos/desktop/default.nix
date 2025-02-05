@@ -38,6 +38,10 @@
 
   programs = {
     dconf.enable = true;
+    ydotool = {
+      enable = true;
+      group = "wheel";
+    };
   };
 
   services = {
@@ -71,6 +75,7 @@
           --cmd sway
       '';
     };
+    avahi.enable = true;
     pipewire = {
       enable = true;
       audio.enable = true;

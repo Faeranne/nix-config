@@ -18,6 +18,7 @@ in {
     hardware.cpu.amd
     hardware.gpu.amd
     hardware.printers.hp-colorjet
+    hardware.bluetooth
     self.userModules.nina
   ];
 
@@ -59,6 +60,14 @@ in {
       SUBSYSTEM=="usb", ATTRS{idVendor}=="1038", ATTRS{idProduct}=="12e0", MODE="0666"
       SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1038", ATTRS{idProduct}=="12e0", MODE="0666"
     '';
+    pipewire.extraConfig.pipewire-pulse = {
+      "15-enable-zeroconf" = {
+        "pulse.cmd" = [
+          { cmd = "load-module"; args = "module-zeroconf-discover"; }
+          { cmd = "load-module"; args = "module-native-protocol-tcp"; }
+        ];
+      };
+    };
   };
 
   virtualisation = {
@@ -80,8 +89,8 @@ in {
     hostName = "sarah";
     hostId = "586769c4";
     firewall = {
-      allowedTCPPorts = [4747 4748 39595 43751 6567];
-      allowedUDPPorts = [43751 6567];
+      allowedTCPPorts = [ 6666 4712 4747 4748 39595 43751 6567];
+      allowedUDPPorts = [ 6666 5353 43751 6567 53];
     };
     wireguard.interfaces = {
       wgsarah = {
@@ -94,8 +103,12 @@ in {
     };
   };
 
+  powerManagement.cpuFreqGovernor = "performance";
+
   environment.systemPackages = [
     pkgs.xsane
+    pkgs.ares
+    pkgs.docker-compose
   ];
 
   fileSystems = {
