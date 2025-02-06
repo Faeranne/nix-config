@@ -299,6 +299,7 @@
             "${modifier}+Mod1+l" = "exec ${swaylock-bin} -fF";
             "${modifier}+space" = "exec ${menu}";
             "${modifier}+f" = "exec ${lib.getExe config.programs.floorp.finalPackage}";
+            "${modifier}+o" = "exec ${lib.getExe pkgs.obsidian}";
           };
         input = {
           "*" = {
