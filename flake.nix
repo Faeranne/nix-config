@@ -4,6 +4,9 @@
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
     };
+    flake-utils = {
+      url = "github:numtide/flake-utils";
+    };
     agenix-rekey = {
       url = "github:oddlama/agenix-rekey";
       inputs = {
@@ -15,6 +18,7 @@
       url = "github:oddlama/nix-topology";
       inputs = {
         nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
       };
     };
     ez-configs = {
@@ -22,6 +26,13 @@
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-parts.follows = "flake-parts";
+      };
+    };
+    extra-container = {
+      url = "github:erikarvstedt/extra-container";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
       };
     };
   };
