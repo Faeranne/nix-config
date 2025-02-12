@@ -13,6 +13,7 @@ inputs: let
     lib.nixosSystem {
       inherit specialArgs;
       modules = [
+        inputs.lix-module.nixosModules.default
         ./${host}
       ];
     });
