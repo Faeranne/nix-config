@@ -35,7 +35,7 @@ in {
     hostName = "greg";
     hostId = "ccd933cc";
     firewall = {
-      allowedTCPPorts = [25565 25566 3876 9091 80 443 52821 7192];
+      allowedTCPPorts = [25565 25566 3876 9091 80 443 52821 7912];
       allowedUDPPorts = [24454];
     };
     nat = {

@@ -22,9 +22,10 @@
         "/Storage/volumes/spoolman/data:/home/app/.local/share/spoolman"
       ];
       ports = [
-        "7192:8000"
+        "7912:8000"
       ];
       extraOptions = [
+        "--ip=10.88.1.11"
       ];
     };
     /*
@@ -101,7 +102,6 @@
       ports = [
       ];
       environment = {
-
       };
       environmentFiles = [
         config.age.secrets.sharkeyenv.path
@@ -133,6 +133,7 @@
       ports = [
       ];
       environment = {
+        COREPACK_DEFAULT_TO_LATEST="0";
       };
       environmentFiles = [
         config.age.secrets.sharkeyenv.path
