@@ -12,6 +12,9 @@
       '';
     };
   });
+  services = (final: prev: {
+    jackett = prev.jackett.overrideAttrs { doCheck = false; };
+  });
   java = (final: prev: {
     arduino-core-unwrapped = prev.arduino-core-unwrapped.overrideAttrs (finalAttrs: prevAttrs: {
       installPhase = prevAttrs.installPhase + ''

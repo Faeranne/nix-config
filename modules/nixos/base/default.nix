@@ -93,6 +93,7 @@
       inputs.nur.overlays.default
       inputs.nix-alien.overlays.default
       self.overlays.desktop
+      self.overlays.services
       self.overlays.java
     ];
   };
