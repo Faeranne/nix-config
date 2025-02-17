@@ -12,6 +12,21 @@
     };
   };
   virtualisation.oci-containers.containers = {
+    "spoolman" = {
+      autoStart = true;
+      image = "ghcr.io/donkie/spoolman";
+      environment = {
+        TZ = "America/Indiana/Indianapolis";
+      };
+      volumes = [
+        "/Storage/volumes/spoolman/data:/home/app/.local/share/spoolman"
+      ];
+      ports = [
+        "7192:8000"
+      ];
+      extraOptions = [
+      ];
+    };
     /*
     "fasten" = {
       autoStart = true;
