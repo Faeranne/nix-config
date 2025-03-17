@@ -64,6 +64,10 @@
         directories = [
           ".local/share/godot/app_userdata"
           {
+            directory = ".android";
+            method = "symlink";
+          }
+          {
             directory = ".floorp/default/bookmarkbackups";
             method = "symlink";
           }
