@@ -1,11 +1,11 @@
 {...}: {
   programs.virt-manager.enable = true;
   virtualisation = {
-    virtualbox.host = {
+    /*virtualbox.host = {
       enable = true;
       enableExtensionPack = true;
       enableHardening = true;
-    };
+    };*/
     libvirtd.enable = true;
   };
 }
