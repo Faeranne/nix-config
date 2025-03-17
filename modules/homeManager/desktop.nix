@@ -139,13 +139,12 @@
             directory = "Videos";
             method = "symlink";
           }
+          {
+            directory = ".config/obsidian";
+            method = "symlink";
+          }
         ];
         files = [
-          ".config/obsidian/obsidian.json"
-          ".config/obsidian/id"
-          ".config/obsidian/Perferences"
-          ".config/obsidian/Trust Tokens"
-          ".config/obsidian/Trust Tokens-journal"
           ".cache/keepassxc/keepassxc.ini"
           ".floorp/default/cookies.sqlite"
           ".floorp/default/cookies.sqlite-wal"
@@ -164,6 +163,22 @@
         profiles = {
           default = {
             extensions = let
+              obsidian_web_clipper = pkgs.nur.repos.rycee.firefox-addons.buildFirefoxXpiAddon rec {
+                addonId = "clipper@obsidian.md";
+                version = "0.10.8";
+                pname = "web_clipper_obsidian";
+                url = "https://addons.mozilla.org/firefox/downloads/file/4425554/${pname}-${version}.xpi";
+                sha256 = "sha256-9W20RG4+TVkoIOjW6ijO0qGRfR/k1n1pweRT6HyJMos=";
+                meta = {
+                  homepage = "https://obsidian.md/";
+                  description = "Save and highlight web pages in a private and durable format that you can access offline. The official browser extension for Obsidian.";
+                  license = lib.licenses.mit;
+                  mozPermissions = [
+                    "*"
+                  ];
+                  platforms = lib.platforms.all;
+                };
+              };
               frankerfacez = pkgs.nur.repos.rycee.firefox-addons.buildFirefoxXpiAddon rec {
                 addonId = "frankerfacez@frankerfacez.com";
                 version = "4.75.7.0";
@@ -186,6 +201,7 @@
             in
               [
                 frankerfacez
+                obsidian_web_clipper
               ]
               ++ (with pkgs.nur.repos.bandithedoge.firefoxAddons; [
                 augmented-steam
