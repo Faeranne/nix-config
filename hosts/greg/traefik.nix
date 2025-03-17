@@ -55,6 +55,11 @@
           service = "actual";
           entryPoints = ["websecure"];
         };
+        obico = {
+          rule = "Host(`obico.faeranne.com`)";
+          service = "obico";
+          entryPoints = ["websecure"];
+        };
         # The rest of these are all completely declaritively set, so we can just use them dynamically
         freshrss = {
           rule = "Host(`${config.containers.jellyfin.specialArgs.hostName}`)";
@@ -85,6 +90,7 @@
         # the ports *or* ips for them, so we just hardcode them, both ip and port
         wizarr.loadBalancer.servers = [{url = "http://10.88.1.3:5690";}];
         actual.loadBalancer.servers = [{url = "http://10.88.1.4:5006";}];
+        obico.loadBalancer.servers = [{url = "http://192.168.1.10:3334";}];
         # these all have dynamically set ports, so we can just fetch them from configs instead. :3
         freshrss.loadBalancer.servers = [{url = "http://${config.containers.freshrss.localAddress}:${config.containers.freshrss.config.nginx.port}";}];
         grocy.loadBalancer.servers = [{url = "http://${config.containers.grocy.localAddress}:${config.containers.grocy.config.nginx.port}";}];
