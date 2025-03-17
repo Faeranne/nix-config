@@ -183,12 +183,13 @@
                   platforms = lib.platforms.all;
                 };
               };
+
               frankerfacez = pkgs.nur.repos.rycee.firefox-addons.buildFirefoxXpiAddon rec {
                 addonId = "frankerfacez@frankerfacez.com";
-                version = "4.75.7.0";
+                version = "4.76.4.0";
                 pname = "frankerfacez";
-                url = "https://addons.mozilla.org/firefox/downloads/file/4383952/${pname}-${version}.xpi";
-                sha256 = "sha256-6k4L9aaaWOtUuLBu9FCcoF3y66/BSUGdIVATV1dSZrI=";
+                url = "https://addons.mozilla.org/firefox/downloads/file/4412136/${pname}-${version}.xpi";
+                sha256 = "sha256-bZbMut4F6hRPZ70w9rUHuiHm/1vfrCx3OqWsZMdq3Hk=";
                 meta = {
                   homepage = "https://www.frankerfacez.com/";
                   description = "The Twitch enhancement suite. Get custom emotes and tons of new features you'll never want to go without.";
@@ -196,8 +197,8 @@
                   mozPermissions = [
                     "*://twitch.tv/*"
                     "*://frankerfacez.com/*"
-                    "*://*.twitch.tv/*"
-                    "*://*.frankerfacez.com/*"
+                    "*://www.twitch.tv/*"
+                    "*://www.frankerfacez.com/*"
                   ];
                   platforms = lib.platforms.all;
                 };
