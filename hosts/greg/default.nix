@@ -39,7 +39,7 @@ in {
       allowedUDPPorts = [24454];
     };
     nat = {
-      externalInterface = "eno1";
+      externalInterface = "enp3s0";
     };
     wireguard.interfaces = {
       wghub = {
