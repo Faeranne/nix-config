@@ -100,6 +100,10 @@
       url = "https://git.lix.systems/lix-project/nixos-module/archive/2.92.0.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    mystia = {
+      url = "git+https://git.faeranne.com/migrations/mystia.git";
+      #inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
   };
 
   # since `inputs` is a single variable here, it's the set of flakes input above.

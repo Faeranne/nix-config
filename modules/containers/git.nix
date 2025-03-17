@@ -98,6 +98,7 @@ in {
       }: {
         imports = [
           ./base.nix
+          inputs.mystia.nixosModules.anubis
         ];
 
         networking = {
@@ -122,6 +123,14 @@ in {
               }
             ];
           };
+          anubis.instances.gitea = {
+            settings = {
+              SERVE_ROBOTS_TXT = true;
+              BIND = "10.100.1.10:${builtins.toString port}";
+              BIND_NETWORK = "tcp";
+              TARGET = "http://127.0.0.1:8001";
+            };
+          };
           forgejo = {
             enable = true;
             package = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.forgejo;
@@ -143,8 +152,12 @@ in {
                 SSH_CREATE_AUTHORIZED_KEYS_FILE = false;
                 SSH_USER = "git";
                 DOMAIN = "${hostName}";
-                HTTP_PORT = port;
+                HTTP_ADDR = "127.0.0.1";
+                HTTP_PORT = 8001;
                 ROOT_URL = "https://${hostName}";
+              };
+              security = {
+                REVERSE_PROXY_TRUSTED_PROXIES = "127.0.0.0/8";
               };
               service = {
                 DISABLE_REGISTRATION = false;

@@ -12,6 +12,7 @@
     inputs.agenix-rekey.nixosModules.default
     inputs.stylix.nixosModules.stylix
     inputs.nix-topology.nixosModules.default
+    inputs.mystia.nixosModules.anubis
     ./networking.nix
     ./nix-config.nix
     ./security.nix
