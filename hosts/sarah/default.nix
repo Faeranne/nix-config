@@ -59,6 +59,7 @@ in {
     udev.extraRules = ''
       SUBSYSTEM=="usb", ATTRS{idVendor}=="1038", ATTRS{idProduct}=="12e0", MODE="0666"
       SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1038", ATTRS{idProduct}=="12e0", MODE="0666"
+      ACTION=="add", SUBSYSTEMS=="usb", ATTRS{idVendor}=="0922", ATTRS{idProduct}=="1005", MODE="0666"
     '';
     pipewire.extraConfig.pipewire-pulse = {
       "15-enable-zeroconf" = {
