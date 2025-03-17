@@ -168,6 +168,11 @@ in {
             service = "etherpad";
             entryPoints = ["websecure"];
           };
+          obico = {
+            rule = "Host(`obico.faeranne.com`)";
+            service = "obico";
+            entryPoints = ["websecure"];
+          };
         };
         extraServices = {
           wizarr.loadBalancer.servers = [{url = "http://10.88.1.3:5690";}];
@@ -175,6 +180,7 @@ in {
           lube.loadBalancer.servers = [{url = "http://10.88.1.5:8080";}];
           sharkey.loadBalancer.servers = [{url = "http://10.88.1.6:3000";}];
           etherpad.loadBalancer.servers = [{url = "http://10.88.1.10:9001";}];
+          obico.loadBalancer.servers = [{url = "http://10.120.1.2:3334";}];
         };
       };
     };
