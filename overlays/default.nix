@@ -1,5 +1,7 @@
 {self, ...}:{
   desktop = (final: prev: {
+    # Need the latest blockbench for cpm
+    blockbench = self.inputs.nixpkgs-unstable.legacyPackages.${final.system}.blockbench;
     # Inkscape crashes on wayland when a tablet is connected.
     # https://gitlab.com/inkscape/inkscape/-/issues/4649
     inkscape-wayland = prev.pkgs.symlinkJoin {
