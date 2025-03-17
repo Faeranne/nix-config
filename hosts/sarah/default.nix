@@ -89,6 +89,7 @@ in {
     };
     hostName = "sarah";
     hostId = "586769c4";
+    networkmanager.enable = true;
     firewall = {
       allowedTCPPorts = [ 6666 4712 4747 4748 39595 43751 6567];
       allowedUDPPorts = [ 6666 5353 43751 6567 53];
@@ -123,6 +124,10 @@ in {
   nixpkgs.hostPlatform = "x86_64-linux";
 
   age.rekey.hostPubkey = "age185avxte33jvaexyl5292nczj3drlhc5dnyv8svyyy8u4l0tfgpksz6encl";
+
+  systemd = {
+    network.wait-online.enable = false;
+  };
 
   home-manager = {
     backupFileExtension = "bak";
