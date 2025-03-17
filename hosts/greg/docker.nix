@@ -3,6 +3,9 @@
   config,
   ...
 }: {
+  imports = [
+    ./docker-compose.nix
+  ];
   age.secrets = {
     sharkeyenv = {
       rekeyFile = self + "/secrets/containers/sharkey/env.age";
@@ -10,7 +13,28 @@
     etherpadenv = {
       rekeyFile = self + "/secrets/containers/etherpad/env.age";
     };
+    obico = {
+      rekeyFile = self + "/secrets/containers/obico/env.age";
+    };
   };
+
+  hardware.nvidia-container-toolkit.enable = true;
+  # Runtime
+  virtualisation.podman = {
+    enable = true;
+    autoPrune.enable = true;
+    dockerCompat = true;
+  };
+
+  # Enable container name DNS for all Podman networks.
+  networking.firewall.interfaces = let
+    matchAll = if !config.networking.nftables.enable then "podman+" else "podman*";
+  in {
+    "${matchAll}".allowedUDPPorts = [ 53 ];
+  };
+
+  virtualisation.oci-containers.backend = "podman";
+
   virtualisation.oci-containers.containers = {
     "spoolman" = {
       autoStart = true;
