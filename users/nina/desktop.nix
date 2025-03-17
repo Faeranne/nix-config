@@ -102,6 +102,10 @@
             directory = ".config/Ryujinx";
             method = "symlink";
           }
+          {
+            directory = ".config/Blockbench/plugins";
+            method = "symlink";
+          }
         ];
       };
       packages = with pkgs; [
