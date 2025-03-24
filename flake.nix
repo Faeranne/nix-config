@@ -104,6 +104,9 @@
       url = "git+https://git.faeranne.com/migrations/mystia.git";
       #inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+    koboldfactory = {
+      url = "git+https://git.faeranne.com/faeranne/koboldfactory.git";
+    };
   };
 
   # since `inputs` is a single variable here, it's the set of flakes input above.

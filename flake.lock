@@ -890,6 +890,25 @@
         "type": "github"
       }
     },
+    "koboldfactory": {
+      "inputs": {
+        "nixpkgs": "nixpkgs",
+        "packwiz": "packwiz"
+      },
+      "locked": {
+        "lastModified": 1742824126,
+        "narHash": "sha256-GTeywiOEVoRuLK797NV7PeYK5JHvF8VyuruHnMbr6F8=",
+        "ref": "refs/heads/main",
+        "rev": "78bf650ec471ccfe8f48ff0cd5c025771ce1cd79",
+        "revCount": 3,
+        "type": "git",
+        "url": "https://git.faeranne.com/faeranne/koboldfactory.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.faeranne.com/faeranne/koboldfactory.git"
+      }
+    },
     "lix": {
       "flake": false,
       "locked": {
@@ -930,7 +949,7 @@
         "anubis-unix": "anubis-unix",
         "flake-compat": "flake-compat_2",
         "nix-update-soopy": "nix-update-soopy",
-        "nixpkgs": "nixpkgs",
+        "nixpkgs": "nixpkgs_2",
         "treefmt-nix": "treefmt-nix_3"
       },
       "locked": {
@@ -953,7 +972,7 @@
         "flake-utils": "flake-utils_3",
         "nix-filter": "nix-filter",
         "nix-index-database": "nix-index-database",
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": "nixpkgs_3"
       },
       "locked": {
         "lastModified": 1736952083,
@@ -1164,16 +1183,14 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1742069588,
-        "narHash": "sha256-C7jVfohcGzdZRF6DO+ybyG/sqpo1h6bZi9T56sxLy+k=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "c80f6a7e10b39afcc1894e02ef785b1ad0b0d7e5",
-        "type": "github"
+        "lastModified": 1737569578,
+        "narHash": "sha256-6qY0pk2QmUtBT9Mywdvif0i/CLVgpCjMUn6g9vB+f3M=",
+        "path": "/nix/store/5kvd3cn4cld24l2cs07m4hw3hwlqq104-source",
+        "rev": "47addd76727f42d351590c905d9d1905ca895b82",
+        "type": "path"
       },
       "original": {
         "id": "nixpkgs",
-        "ref": "nixos-unstable",
         "type": "indirect"
       }
     },
@@ -1228,6 +1245,21 @@
     },
     "nixpkgs_2": {
       "locked": {
+        "lastModified": 1742069588,
+        "narHash": "sha256-C7jVfohcGzdZRF6DO+ybyG/sqpo1h6bZi9T56sxLy+k=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "c80f6a7e10b39afcc1894e02ef785b1ad0b0d7e5",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "ref": "nixos-unstable",
+        "type": "indirect"
+      }
+    },
+    "nixpkgs_3": {
+      "locked": {
         "lastModified": 1736798957,
         "narHash": "sha256-qwpCtZhSsSNQtK4xYGzMiyEDhkNzOCz/Vfu4oL2ETsQ=",
         "owner": "NixOS",
@@ -1242,7 +1274,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_3": {
+    "nixpkgs_4": {
       "locked": {
         "lastModified": 1737569578,
         "narHash": "sha256-6qY0pk2QmUtBT9Mywdvif0i/CLVgpCjMUn6g9vB+f3M=",
@@ -1258,7 +1290,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_4": {
+    "nixpkgs_5": {
       "locked": {
         "lastModified": 1737469691,
         "narHash": "sha256-nmKOgAU48S41dTPIXAq0AHZSehWUn6ZPrUKijHAMmIk=",
@@ -1362,7 +1394,7 @@
     "nur": {
       "inputs": {
         "flake-parts": "flake-parts_4",
-        "nixpkgs": "nixpkgs_4",
+        "nixpkgs": "nixpkgs_5",
         "treefmt-nix": "treefmt-nix_5"
       },
       "locked": {
@@ -1400,6 +1432,27 @@
         "owner": "NuschtOS",
         "repo": "search",
         "type": "github"
+      }
+    },
+    "packwiz": {
+      "inputs": {
+        "nixpkgs": [
+          "koboldfactory",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1731789732,
+        "narHash": "sha256-UbrAhur94sbqXVuaACm1FP02qfi8m/Xxo7i1XsnxeXg=",
+        "ref": "refs/heads/main",
+        "rev": "2e327c0bb07b7fbe35d34a97b149e233648628c3",
+        "revCount": 370,
+        "type": "git",
+        "url": "https://git.faeranne.com/faeranne/packwiz"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.faeranne.com/faeranne/packwiz"
       }
     },
     "pre-commit-hooks": {
@@ -1483,13 +1536,14 @@
         "foundryvtt": "foundryvtt",
         "home-manager": "home-manager",
         "impermanence": "impermanence",
+        "koboldfactory": "koboldfactory",
         "lix-module": "lix-module",
         "mystia": "mystia",
         "nix-alien": "nix-alien",
         "nix-on-droid": "nix-on-droid",
         "nix-topology": "nix-topology",
         "nixos-generators": "nixos-generators",
-        "nixpkgs": "nixpkgs_3",
+        "nixpkgs": "nixpkgs_4",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nixvim": "nixvim",
         "nur": "nur",
